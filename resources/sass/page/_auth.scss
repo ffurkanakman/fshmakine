@@ -1,0 +1,162 @@
+@use "../variable" as *;
+.auth {
+    background: #2d9df2;
+    background: linear-gradient(
+            90deg,
+            rgba(45, 157, 242, 0.7) 0%,
+            rgba(120, 188, 240, 0.7) 50%,
+            rgba(28, 195, 232, 0.5) 100%
+    );
+    width: 100%;
+    height: 100vh;
+    background-repeat: no-repeat;
+    .card-area {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        padding: 1rem;
+    }
+    .card-container {
+        width: 100%;
+        max-width: 500px;
+        background-color: rgb(255 255 255 / 67%);
+        border-radius: 26px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        border: 1px solid rgba(45, 157, 242, 0.1);
+
+        .auth-header {
+            text-align: center;
+
+            h1 {
+                color: $darkBlue;
+                font-size: 1.75rem;
+                font-weight: 700;
+                margin-bottom: 1rem;
+            }
+
+            p {
+                color: black;
+                font-size: 0.875rem;
+            }
+        }
+        .form-wrapper {
+            .auth-links {
+                margin-top: 1.5rem;
+                text-align: center;
+                font-size: 0.9rem;
+                color: black;
+
+                a {
+                    color: $darkBlue;
+                    text-decoration: none;
+                    font-weight: 500;
+                    transition: color 0.2s ease;
+
+                    &:hover {
+                        color: $darkBlue;
+                        text-decoration: underline;
+                    }
+                }
+
+                .separator {
+                    margin: 0 0.5rem;
+                    color: $blue;
+                }
+            }
+            .form-group {
+                margin-bottom: 0.5rem;
+
+                label {
+                    display: block;
+                    color: $darkBlue;
+                    font-size: 0.875rem;
+                    font-weight: 500;
+                    // margin-bottom: 0.5rem;
+                }
+
+                input,
+                select {
+                    width: 100%;
+                    padding: 0.75rem 1rem;
+                    border: 1px solid rgba($blue, 0.2);
+                    border-radius: 6px;
+                    font-size: 0.9rem;
+                    color: #191e25;
+                    transition: all 0.2s ease;
+
+                    &:focus {
+                        outline: none;
+                        border-color: $darkBlue;
+                        box-shadow: 0 0 0 3px rgba($darkBlue, 0.1);
+                    }
+
+                    &::placeholder {
+                        color: rgba($blue, 0.4);
+                    }
+                }
+            }
+            .home-links {
+                text-align: center;
+                margin-top: 0.5rem;
+                a {
+                    color: $darkBlue;
+                    text-align: center;
+                    font-size: 0.9rem;
+                    font-weight: 600;
+                }
+            }
+            .submit-button {
+                width: 100%;
+                padding: 0.75rem;
+                background-color: $darkBlue;
+                color: $white;
+                border: none;
+                border-radius: 1.2rem;
+                font-size: 1rem;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s ease;
+
+                &:hover {
+                    background-color: $blue;
+                }
+
+                &:disabled {
+                    opacity: 0.7;
+                    cursor: not-allowed;
+                }
+            }
+        }
+    }
+    .pass-input {
+        position: relative;
+        span {
+            position: absolute;
+            cursor: pointer;
+            right: 0.5rem;
+            top: 35%;
+        }
+    }
+    .pass-strength {
+        p {
+            display: none;
+        }
+        div {
+            height: 4px !important;
+            border-radius: 8px;
+        }
+    }
+    .pass-info {
+        font-size: 0.7rem;
+        font-weight: 500;
+        color: grey;
+    }
+}
+
+.error-messages {
+    font-size: 0.8rem;
+    color: #ef4444;
+    font-weight: 500;
+}

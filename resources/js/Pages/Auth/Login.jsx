@@ -1,100 +1,95 @@
-import Checkbox from '@/Components/Checkbox';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { useTranslation } from "react-i18next";
+import { ROUTES } from "../../Libs/Routes/config";
+import { toast } from "react-toastify";
 
-export default function Login({ status, canResetPassword }) {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        email: '',
-        password: '',
-        remember: false,
+const Login = () => {
+    const { t } = useTranslation();
+    const initialValues = {
+        email: "",
+        password: "",
+    };
+
+    const validationSchema = Yup.object({
+        email: Yup.string()
+            .email(t('Geçerli bir email adresi giriniz'))
+            .required(t('Email adresi zorunludur')),
+        password: Yup.string()
+            .required(t('Şifre zorunludur'))
+            .min(6, t('Şifre en az 6 karakter olmalıdır'))
     });
 
-    const submit = (e) => {
-        e.preventDefault();
-
-        post(route('login'), {
-            onFinish: () => reset('password'),
-        });
+    const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+        try {
+            const response = await login(values);
+            if (response)
+                toast.success(t('Giriş Yapıldı. Yönlendiriliyorsunuz'));
+        } catch (error) {
+            console.error("Giriş hatası:", error);
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (
-        <GuestLayout>
-            <Head title="Log in" />
+        <div>
+            <div className="auth-header">
+                <h1>{t('Üye Girişi')}</h1>
+            </div>
+            <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
+            >
+                {({ errors, touched }) => (
+                    <Form className="form-wrapper">
+                        <div className="form-group">
+                            <label htmlFor="email">{t('E-posta Adresi')}</label>
+                            <Field
+                                id="email"
+                                name="email"
+                                type="email"
+                                placeholder="ornek@email.com"
+                                className={`form-control ${errors.email && touched.email ? 'is-invalid' : ''}`}
+                            />
+                            <ErrorMessage name="email" component="div" className="error-messages" />
+                        </div>
 
-            {status && (
-                <div className="mb-4 text-sm font-medium text-green-600">
-                    {status}
-                </div>
-            )}
+                        <div className="form-group">
+                            <label htmlFor="password">{t('Şifre')}</label>
+                            <Field
+                                id="password"
+                                name="password"
+                                type="password"
+                                placeholder="••••••••"
+                                className={`form-control ${errors.password && touched.password ? 'is-invalid' : ''}`}
+                            />
+                            <ErrorMessage name="password" component="div" className="error-messages" />
+                            <Link to={ROUTES.AUTH.FORGOT_PASSWORD} className="mt-2">
+                                {t('Şifremi Unuttum')}
+                            </Link>
+                        </div>
 
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                        <button type="submit" className="submit-button" >
+                            {t('Giriş Yap')}
+                        </button>
 
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        isFocused={true}
-                        onChange={(e) => setData('email', e.target.value)}
-                    />
+                        <div className="auth-links">
+                            <span className="separator">{t('Henüz hesabın yok mu?')}&nbsp;</span>
+                            <Link to={ROUTES.AUTH.REGISTER}>{t('Hesap Oluştur')}</Link>
+                        </div>
 
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                        onChange={(e) => setData('password', e.target.value)}
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div className="mt-4 block">
-                    <label className="flex items-center">
-                        <Checkbox
-                            name="remember"
-                            checked={data.remember}
-                            onChange={(e) =>
-                                setData('remember', e.target.checked)
-                            }
-                        />
-                        <span className="ms-2 text-sm text-gray-600">
-                            Remember me
-                        </span>
-                    </label>
-                </div>
-
-                <div className="mt-4 flex items-center justify-end">
-                    {canResetPassword && (
-                        <Link
-                            href={route('password.request')}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                            Forgot your password?
-                        </Link>
-                    )}
-
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Log in
-                    </PrimaryButton>
-                </div>
-            </form>
-        </GuestLayout>
+                        <div className="home-links">
+                            <Link to={ROUTES.UI.LANDING}>{t('Anasayfa Dön')}</Link>
+                        </div>
+                    </Form>
+                )}
+            </Formik>
+        </div>
     );
-}
+};
+
+export default Login;
