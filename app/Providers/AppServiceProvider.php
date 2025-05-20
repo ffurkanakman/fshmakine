@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Providers;
+use App\Modules\Servis\Providers\ServisServiceProvider;
 use App\Modules\Auth\Providers\AuthServiceProvider;
 
 use Illuminate\Support\Facades\Vite;
@@ -13,6 +14,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+    // Register services
+        $this->app->register(ServisServiceProvider::class);
     // Register services
         $this->app->register(AuthServiceProvider::class);
         //

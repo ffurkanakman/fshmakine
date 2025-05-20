@@ -37,4 +37,19 @@ class AuthService
     {
         return $this->authRepository->delete($id);
     }
+
+    public function login(array $credentials): array
+    {
+        $user = \App\Models\User::where('email', $credentials['email'])->first();
+
+        if (! $user || ! \Hash::check($credentials['password'], $user->password)) {
+            abort(401, 'Bilgiler hatalı');
+        }
+
+        return [
+            'token' => $user->createToken('auth_token')->plainTextToken,
+            'user'  => $user
+        ];
+    }
+
 }
