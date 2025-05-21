@@ -1,8 +1,6 @@
 import MainRouter from './MainRouter';
-import AuthRouter from './Router/AuthRouter';
 import React, { memo, useState } from 'react';
 import { useSelector } from 'react-redux';
-// import { selectIsAuthenticated } from '../../Repo/Redux/Auth/AuthSlice';
 import Loader from "../../Components/Loader";
 import { Routes, Route } from 'react-router-dom';
 

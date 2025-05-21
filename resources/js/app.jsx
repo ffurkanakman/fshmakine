@@ -5,6 +5,12 @@ import ListenLoad from "./Listen/Load.jsx";
 import {Provider} from "react-redux";
 import Loader from "./Components/Loader"; // Loader komponenti import edin
 
+
+import './Libs/Metronic/_metronic/assets/fonticon/fonticon.css'
+import './Libs/Metronic/_metronic/assets/keenicons/duotone/style.css'
+import './Libs/Metronic/_metronic/assets/keenicons/outline/style.css'
+import './Libs/Metronic/_metronic/assets/keenicons/solid/style.css'
+
 // Loader için stil tanımı
 const loaderStyle = {
     position: 'fixed',
@@ -19,7 +25,7 @@ const loaderStyle = {
     zIndex: 9999
 };
 
-const rootElement = document.getElementById('efixed');
+const rootElement = document.getElementById('fsh');
 
 if (rootElement) {
     const root = ReactDOM.createRoot(rootElement);

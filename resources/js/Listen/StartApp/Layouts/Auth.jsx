@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Outlet } from 'react-router-dom';
-import { MEDIA } from "@/Libs/Global/config.jsx";
-import { ROUTES } from "@/Libs/Routes/config.jsx";
+// import { MEDIA } from "@/Libs/Global/config.jsx";
+import { ROUTES } from "../../../Libs/Routes/config";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { LanguageService } from "@/Libs/i18n/languageConfig.jsx";
+// import { LanguageService } from "@/Libs/i18n/languageConfig.jsx";
 
 
-const languages = LanguageService.getLanguages();
+// const languages = LanguageService.getLanguages();
 
 const AuthLayout = () => {
     const { t, i18n } = useTranslation();

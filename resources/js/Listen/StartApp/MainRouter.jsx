@@ -1,17 +1,19 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import UiLayout from './Layouts/Ui';
+import UiLayout from './Layouts/Misc/Ui';
 import { ROUTES } from '../../Libs/Routes/config';
-// import AuthRouter from "./Router/AuthRouter";
 import AuthLayout from "./Layouts/Auth";
 import Login from "../../Pages/Auth/Login";
 import Register from "../../Pages/Auth/Register";
 import ForgotPassword from "../../Pages/Auth/ForgotPassword";
 import ResetPassword from "../../Pages/Auth/ResetPassword";
-import Home from '../../Pages/Front/Home/Home';
-import Detail from '../../Pages/Front/Detail/Detail';
-import Listing from '../../Pages/Front/Listing/Listing';
+import Home from '../../Pages/Ui/Home/ServisList';
+
+import {ErrorsPage} from '../../Libs/Metronic/app/modules/errors/ErrorsPage';
+import {PagesLoad} from "../../Pages/Load.jsx";
+
 const MainRouter = () => {
+
     return (
         <Routes>
 
@@ -21,17 +23,17 @@ const MainRouter = () => {
                 <Route path={ROUTES.AUTH.FORGOT_PASSWORD} element={<ForgotPassword />} />
                 <Route path={ROUTES.AUTH.RESET_PASSWORD} element={<ResetPassword />} />
                 {/*<Route path={ROUTES.AUTH.TWO_FACTOR} element={<TwoFactor />} />*/}
-
-
-                {/* Index route ekleyiasdn */}
                 <Route index element={<Navigate to="Giris" replace />} />
             </Route>
 
-            <Route element={<UiLayout />}>
-                {/* Ana Layout için default route */}
-                <Route path={ROUTES.UI.LANDING} index element={<Home />} />
-                <Route path={ROUTES.UI.DETAIL} element={<Detail />} />
-                <Route path={ROUTES.UI.LISTING} element={<Listing />} />
+            <Route element={<PagesLoad />}>
+                <Route element={<UiLayout />} >
+                    {/* Ana Layout için default route */}
+                    <Route path={ROUTES.UI.LANDING} index element={<Home />} />
+                </Route>
+
+
+                <Route path={`${ROUTES.UI.ERROR}/*`} element={<ErrorsPage />} />
 
             </Route>
 

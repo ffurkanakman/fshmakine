@@ -1,13 +1,21 @@
-@import "./sass/app.module.scss";
+//@import "./sass/app.module.scss";
+//
+//@import "./sass/framework";
+//@import "./sass/variable";
+//@import "./sass/mixing";
+//@import "./sass/component";
+//@import "./sass/layout";
+//@import "./sass/page";
+//
+//@import "bootstrap/scss/bootstrap";
 
-@import "./sass/framework";
-@import "./sass/variable";
-@import "./sass/mixing";
-@import "./sass/component";
-@import "./sass/layout";
-@import "./sass/page";
+@import "./js/Libs/Metronic/_metronic/assets/sass/style.react";
+@import './js/Libs/Metronic/_metronic/assets/sass/style.scss';
+@import './js/Libs/Metronic/_metronic/assets/fonticon/fonticon.css';
+@import './js/Libs/Metronic/_metronic/assets/keenicons/duotone/style.css';
+@import './js/Libs/Metronic/_metronic/assets/keenicons/outline/style.css';
+@import './js/Libs/Metronic/_metronic/assets/keenicons/solid/style.css';
 
-@import "bootstrap/scss/bootstrap";
 // @tailwind base;
 // @tailwind components;
 // @tailwind utilities;
