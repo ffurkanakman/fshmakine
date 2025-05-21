@@ -4,12 +4,11 @@ namespace App\Modules\User\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable, SoftDeletes;
+    use HasApiTokens, Notifiable;
 
     protected $table = 'users';
 
@@ -24,7 +23,7 @@ class User extends Authenticatable
         'role',
     ];
 
-    protected $dates = ['deleted_at'];
+
 
     protected $casts = [
         'email_verified_at' => 'datetime',

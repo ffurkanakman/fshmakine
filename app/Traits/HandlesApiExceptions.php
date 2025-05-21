@@ -4,12 +4,14 @@ namespace App\Traits;
 
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 trait HandlesApiExceptions
 {
     /**
-     * API İstisnalarını Yönetir
+     * Genel API hatalarını merkezi olarak yönetir.
      *
      * @param \Closure $callback
      * @return \Illuminate\Http\JsonResponse
@@ -18,62 +20,81 @@ trait HandlesApiExceptions
     {
         try {
             return $callback();
+        } catch (ValidationException $e) {
+            return $this->errorResponse(
+                'Validasyon hatası oluştu',
+                Response::HTTP_UNPROCESSABLE_ENTITY,
+                $e->errors()
+            );
         } catch (AuthorizationException $e) {
-            return $this->errorResponse('Yetkilendirme başarısız', 403, ['error' => $e->getMessage()]);
+            return $this->errorResponse(
+                'Yetkilendirme başarısız',
+                Response::HTTP_FORBIDDEN,
+                ['error' => $e->getMessage()]
+            );
         } catch (ModelNotFoundException $e) {
-            return $this->errorResponse('İstenen id bulunamadı', 404, ['error' => $e->getMessage()]);
+            return $this->errorResponse(
+                'Kayıt bulunamadı',
+                Response::HTTP_NOT_FOUND,
+                ['error' => $e->getMessage()]
+            );
         } catch (HttpException $e) {
-            return $this->errorResponse($e->getMessage(), $e->getStatusCode(), ['error' => $e->getMessage()]);
+            return $this->errorResponse(
+                $e->getMessage(),
+                $e->getStatusCode(),
+                ['error' => $e->getMessage()]
+            );
         } catch (\Exception $e) {
-            return $this->errorResponse('Beklenmedik bir hata oluştu', 500, ['error' => $e->getMessage()]);
+            return $this->errorResponse(
+                'Beklenmedik bir hata oluştu',
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                ['error' => $e->getMessage()]
+            );
         }
     }
 
     /**
-     * Başarısız response üretir
+     * Başarısız response üretir (Controller ile uyumlu).
      */
-    protected function errorResponse(string $message = 'Bir hata oluştu', int $status = 500, array $extra = []): \Illuminate\Http\JsonResponse
+    protected function errorResponse(string $message, int $status = Response::HTTP_BAD_REQUEST, $errors = null): \Illuminate\Http\JsonResponse
     {
-        return response()->json(array_merge([
+        return response()->json([
             'status' => false,
             'message' => $message,
-        ], $extra), $status);
+            'errors' => $errors,
+        ], $status);
     }
 
     /**
-     * Başarılı response üretir
+     * Başarılı response üretir (Controller ile imza uyumlu)
      */
-    protected function successResponse(mixed $data = null, string $message = 'İşlem başarılı'): \Illuminate\Http\JsonResponse
+    protected function successResponse($data, int $status = Response::HTTP_OK): \Illuminate\Http\JsonResponse
+    {
+        return response()->json([
+            'status' => true,
+            'message' => 'İşlem başarılı',
+            'data' => $data,
+        ], $status);
+    }
+
+    /**
+     * Kayıt oluşturma işlemi için response
+     */
+    protected function createdResponse($data = null, string $message = 'Kayıt oluşturuldu'): \Illuminate\Http\JsonResponse
     {
         return response()->json([
             'status' => true,
             'message' => $message,
             'data' => $data,
-        ]);
-    }
-
-    /**
-     * Oluşturma işlemi için response
-     */
-    protected function createdResponse(mixed $data = null, string $message = 'Kayıt başarıyla oluşturuldu'): \Illuminate\Http\JsonResponse
-    {
-        return response()->json([
-            'status' => true,
-            'message' => $message,
-            'data' => $data,
-        ], 201);
+        ], Response::HTTP_CREATED);
     }
 
     /**
      * Güncelleme işlemi için response
      */
-    protected function updatedResponse(mixed $data = null, string $message = 'Güncelleme başarılı'): \Illuminate\Http\JsonResponse
+    protected function updatedResponse($data = null, string $message = 'Güncelleme başarılı'): \Illuminate\Http\JsonResponse
     {
-        return response()->json([
-            'status' => true,
-            'message' => $message,
-            'data' => $data,
-        ]);
+        return $this->successResponse($data);
     }
 
     /**

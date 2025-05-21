@@ -8,14 +8,32 @@ class UserRequest extends FormRequest
 {
     public function authorize()
     {
-        // Burada yetkilendirme kontrolü ekleyebilirsin.
         return true;
     }
 
     public function rules()
     {
+        if ($this->isMethod('post')) {
+            return [
+                'name' => ['required', 'string', 'max:255'],
+                'surname' => ['required', 'string', 'max:255'],
+                'phone_number' => ['required', 'string', 'max:20', 'unique:users,phone_number'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+                'password' => ['required', 'string', 'min:8', 'confirmed'],
+                'role' => ['nullable', 'string'],
+            ];
+        }
+
+        // PUT veya PATCH - alanlar opsiyonel ama gelen varsa doğrulanır
+        $userId = $this->route('user') ?? auth()->id();
+
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['sometimes', 'string', 'max:255'],
+            'surname' => ['sometimes', 'string', 'max:255'],
+            'phone_number' => ['sometimes', 'string', 'max:20', 'unique:users,phone_number,' . $userId],
+            'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:users,email,' . $userId],
+            'password' => ['sometimes', 'string', 'min:8', 'confirmed'],
+            'role' => ['sometimes', 'string'],
         ];
     }
 }

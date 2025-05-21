@@ -24,7 +24,6 @@ return new class extends Migration
             $table->string('role')->default('user'); // 👈 default user rolü
             $table->string('remember_token', 100)->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
 
 
