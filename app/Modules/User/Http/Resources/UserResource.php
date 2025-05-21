@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Auth\Http\Resources;
+namespace App\Modules\User\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AuthResource extends JsonResource
+class UserResource extends JsonResource
 {
     public function toArray($request)
     {

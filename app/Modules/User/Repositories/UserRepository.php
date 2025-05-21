@@ -1,41 +1,41 @@
 <?php
 
-namespace App\Modules\Auth\Repositories;
+namespace App\Modules\User\Repositories;
 
-use App\Modules\Auth\Models\Auth;
+use App\Modules\User\Models\User;
 
-class AuthRepository
+class UserRepository
 {
     public function all()
     {
-        return Auth::all();
+        return User::all();
     }
 
     public function paginate($perPage = 15)
     {
-        return Auth::paginate($perPage);
+        return User::paginate($perPage);
     }
 
     public function find($id)
     {
-        return Auth::findOrFail($id);
+        return User::findOrFail($id);
     }
 
     public function create(array $data)
     {
-        return Auth::create($data);
+        return User::create($data);
     }
 
     public function update($id, array $data)
     {
-        $model = Auth::findOrFail($id);
+        $model = User::findOrFail($id);
         $model->update($data);
         return $model;
     }
 
     public function delete($id)
     {
-        $model = Auth::findOrFail($id);
+        $model = User::findOrFail($id);
         return $model->delete();
     }
 }
