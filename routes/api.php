@@ -1,17 +1,30 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SmsController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Select2Controller;
 
-// Giriş yapan kullanıcının bilgilerini döner
-//Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//    return $request->user();
-//});
+// /api/v1/ prefix'i ile rotalar
+Route::prefix('v1')->group(function () {
+    // Kullanıcı Girişi
+    Route::post('Giris', [AuthController::class, 'login'])->name('login');
+    Route::post('TokenYenile', [AuthController::class, 'refreshToken'])->name('token.refresh')->middleware('auth:sanctum');
+    // Kullanıcı kaydı
+    Route::post('KayitOl', [AuthController::class, 'register'])->name('register');
+    // Kullanıcı çıkışı
+    Route::middleware('auth:sanctum')->post('Cikis', [AuthController::class, 'logout'])->name('logout');
+    // Giriş yapmış kullanıcıyı döndüren rota
+    Route::middleware('auth:sanctum')->get('me', function () {
+        return new \App\Modules\User\Http\Resources\UserResource(auth()->user()->load('regionSimple'));
+    })->name('me');
 
-// Modül route dosyalarını buraya dahil et
-require_once base_path('app/Modules/Servis/routes/api.php');
-require_once base_path('app/Modules/Auth/routes/api.php');
 
-// Eğer başka modül eklersen buraya da ekle
-// require_once base_path('app/Modules/User/routes/api.php');
+    Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
+    Route::middleware('auth:sanctum')->put('reset-password', [AuthController::class, 'resetPassword'])->name('password.reset');
+
+});
+
+
+
 
