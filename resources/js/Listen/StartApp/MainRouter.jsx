@@ -16,7 +16,6 @@ const MainRouter = () => {
 
     return (
         <Routes>
-
             <Route path={ROUTES.UI.USER} element={<AuthLayout />}>
                 <Route path={ROUTES.AUTH.LOGIN} element={<Login />} />
                 <Route path={ROUTES.AUTH.REGISTER} element={<Register />} />
