@@ -150,7 +150,6 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
             <PageTitle breadcrumbs={breadcrumbs}>
                 {title}
             </PageTitle>
-            <Toolbar />
             <Content>
                 <div className='card'>
                     <div className='card-body'>
@@ -179,43 +178,39 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
 
                             <Formik validationSchema={currentSchema} initialValues={initialValues} onSubmit={submitStep}>
                                 {({ values, setFieldValue, errors, touched }) => (
-                                    <Form className='mx-auto w-100 pt-15 pb-10' id='kt_create_project_form'>
-                                        {/* Step 1: Service Information */}
+                                    <Form className='pt-15 pb-10 form-wrapper' id='kt_create_project_form'>
                                         <div className='current' data-kt-stepper-element='content'>
                                             <div className="step-content">
-                                                <h3 className="mb-5">Servis Bilgileri</h3>
                                                 <div className="mb-10">
                                                     <label className="form-label required">Yapılacak İşlemler</label>
                                                     <Field
-                                                        as="textarea"
-                                                        className="form-control w-100"
-                                                        name="tasksToBeDone"
-                                                        rows="4"
+                                                    as="textarea"
+                                                    className="form-control"
+                                                    name="tasksToBeDone"
+                                                    rows="4"
                                                     />
                                                     <div className="text-danger mt-2">
-                                                        <ErrorMessage name="tasksToBeDone" />
+                                                    <ErrorMessage name="tasksToBeDone" />
                                                     </div>
                                                 </div>
                                                 <div className="mb-10">
                                                     <label className="form-label required">Yapılan İşlemler</label>
                                                     <Field
-                                                        as="textarea"
-                                                        className="form-control w-100"
-                                                        name="tasksDone"
-                                                        rows="4"
+                                                    as="textarea"
+                                                    className="form-control"
+                                                    name="tasksDone"
+                                                    rows="4"
                                                     />
                                                     <div className="text-danger mt-2">
-                                                        <ErrorMessage name="tasksDone" />
+                                                    <ErrorMessage name="tasksDone" />
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
-                                        {/* Step 2: Customer and Vehicle Information */}
+                                         {/* Step 2: Customer and Vehicle Information */}
                                         <div data-kt-stepper-element='content'>
                                             <div className="step-content">
                                                 <h3 className="mb-5">Müşteri ve Araç Bilgileri</h3>
-
                                                 {/* Customer Information */}
                                                 <div className="mb-10">
                                                     <label className="form-label required">Müşteri</label>
@@ -373,7 +368,7 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
                                                         </div>
                                                         <input
                                                             type="file"
-                                                            className="form-control w-100"
+                                                            className="form-control w-100 picture-select"
                                                             multiple
                                                             accept="image/*"
                                                             onChange={(e) => handleFileUpload(e, values, setFieldValue)}
@@ -755,28 +750,27 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div className='d-flex flex-stack pt-15'>
                                             <div className='mr-2'>
-                                                <button
-                                                    onClick={prevStep}
-                                                    type='button'
-                                                    className='btn btn-lg btn-light-primary me-3'
-                                                    data-kt-stepper-action='previous'
-                                                >
-                                                    <KTIcon iconName='arrow-left' className='fs-4 me-1' />
-                                                    Geri
-                                                </button>
+                                            <button
+                                                onClick={prevStep}
+                                                type='button'
+                                                className='btn btn-lg btn-light-primary me-3'
+                                                data-kt-stepper-action='previous'
+                                            >
+                                                <KTIcon iconName='arrow-left' className='fs-4 me-1' />
+                                                Geri
+                                            </button>
                                             </div>
 
                                             <div>
-                                                <button type='submit' className='btn btn-lg btn-primary me-3'>
-                                                    <span className='indicator-label'>
-                                                        {!isSubmitButton && 'İleri'}
-                                                        {isSubmitButton && 'Kaydet'}
-                                                        <KTIcon iconName='arrow-right' className='fs-3 ms-2 me-0' />
-                                                    </span>
-                                                </button>
+                                            <button type='submit' className='btn btn-lg btn-primary me-3'>
+                                                <span className='indicator-label'>
+                                                {!isSubmitButton && 'İleri'}
+                                                {isSubmitButton && 'Kaydet'}
+                                                <KTIcon iconName='arrow-right' className='fs-3 ms-2 me-0' />
+                                                </span>
+                                            </button>
                                             </div>
                                         </div>
                                     </Form>

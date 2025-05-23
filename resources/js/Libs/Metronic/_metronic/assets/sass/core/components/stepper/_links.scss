@@ -8,7 +8,7 @@
 		display: flex;
 		margin: 0 auto;
 		justify-content: center;
-		align-items: center;	
+		align-items: center;
 		flex-wrap: wrap;
 
         .stepper-item {
@@ -25,33 +25,33 @@
 				width: 100%;
 				background-color: transparent;
 				transition: $transition-link;
-			}           
+			}
 
             .stepper-title {
-                color: var(--#{$prefix}gray-900);		
+                color: var(--#{$prefix}gray-900);
                 font-weight: 600;
-                font-size: 1.25rem; 
-            }             
+                font-size: 1.25rem;
+            }
 
             // Current
             &.current {
 				transition: $transition-link;
-				
+
 				.stepper-title {
-					color: var(--#{$prefix}primary);					 
-				}               
-                
-				&:after {					
+					color: var(--#{$prefix}primary);
+				}
+
+				&:after {
 					background-color: var(--#{$prefix}primary);
-				}				                              
-			} 
-			
+				}
+			}
+
 			&.current.mark-completed:last-child,
 			&.completed {
 				.stepper-title {
 					color: var(--#{$prefix}gray-500);
-				}  			
+				}
 			}
         }
-    }     
+    }
 }

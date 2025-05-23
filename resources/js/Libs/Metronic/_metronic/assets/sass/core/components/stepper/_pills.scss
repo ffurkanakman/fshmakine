@@ -8,7 +8,7 @@
     --#{$prefix}stepper-icon-border-radius: 9px;
     --#{$prefix}stepper-icon-check-size: 1rem;
 
-    --#{$prefix}stepper-icon-bg-color: var(--#{$prefix}primary-light);    
+    --#{$prefix}stepper-icon-bg-color: var(--#{$prefix}primary-light);
     --#{$prefix}stepper-icon-bg-color-current: var(--#{$prefix}primary);
     --#{$prefix}stepper-icon-bg-color-completed: var(--#{$prefix}primary-light);
 
@@ -32,13 +32,13 @@
     --#{$prefix}stepper-label-desc-opacity: 1;
     --#{$prefix}stepper-label-desc-opacity-current: 1;
     --#{$prefix}stepper-label-desc-opacity-completed: 1;
-    
-    --#{$prefix}stepper-label-desc-color: var(--#{$prefix}text-muted);     
+
+    --#{$prefix}stepper-label-desc-color: var(--#{$prefix}text-muted);
     --#{$prefix}stepper-label-desc-color-current: var(--#{$prefix}gray-500);
     --#{$prefix}stepper-label-desc-color-completed: var(--#{$prefix}gray-500);
 
     --#{$prefix}stepper-line-border: 1px dashed var(--#{$prefix}gray-300);
-    
+
     // Nav
     .stepper-nav {
         display: flex;
@@ -48,7 +48,7 @@
     .stepper-item {
         display: flex;
         align-items: center;
-        transition: $transition-link;            
+        transition: $transition-link;
 
         // Icon
         .stepper-icon {
@@ -177,7 +177,7 @@
 		    margin: 0;
         }
 
-        // Wrapper 
+        // Wrapper
         .stepper-wrapper {
             display: flex;
             align-items: center;
@@ -193,9 +193,52 @@
             display: block;
             flex-grow: 1;
             margin-left: calc(var(--#{$prefix}stepper-pills-size) / 2);
-            border-left: var(--#{$prefix}stepper-line-border); 
+            border-left: var(--#{$prefix}stepper-line-border);
             margin-top: 2px;
             margin-bottom: 2px;
         }
-    }    
+    }
 }
+
+.step-content {
+  width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding-left: 1rem;
+  padding-right: 1rem;
+
+  .mb-10 {
+    align-items: center;
+
+    .form-label,
+    .text-danger {
+      width: 70%;
+      max-width: 800px;
+      text-align: left;
+    }
+
+    .form-control {
+      width: 70% !important;
+      width: 800px;
+      box-sizing: border-box;
+    }
+  }
+}
+.picture-select{
+    width: 70% !important;
+      width: 800px;
+      box-sizing: border-box;
+      margin-left: 15.5%;
+}
+
+.form-wrapper {
+  .d-flex.flex-stack.pt-15 {
+    justify-content: flex-end;
+    padding-right: 3rem;
+  }
+}
+
+
+
