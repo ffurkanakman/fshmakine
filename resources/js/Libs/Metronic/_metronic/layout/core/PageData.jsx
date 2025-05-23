@@ -13,6 +13,14 @@ const pageLinkPropTypes = PropTypes.shape({
     isSeparator: PropTypes.bool
 })
 
+// PageLink type for TypeScript
+const PageLink = {
+    title: '',
+    path: '',
+    isActive: false,
+    isSeparator: false
+}
+
 const PageDataContext = createContext({
     setPageTitle: () => {},
     setPageBreadcrumbs: () => {},
@@ -103,4 +111,4 @@ PageDescription.propTypes = {
     children: PropTypes.node
 }
 
-export {PageDescription, PageTitle, PageDataProvider, usePageData}
+export {PageDescription, PageTitle, PageDataProvider, usePageData, PageLink}

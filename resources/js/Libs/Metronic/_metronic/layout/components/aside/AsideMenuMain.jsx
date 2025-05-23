@@ -17,6 +17,12 @@ const AsideMenuMain = () => {
                     fontIcon='bi-app-indicator'
                 />
                 <AsideMenuItem
+                    to='/Projeler'
+                    icon='element-11'
+                    title='Projeler'
+                    fontIcon='bi-clipboard-data'
+                />
+                <AsideMenuItem
                     to='/builder'
                     icon='switch'
                     title='Layout Builder'

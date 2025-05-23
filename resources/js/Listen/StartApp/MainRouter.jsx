@@ -8,6 +8,8 @@ import Register from "../../Pages/Auth/Register";
 import ForgotPassword from "../../Pages/Auth/ForgotPassword";
 import ResetPassword from "../../Pages/Auth/ResetPassword";
 import Home from '../../Pages/Ui/Home/ServisList';
+import Projeler from '../../Pages/Ui/Projeler';
+import YeniProje from '../../Pages/Ui/YeniProje';
 
 import {ErrorsPage} from '../../Libs/Metronic/app/modules/errors/ErrorsPage';
 import {PagesLoad} from "../../Pages/Load.jsx";
@@ -29,6 +31,8 @@ const MainRouter = () => {
                 <Route element={<UiLayout />} >
                     {/* Ana Layout için default route */}
                     <Route path={ROUTES.UI.LANDING} index element={<Home />} />
+                    <Route path={ROUTES.UI.PROJECTS} element={<Projeler />} />
+                    <Route path={ROUTES.UI.NEW_PROJECT} element={<YeniProje />} />
                 </Route>
 
 

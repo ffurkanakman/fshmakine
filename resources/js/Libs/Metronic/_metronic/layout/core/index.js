@@ -1,15 +1,16 @@
 // Layout yapılandırmaları
 import { DefaultLayoutConfig } from './DefaultLayoutConfig'
-import { LayoutSetup } from './LayoutSetup'
+import { LayoutSetup, getLayout } from './LayoutSetup'
 import { LayoutModels } from './LayoutModels'
-import { LayoutProvider } from './LayoutProvider'
+import { LayoutProvider, useLayout } from './LayoutProvider'
 
 // Sayfa bileşenleri ve veri yönetimi
 import {
     PageDescription,
     PageTitle,
     PageDataProvider,
-    usePageData
+    usePageData,
+    PageLink
 } from './PageData'
 
 // Splash screen bileşeni
@@ -24,12 +25,15 @@ export {
     LayoutSetup,
     LayoutModels,
     LayoutProvider,
+    useLayout,
+    getLayout,
 
     // Page data exports
     PageDescription,
     PageTitle,
     PageDataProvider,
     usePageData,
+    PageLink,
 
     // Splash screen exports
     MetronicSplashScreen,

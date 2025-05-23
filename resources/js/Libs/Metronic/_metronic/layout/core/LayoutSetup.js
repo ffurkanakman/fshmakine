@@ -1,3 +1,5 @@
+import { DefaultLayoutConfig } from './DefaultLayoutConfig';
+
 const LAYOUT_CONFIG_KEY = import.meta.env.VITE_APP_BASE_LAYOUT_CONFIG_KEY || "LayoutConfig";
 
 export function getLayout() {

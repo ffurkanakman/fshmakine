@@ -13,7 +13,8 @@ export const ROUTES = {
         LANDING: "/",
         LISTING: "/Ilanlar",
         DETAIL: "/Detay",
-        ERROR : '/Hata'
+        ERROR : '/Hata',
+        PROJECTS: '/Projeler',
+        NEW_PROJECT: '/YeniProje'
     }
 }
-
