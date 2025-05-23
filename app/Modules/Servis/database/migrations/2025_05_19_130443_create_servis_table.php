@@ -11,8 +11,6 @@ return new class extends Migration {
             $table->id();
 
             $table->string('code')->unique(); // FSH-3123
-            $table->string('company_name');
-            $table->string('authorized_person')->nullable();
             $table->string('machine_info')->nullable();
             $table->string('service_type'); // Tamir, Teklif, vs
             $table->decimal('price', 15, 2)->nullable();
@@ -21,6 +19,10 @@ return new class extends Migration {
 
             $table->text('notes')->nullable(); // Yapılacak işlemler
             $table->text('done_jobs')->nullable(); // Yapılan işlemler
+
+            $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
+            $table->foreignId('sales_person_id')->constrained('users')->onDelete('cascade');
+
 
             $table->timestamps();
         });
