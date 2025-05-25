@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Outlet } from 'react-router-dom';
-// import { MEDIA } from "@/Libs/Global/config.jsx";
 import { ROUTES } from "../../../Libs/Routes/config";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -17,7 +16,7 @@ const AuthLayout = () => {
     const langMenuRef = useRef(null);
 
     useEffect(() => {
-        document.body.style.backgroundImage = `url(${MEDIA.AUTH.BG})`;
+        document.body.style.backgroundImage = `url('/media/misc/auth-bg.png')`;
         document.body.style.backgroundRepeat = 'no-repeat';
         document.body.style.backgroundSize = 'cover';
 

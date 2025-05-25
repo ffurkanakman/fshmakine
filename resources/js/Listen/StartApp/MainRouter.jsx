@@ -10,6 +10,7 @@ import ResetPassword from "../../Pages/Auth/ResetPassword";
 import Home from '../../Pages/Ui/Home/ServisList';
 import Projeler from '../../Pages/Ui/Projeler';
 import YeniProje from '../../Pages/Ui/YeniProje';
+import ProtectedRoute from '../../Components/Auth/ProtectedRoute';
 
 import {ErrorsPage} from '../../Libs/Metronic/app/modules/errors/ErrorsPage';
 import {PagesLoad} from "../../Pages/Load.jsx";
@@ -29,15 +30,35 @@ const MainRouter = () => {
 
             <Route element={<PagesLoad />}>
                 <Route element={<UiLayout />} >
-                    {/* Ana Layout için default route */}
-                    <Route path={ROUTES.UI.LANDING} index element={<Home />} />
-                    <Route path={ROUTES.UI.PROJECTS} element={<Projeler />} />
-                    <Route path={ROUTES.UI.NEW_PROJECT} element={<YeniProje />} />
+                    {/* Protected routes - require authentication */}
+                    <Route
+                        path={ROUTES.UI.LANDING}
+                        index
+                        element={
+                            <ProtectedRoute>
+                                <Home />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path={ROUTES.UI.PROJECTS}
+                        element={
+                            <ProtectedRoute>
+                                <Projeler />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path={ROUTES.UI.NEW_PROJECT}
+                        element={
+                            <ProtectedRoute>
+                                <YeniProje />
+                            </ProtectedRoute>
+                        }
+                    />
                 </Route>
 
-
                 <Route path={`${ROUTES.UI.ERROR}/*`} element={<ErrorsPage />} />
-
             </Route>
 
             {/* Hatalı rota durumunda yönlendirme */}

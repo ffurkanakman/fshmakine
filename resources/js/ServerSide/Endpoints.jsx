@@ -6,6 +6,10 @@ export const API_CONFIG = {
     ENDPOINTS: {
         SERVIS: {
             SERVIS: '/api/servis',
+        },
+        PROJECTS: {
+            PROJECTS: '/api/projects',
+            SAVE_PROJECT: '/api/projects'
         }
     }
 };

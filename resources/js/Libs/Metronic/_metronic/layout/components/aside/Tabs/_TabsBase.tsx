@@ -27,7 +27,7 @@ const SelectedTab: FC<Props> = ({link}) => {
     case 'authors':
       return <AuthorsTab />
     default:
-      return <ProjectsTab />
+      return <MenuTab />
   }
 }
 
@@ -69,8 +69,8 @@ const TabsBase: FC<Props> = ({link}) => {
           data-bs-offset='0,5'
           data-bs-dismiss-='click'
         >
-          <span className='btn-label'>Docs & Components</span>
-          <KTIcon iconName='document' className='btn-icon fs-4 ms-2' />
+          <span className='btn-label'>Kullanıcılar</span>
+          <KTIcon iconName='profile-circle' className='btn-icon fs-4 ms-2' />
         </a>
       </div>
       {/* end::Footer */}

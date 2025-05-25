@@ -2,9 +2,9 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     servisler: [],
+    projects: [],
     loading: false,
     error: null
-
 };
 
 const servisSlice = createSlice({
@@ -20,16 +20,16 @@ const servisSlice = createSlice({
         },
         setLoading: (state, action) => {
             state.loading = action.payload;
+        },
+        addProject: (state, action) => {
+            state.projects.push(action.payload);
         }
-
     }
-
 });
-
 
 export const {
     setservisler,
     setError,
-    setLoading } = servisSlice.actions;
+    setLoading,
+    addProject } = servisSlice.actions;
 export default servisSlice.reducer;
-

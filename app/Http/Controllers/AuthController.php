@@ -148,7 +148,8 @@ class AuthController extends Controller
             ['token' => $token, 'created_at' => now()]
         );
 
-        $resetLink = route('password.reset', ['token' => $token, 'email' => $user->email]);
+        // Frontend URL for password reset
+        $resetUrl = env('APP_URL') . '/Kullanici/SifreyiSifirla?token=' . $token . '&email=' . urlencode($user->email);
 
         $this->logInfo('Password reset email sent', ['user_id' => $user->id]);
 
@@ -156,7 +157,7 @@ class AuthController extends Controller
         $mailContent = [
             'subject' => 'Şifre Sıfırlama Talebi',
             'message' => 'Şifrenizi sıfırlamak için aşağıdaki linke tıklayın:',
-            'reset_link' => $resetLink,
+            'reset_link' => $resetUrl,
         ];
 
         return response()->json([
@@ -219,6 +220,9 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Admin isteği reddedildi ❌']);
     }
+    /**
+     * Authenticated user password change
+     */
     public function resetPassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -249,6 +253,78 @@ class AuthController extends Controller
         $this->logInfo('Password changed successfully', ['user_id' => $user->id]);
 
         return $this->successResponse(null, 200); // İsteğe göre mesaj da dönebilir
+    }
+
+    /**
+     * Reset password with token (for forgotten passwords)
+     */
+    public function resetPasswordWithToken(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'token' => 'required|string',
+            'email' => 'required|email',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            $this->logWarning('Password reset validation failed', ['errors' => $validator->errors()]);
+            return $this->validationErrorResponse($validator->errors());
+        }
+
+        // Check if token exists and is valid
+        $resetRecord = DB::table('password_reset_tokens')
+            ->where('email', $request->email)
+            ->where('token', $request->token)
+            ->first();
+
+        if (!$resetRecord) {
+            $this->logWarning('Invalid password reset token', [
+                'email' => $request->email,
+                'token' => $request->token
+            ]);
+
+            return response()->json([
+                'message' => 'Geçersiz veya süresi dolmuş token',
+                'error_code' => 'AUTH_INVALID_TOKEN',
+                'details' => 'Şifre sıfırlama bağlantısı geçersiz veya süresi dolmuş.',
+            ], 400);
+        }
+
+        // Check if token is not expired (1 hour)
+        $tokenCreatedAt = Carbon::parse($resetRecord->created_at);
+        if ($tokenCreatedAt->diffInHours(now()) > 1) {
+            $this->logWarning('Expired password reset token', [
+                'email' => $request->email,
+                'token' => $request->token,
+                'created_at' => $tokenCreatedAt
+            ]);
+
+            return response()->json([
+                'message' => 'Şifre sıfırlama bağlantısının süresi dolmuş',
+                'error_code' => 'AUTH_EXPIRED_TOKEN',
+                'details' => 'Şifre sıfırlama bağlantısının süresi dolmuş. Lütfen yeni bir bağlantı talep edin.',
+            ], 400);
+        }
+
+        // Find user and update password
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
+            $this->logWarning('User not found for password reset', ['email' => $request->email]);
+            return $this->notFoundResponse('Email not found');
+        }
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        // Delete the token after successful reset
+        DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+
+        $this->logInfo('Password reset successfully', ['user_id' => $user->id]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Şifreniz başarıyla sıfırlandı. Şimdi giriş yapabilirsiniz.'
+        ]);
     }
 
 

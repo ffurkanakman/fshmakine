@@ -1,10 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../../ServerSide/Hooks/Auth/useAuth";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../Libs/Routes/config";
 
 const ForgotPassword = () => {
     const { t } = useTranslation();
+    const { forgotPassword, loading, isAuthenticated } = useAuth();
+    const navigate = useNavigate();
+    const [resetSent, setResetSent] = useState(false);
+    const [resetError, setResetError] = useState(null);
+
+    // Redirect if already authenticated
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate(ROUTES.UI.DASHBOARD);
+        }
+    }, [isAuthenticated, navigate]);
 
     const initialValues = {
         email: "",
@@ -17,15 +31,16 @@ const ForgotPassword = () => {
     });
 
     const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-        setIsLoading(true);
+        setResetError(null);
         try {
-            console.log("Şifre sıfırlama isteği başarılı:", values);
-
+            await forgotPassword(values.email);
+            setResetSent(true);
+            resetForm();
         } catch (error) {
             console.error("Şifre sıfırlama hatası:", error);
+            setResetError(error.response?.data?.message || "Şifre sıfırlama işlemi sırasında bir hata oluştu");
         } finally {
             setSubmitting(false);
-            setIsLoading(false);
         }
     };
 
@@ -57,9 +72,32 @@ const ForgotPassword = () => {
                             <ErrorMessage name="email" component="div" className="error-messages" />
 
                         </div>
-                        <button type="submit" className="submit-button">
-                            Şifre Sıfırlama Linki Gönder
-                        </button>
+                        {resetSent ? (
+                            <div className="alert alert-success">
+                                {t('Şifre sıfırlama bağlantısı e-posta adresinize gönderildi. Lütfen e-postanızı kontrol edin.')}
+                            </div>
+                        ) : (
+                            <button
+                                type="submit"
+                                className="submit-button"
+                                disabled={loading}
+                            >
+                                {loading ? (
+                                    <>
+                                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                        {t('Gönderiliyor...')}
+                                    </>
+                                ) : (
+                                    t('Şifre Sıfırlama Linki Gönder')
+                                )}
+                            </button>
+                        )}
+
+                        {resetError && (
+                            <div className="alert alert-danger mt-3">
+                                {resetError}
+                            </div>
+                        )}
                     </Form>
                 )}
             </Formik>

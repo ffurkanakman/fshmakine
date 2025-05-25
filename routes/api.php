@@ -21,10 +21,7 @@ Route::prefix('v1')->group(function () {
 
 
     Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
+    Route::post('reset-password-token', [AuthController::class, 'resetPasswordWithToken'])->name('password.reset.token');
     Route::middleware('auth:sanctum')->put('reset-password', [AuthController::class, 'resetPassword'])->name('password.reset');
 
 });
-
-
-
-

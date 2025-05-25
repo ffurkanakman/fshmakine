@@ -10,7 +10,7 @@ import {TabsBase} from './Tabs/_TabsBase'
 const AsideDefault = () => {
     const {config} = useLayout()
     const {classes} = useLayout()
-    const [link, setLink] = useState('projects')
+    const [link, setLink] = useState('menu')
 
     return (
         <div
@@ -19,7 +19,7 @@ const AsideDefault = () => {
             data-kt-drawer='true'
             data-kt-drawer-name='aside'
             data-kt-drawer-activate='{default: true, lg: false}'
-            data-kt-drawer-overlay='true'
+            data-kt-drawer-overlay='false'
             data-kt-drawer-width='auto'
             data-kt-drawer-direction='start'
             data-kt-drawer-toggle='#kt_aside_toggle'

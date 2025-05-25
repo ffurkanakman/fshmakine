@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useIntl } from 'react-intl';
+import { useNavigate } from 'react-router-dom';
 import { PageLink, PageTitle } from '../../Libs/Metronic/_metronic/layout/core';
 import { ROUTES } from "@/Libs/Routes/config.jsx";
 import { KTCard, KTCardBody, KTIcon } from '../../Libs/Metronic/_metronic/helpers';
@@ -8,6 +9,7 @@ import { Form, Formik, Field, ErrorMessage } from 'formik';
 import { projectFormSchema, initialValues } from './YeniProjeWizardHelper';
 import { Toolbar } from '../../Libs/Metronic/_metronic/layout/components/toolbar/Toolbar';
 import { Content } from '../../Libs/Metronic/_metronic/layout/components/Content';
+import { useServis } from '../../ServerSide/Hooks/useServis';
 
 const newProjectBreadCrumbs = [
     {
@@ -36,6 +38,10 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
     const [stepper, setStepper] = useState(null);
     const [currentSchema, setCurrentSchema] = useState(projectFormSchema[0]);
     const [isSubmitButton, setSubmitButton] = useState(false);
+    const navigate = useNavigate();
+
+    // Servis hook'unu kullan
+    const { saveProject, loading } = useServis();
 
     // Calculate total price
     const calculateTotal = (values) => {
@@ -63,7 +69,7 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
     };
 
     // Handle form submission for each step
-    const submitStep = (values, actions) => {
+    const submitStep = async (values, actions) => {
         if (!stepper) {
             return;
         }
@@ -71,11 +77,33 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
         if (stepper.currentStepIndex !== stepper.totalStepsNumber) {
             stepper.goNext();
         } else {
-            // Form is complete, submit the data
-            console.log('Form submitted:', values);
-            alert('Proje başarıyla oluşturuldu!');
-            window.location.href = ROUTES.UI.PROJECTS;
-            return;
+            try {
+                // Map form fields to the required fields for the ProjectRequest
+                const projectData = {
+                    // Required fields
+                    company_name: values.companyName,
+                    authorized_person: values.authorizedPerson,
+                    machine_info: `${values.brand} ${values.model}`,
+                    project_type: 'service', // Default project type
+
+                    // Optional fields
+                    description: values.extraNotes,
+                    price: calculateTotal(values),
+                    notes: values.tasksToBeDone,
+                    done_jobs: values.tasksDone
+                };
+
+                // Form is complete, submit the data using the hook
+                await saveProject(projectData);
+
+                // Başarılı kayıt sonrası projeler sayfasına yönlendir
+                navigate(ROUTES.UI.PROJECTS);
+                return;
+            } catch (error) {
+                console.error('Proje kaydedilirken hata oluştu:', error);
+                // Hata durumunda form işlemini devam ettir
+                actions.setSubmitting(false);
+            }
         }
 
         setSubmitButton(stepper.currentStepIndex === stepper.totalStepsNumber);
@@ -151,8 +179,6 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
                 {title}
             </PageTitle>
             <Content>
-                <div className='card'>
-                    <div className='card-body'>
                         <div
                             ref={stepperRef}
                             className='stepper stepper-links d-flex flex-column pt-15'
@@ -764,12 +790,24 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
                                             </div>
 
                                             <div>
-                                            <button type='submit' className='btn btn-lg btn-primary me-3'>
-                                                <span className='indicator-label'>
-                                                {!isSubmitButton && 'İleri'}
-                                                {isSubmitButton && 'Kaydet'}
-                                                <KTIcon iconName='arrow-right' className='fs-3 ms-2 me-0' />
-                                                </span>
+                                            <button
+                                                type='submit'
+                                                className='btn btn-lg btn-primary me-3'
+                                                disabled={loading}
+                                            >
+                                                {!loading && (
+                                                    <span className='indicator-label'>
+                                                        {!isSubmitButton && 'İleri'}
+                                                        {isSubmitButton && 'Kaydet'}
+                                                        <KTIcon iconName='arrow-right' className='fs-3 ms-2 me-0' />
+                                                    </span>
+                                                )}
+                                                {loading && (
+                                                    <span className='indicator-progress'>
+                                                        Lütfen bekleyin...
+                                                        <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+                                                    </span>
+                                                )}
                                             </button>
                                             </div>
                                         </div>
@@ -777,8 +815,6 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
                                 )}
                             </Formik>
                         </div>
-                    </div>
-                </div>
             </Content>
         </>
     );

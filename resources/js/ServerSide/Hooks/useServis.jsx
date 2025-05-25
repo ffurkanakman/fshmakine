@@ -3,6 +3,7 @@ import {
     setError,
     setLoading,
     setservisler,
+    addProject
 }  from '../../Repo/Redux/Modules/servisSlice';
 import { API_CONFIG } from "../EndPoints";
 import { toast } from "react-toastify";
@@ -11,6 +12,7 @@ import { apiService } from '../Load';
 
 export const useServis = () => {
     const dispatch = useDispatch();
+    const { servisler, loading, error } = useSelector(state => state.servis);
 
     const setServis = async () => {
         try {
@@ -25,7 +27,29 @@ export const useServis = () => {
 
         } catch (error) {
             dispatch(setError(error.message));
-            toast.error(t('Yüklenemedi...'))
+            toast.error('Yüklenemedi...')
+            throw error;
+        } finally {
+            dispatch(setLoading(false));
+        }
+    };
+
+    const saveProject = async (projectData) => {
+        try {
+            dispatch(setLoading(true));
+
+            // API endpoint'e veri gönderme işlemi
+            const response = await apiService.post(API_CONFIG.ENDPOINTS.PROJECTS.SAVE_PROJECT, projectData);
+
+            // Redux store'a projeyi ekle
+            dispatch(addProject(response.data.data || projectData));
+
+            toast.success('Proje başarıyla kaydedildi');
+            return response.data.data || projectData;
+
+        } catch (error) {
+            dispatch(setError(error.message));
+            toast.error('Proje kaydedilemedi');
             throw error;
         } finally {
             dispatch(setLoading(false));
@@ -33,6 +57,10 @@ export const useServis = () => {
     };
 
     return {
-        setServisler: setServis
+        servisler,
+        loading,
+        error,
+        setServisler: setServis,
+        saveProject
     };
 };

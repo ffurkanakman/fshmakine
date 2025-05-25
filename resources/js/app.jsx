@@ -1,8 +1,7 @@
 import ReactDOM from "react-dom/client";
 import React, { Suspense } from "react";
 import ListenLoad from "./Listen/Load.jsx";
-// import {Store} from "./Repo/Redux/Load.jsx";
-import {Provider} from "react-redux";
+import { ReduxProvider } from "./Repo/Redux/Load.jsx";
 import Loader from "./Components/Loader"; // Loader komponenti import edin
 import { MetronicI18nProvider } from "./Libs/Metronic/_metronic/i18n/Metronici18n";
 import { I18nProvider } from "./Libs/Metronic/_metronic/i18n/i18nProvider";
@@ -37,13 +36,13 @@ if (rootElement) {
                 <Loader />
             </div>
         }>
-            {/*<Provider store={Store}>*/}
-            <MetronicI18nProvider>
-                <I18nProvider>
-                    <ListenLoad/>
-                </I18nProvider>
-            </MetronicI18nProvider>
-            {/*</Provider>*/}
+            <ReduxProvider>
+                <MetronicI18nProvider>
+                    <I18nProvider>
+                        <ListenLoad/>
+                    </I18nProvider>
+                </MetronicI18nProvider>
+            </ReduxProvider>
         </Suspense>
     );
 }

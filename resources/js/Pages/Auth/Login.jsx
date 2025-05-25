@@ -1,13 +1,17 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
 import { ROUTES } from "../../Libs/Routes/config";
 import { toast } from "react-toastify";
+import { useAuth } from "../../ServerSide/Hooks/Auth/useAuth";
 
 const Login = () => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
+    const { login, isAuthenticated, loading, loginError } = useAuth();
+
     const initialValues = {
         email: "",
         password: "",
@@ -22,11 +26,22 @@ const Login = () => {
             .min(6, t('Şifre en az 6 karakter olmalıdır'))
     });
 
-    const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    // Redirect if already authenticated
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate(ROUTES.UI.DASHBOARD);
+        }
+    }, [isAuthenticated, navigate]);
+
+    const handleSubmit = async (values, { setSubmitting }) => {
         try {
-            const response = await login(values);
-            if (response)
-                toast.success(t('Giriş Yapıldı. Yönlendiriliyorsunuz'));
+            const success = await login(values);
+            if (success) {
+                // Force navigation to dashboard after successful login
+                setTimeout(() => {
+                    navigate(ROUTES.UI.LANDING);
+                }, 100);
+            }
         } catch (error) {
             console.error("Giriş hatası:", error);
         } finally {
@@ -73,9 +88,26 @@ const Login = () => {
                             </Link>
                         </div>
 
-                        <button type="submit" className="submit-button" >
-                            {t('Giriş Yap')}
+                        <button
+                            type="submit"
+                            className="submit-button"
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <>
+                                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                    {t('Giriş Yapılıyor...')}
+                                </>
+                            ) : (
+                                t('Giriş Yap')
+                            )}
                         </button>
+
+                        {loginError && (
+                            <div className="alert alert-danger mt-3">
+                                {loginError}
+                            </div>
+                        )}
 
                         <div className="auth-links">
                             <span className="separator">{t('Henüz hesabın yok mu?')}&nbsp;</span>
