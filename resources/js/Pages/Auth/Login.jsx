@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { ROUTES } from "../../Libs/Routes/config";
 import { toast } from "react-toastify";
 import { useAuth } from "../../ServerSide/Hooks/Auth/useAuth";
+import "../../../sass/page/_auth.scss";
 
 const Login = () => {
     const { t } = useTranslation();
@@ -51,9 +52,14 @@ const Login = () => {
 
     return (
         <div>
+<div className="auth-logo">
+  <img src="/img\vector/logo.png" alt="Logo" />
+</div>
+        <div>
             <div className="auth-header">
                 <h1>{t('Üye Girişi')}</h1>
             </div>
+            <div className="card-body">
             <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
@@ -61,8 +67,9 @@ const Login = () => {
             >
                 {({ errors, touched }) => (
                     <Form className="form-wrapper">
-                        <div className="form-group">
-                            <label htmlFor="email">{t('E-posta Adresi')}</label>
+                        <div className="row">
+                        <div className="form-group col-lg-6 login-input">
+                            <label htmlFor="email" className="login-title">{t('E-posta')}</label>
                             <Field
                                 id="email"
                                 name="email"
@@ -73,8 +80,8 @@ const Login = () => {
                             <ErrorMessage name="email" component="div" className="error-messages" />
                         </div>
 
-                        <div className="form-group">
-                            <label htmlFor="password">{t('Şifre')}</label>
+                        <div className="form-group col-lg-6">
+                            <label htmlFor="password" className="login-title">{t('Şifre')}</label>
                             <Field
                                 id="password"
                                 name="password"
@@ -83,14 +90,11 @@ const Login = () => {
                                 className={`form-control ${errors.password && touched.password ? 'is-invalid' : ''}`}
                             />
                             <ErrorMessage name="password" component="div" className="error-messages" />
-                            <Link to={ROUTES.AUTH.FORGOT_PASSWORD} className="mt-2">
-                                {t('Şifremi Unuttum')}
-                            </Link>
                         </div>
-
+</div>
                         <button
                             type="submit"
-                            className="submit-button"
+                            className="submit-button btn btn-danger"
                             disabled={loading}
                         >
                             {loading ? (
@@ -109,18 +113,17 @@ const Login = () => {
                             </div>
                         )}
 
-                        <div className="auth-links">
-                            <span className="separator">{t('Henüz hesabın yok mu?')}&nbsp;</span>
+                        <div className="footer-links">
+                            <Link to={ROUTES.AUTH.FORGOT_PASSWORD}>{t('Şifremi Unuttum')}</Link>
                             <Link to={ROUTES.AUTH.REGISTER}>{t('Hesap Oluştur')}</Link>
-                        </div>
-
-                        <div className="home-links">
                             <Link to={ROUTES.UI.LANDING}>{t('Anasayfa Dön')}</Link>
                         </div>
                     </Form>
                 )}
             </Formik>
+            </div>
         </div>
+</div>
     );
 };
 
