@@ -1,8 +1,8 @@
 import React, { memo, useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router } from "react-router-dom"
-import { useSelector } from "react-redux";
 import Loader from "../Components/Loader";
 import { useAuth } from "../ServerSide/Hooks/Auth/useAuth.jsx";
+import {useSelector} from "react-redux";
 
 const Load = lazy(() => import('./StartApp/Load'));
 
