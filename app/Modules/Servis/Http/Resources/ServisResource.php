@@ -17,8 +17,7 @@ class ServisResource extends JsonResource
             'service_type'      => $this->service_type,
             'price'             => $this->price,
             'status'            => $this->status,
-            'sales_person'      => $this->sales_person?->name . ' ' . $this->sales_person?->surname,
-            'notes'             => $this->notes,
+            'sales_person'      => $this->salesPerson?->name . ' ' . $this->salesPerson?->surname,            'notes'             => $this->notes,
             'done_jobs'         => $this->done_jobs,
             'created_at'        => $this->created_at?->format('Y-m-d H:i'),
         ];

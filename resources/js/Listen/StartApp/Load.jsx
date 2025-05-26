@@ -1,6 +1,5 @@
 import MainRouter from './MainRouter';
 import React, { memo, useState } from 'react';
-import { useSelector } from 'react-redux';
 import Loader from "../../Components/Loader";
 import { Routes, Route } from 'react-router-dom';
 
