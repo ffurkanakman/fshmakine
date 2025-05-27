@@ -58,7 +58,7 @@ const AsideTabs: FC<Props> = ({link, setLink}) => (
           {/* begin::Nav link */}
           <a
             className={clsx(
-              'nav-link btn btn-icon btn-active-color-primary btn-color-gray-500 btn-active-light',
+              'nav-link btn btn-icon btn-active-color-fsh-primary btn-color-gray-500 btn-active-light',
               {active: t.link === link}
             )}
             onClick={() => setLink(t.link)}

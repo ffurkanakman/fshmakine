@@ -15,7 +15,7 @@ const AsideMenu: React.FC<Props> = () => {
       DrawerComponent.reinitialization()
       ToggleComponent.reinitialization()
     }, 50)
-     
+
   }, [pathname])
 
   return (
@@ -29,7 +29,7 @@ const AsideMenu: React.FC<Props> = () => {
       data-kt-scroll-offset='5px'
     >
       <div
-        className='menu menu-column menu-title-gray-700 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500 fw-bold'
+        className='menu menu-column menu-title-gray-700 menu-state-title-fsh-primary menu-state-icon-fsh-primary menu-state-bullet-fsh-primary menu-arrow-gray-500 fw-bold'
         id='#kt_aside_menu'
         data-kt-menu='true'
       >

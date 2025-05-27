@@ -11,7 +11,7 @@ const AsideFooter = () => {
       <div className='d-flex align-items-center mb-2'>
         {/* begin::Menu wrapper */}
         <div
-          className='btn btn-icon btn-active-color-primary btn-color-gray-500 btn-active-light'
+          className='btn btn-icon btn-active-color-fsh-primary btn-color-gray-500 btn-active-light'
           data-kt-menu-trigger='click'
           data-kt-menu-overflow='true'
           data-kt-menu-placement='top-start'
@@ -31,7 +31,7 @@ const AsideFooter = () => {
       <div className='d-flex align-items-center mb-3'>
         {/* begin::Drawer toggle */}
         <div
-          className='btn btn-icon btn-active-color-primary btn-color-gray-500 btn-active-light'
+          className='btn btn-icon btn-active-color-fsh-primary btn-color-gray-500 btn-active-light'
           data-kt-menu-trigger='click'
           data-kt-menu-overflow='true'
           data-kt-menu-placement='top-start'
@@ -51,7 +51,7 @@ const AsideFooter = () => {
       <div className='d-flex align-items-center mb-2'>
         {/* begin::Menu wrapper */}
         <div
-          className='btn btn-icon btn-active-color-primary btn-color-gray-500 btn-active-light'
+          className='btn btn-icon btn-active-color-fsh-primary btn-color-gray-500 btn-active-light'
           data-kt-menu-trigger='click'
           data-kt-menu-overflow='true'
           data-kt-menu-placement='top-start'
