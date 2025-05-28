@@ -65,7 +65,7 @@ const ProjectsPage = () => {
     if (loading) {
         return (
             <div className="d-flex justify-content-center align-items-center" style={{ height: '400px' }}>
-                <div className="spinner-border text-primary" role="status">
+                <div className="spinner-border text-fsh-primary" role="status">
                     <span className="visually-hidden">Yükleniyor...</span>
                 </div>
             </div>

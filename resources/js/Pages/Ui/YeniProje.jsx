@@ -386,7 +386,7 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
                                                     <label className="form-label">Araç Fotoğrafları</label>
                                                     <div className="dropzone-container border rounded p-4">
                                                         <div className="dz-message needsclick text-center mb-3">
-                                                            <i className="bi bi-file-earmark-image fs-3x text-primary"></i>
+                                                            <i className="bi bi-file-earmark-image fs-3x text-fsh-primary"></i>
                                                             <div className="ms-4">
                                                                 <h3 className="fs-5 fw-bold text-gray-900 mb-1">Fotoğrafları buraya sürükleyin veya tıklayın</h3>
                                                                 <span className="fs-7 fw-semibold text-gray-400">En fazla 10 fotoğraf yükleyebilirsiniz</span>
@@ -591,7 +591,7 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
                                                         <div className="separator my-3"></div>
                                                         <div className="d-flex justify-content-between">
                                                             <span className="fw-bolder fs-5">TOPLAM:</span>
-                                                            <span className="fw-bolder fs-5 text-primary">₺{calculateTotal(values).toFixed(2)}</span>
+                                                            <span className="fw-bolder fs-5 text-fsh-primary">₺{calculateTotal(values).toFixed(2)}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -768,7 +768,7 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
                                                                 <div className="separator my-3"></div>
                                                                 <div className="d-flex justify-content-between">
                                                                     <span className="fw-bolder fs-5">TOPLAM:</span>
-                                                                    <span className="fw-bolder fs-5 text-primary">₺{calculateTotal(values).toFixed(2)}</span>
+                                                                    <span className="fw-bolder fs-5 text-fsh-primary">₺{calculateTotal(values).toFixed(2)}</span>
                                                                 </div>
                                                             </div>
                                                         </div>
