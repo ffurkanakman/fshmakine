@@ -36,9 +36,15 @@ export const useAuth = () => {
                 dispatch(setAuthenticated(true));
 
                 // Store token in localStorage for persistence
-                localStorage.setItem('auth_token', response.data.token);
+                localStorage.setItem('token', response.data.token);
 
-                toast.success('Giriş başarılı!');
+                toast.success('Giriş başarılı! Yönlendiriliyorsunuz...');
+
+                // 1.5 saniye sonra yönlendir
+                setTimeout(() => {
+                    navigate(ROUTES.UI.LANDING);
+                }, 1500);
+
                 return true;
             }
 
@@ -68,7 +74,7 @@ export const useAuth = () => {
                 dispatch(setToken(response.data.token));
                 dispatch(setUser(response.data.user));
                 dispatch(setAuthenticated(true));
-                localStorage.setItem('auth_token', response.data.token);
+                localStorage.setItem('token', response.data.token);
 
                 setTimeout(() => {
                     navigate(ROUTES.UI.LANDING);
@@ -121,7 +127,7 @@ export const useAuth = () => {
             dispatch(logoutAction());
 
             // Remove token from localStorage
-            localStorage.removeItem('auth_token');
+            localStorage.removeItem('token');
 
             toast.success('Çıkış yapıldı');
             navigate(ROUTES.AUTH.LOGIN);
@@ -186,7 +192,7 @@ export const useAuth = () => {
             }
 
             // Check if we have a token in localStorage
-            const storedToken = localStorage.getItem('auth_token');
+            const storedToken = localStorage.getItem('token');
             if (!storedToken) {
                 dispatch(setAuthChecked(true));
                 return false;
@@ -210,7 +216,7 @@ export const useAuth = () => {
         } catch (error) {
             console.error('Auth check error:', error);
             // Clear invalid token
-            localStorage.removeItem('auth_token');
+            localStorage.removeItem('token');
             dispatch(logoutAction());
             dispatch(setAuthChecked(true));
             return false;

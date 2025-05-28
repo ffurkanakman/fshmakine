@@ -5,7 +5,7 @@ export const API_CONFIG = {
     },
     ENDPOINTS: {
         AUTH: {
-            LOGIN: '/api/Kullanici/Giris',
+            LOGIN: '/api/v1/Giris',
             REGISTER: '/api/v1/KayitOl', // Try a different API endpoint structure
         },
         SERVIS: {

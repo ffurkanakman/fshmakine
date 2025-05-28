@@ -36,19 +36,14 @@ const Login = () => {
 
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
-            const success = await login(values);
-            if (success) {
-                // Force navigation to dashboard after successful login
-                setTimeout(() => {
-                    navigate(ROUTES.UI.LANDING);
-                }, 100);
-            }
+            await login(values); // toast + yönlendirme zaten burada
         } catch (error) {
             console.error("Giriş hatası:", error);
         } finally {
             setSubmitting(false);
         }
     };
+
 
     return (
         <div>

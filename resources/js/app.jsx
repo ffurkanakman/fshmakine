@@ -7,6 +7,7 @@ import { MetronicI18nProvider } from "./Libs/Metronic/_metronic/i18n/Metronici18
 import { I18nProvider } from "./Libs/Metronic/_metronic/i18n/i18nProvider";
 
 
+
 import './Libs/Metronic/_metronic/assets/fonticon/fonticon.css'
 import './Libs/Metronic/_metronic/assets/keenicons/duotone/style.css'
 import './Libs/Metronic/_metronic/assets/keenicons/outline/style.css'
@@ -46,3 +47,4 @@ if (rootElement) {
         </Suspense>
     );
 }
+
