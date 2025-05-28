@@ -67,8 +67,9 @@ const Register = () => {
             >
                 {({ errors, touched, values }) => (
                     <Form className="form-wrapper">
-                        <div className="form-group d-flex">
-                            <div className="me-2 w-100">
+                        <div className="form-group">
+                            <div className="row">
+                                <div className="col-lg-6 mb-1">
                                 <label htmlFor="name">{t('Ad')}</label>
                                 <Field
                                     id="name"
@@ -78,9 +79,9 @@ const Register = () => {
                                     className={`form-control p-2 ${errors.name && touched.name ? 'is-invalid' : ''}`}
                                 />
                                 <ErrorMessage name="name" component="div" className="error-messages" />
+                                </div>
 
-                            </div>
-                            <div className="w-100">
+                                <div className="col-lg-6 mb-1">
                                 <label htmlFor="surname">{t('Soyad')}</label>
                                 <Field
                                     id="surname"
@@ -90,70 +91,79 @@ const Register = () => {
                                     className={`form-control p-2 ${errors.surname && touched.surname ? 'is-invalid' : ''}`}
                                 />
                                 <ErrorMessage name="surname" component="div" className="error-messages" />
-                            </div>
-                        </div>
-                        <div className="form-group d-flex">
-                            <div className="me-2 w-100">
-                                <label htmlFor="phone">{t('Telefon Numarası')}</label>
-                                <Field
-                                    id="phone"
-                                    name="phone"
-                                    type="tel"
-                                    placeholder={t('Telefon Numarası')}
-                                    className={`form-control p-2 ${errors.phone && touched.phone ? 'is-invalid' : ''}`}
-                                />
-                                <ErrorMessage name="phone" component="div" className="error-messages" />
-                            </div>
-                            <div className="w-100">
-                                <label htmlFor="email">{t('E-posta Adresi')}</label>
-                                <Field
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    placeholder={t('E-posta Adresi')}
-                                    className={`form-control p-2 ${errors.email && touched.email ? 'is-invalid' : ''}`}
-                                />
-                                <ErrorMessage name="email" component="div" className="error-messages" />
+                                </div>
                             </div>
                         </div>
 
-                        <div className="form-group d-flex w-100">
-                            <div className="me-2 w-100">
-                                <label htmlFor="password">{t('Şifre')}</label>
-                                <div className="pass-input">
+                        <div className="form-group">
+                            <div className="row">
+                                <div className="col-lg-6 mb-1">
+                                    <label htmlFor="phone">{t('Telefon Numarası')}</label>
                                     <Field
-                                        name="password"
-                                        type={showPassword ? "text" : "password"}
-                                        placeholder={t('Şifre')}
-                                        className={`form-control p-2 ${errors.password && touched.password ? 'is-invalid' : ''}`}
+                                        id="phone"
+                                        name="phone"
+                                        type="tel"
+                                        placeholder={t('Telefon Numarası')}
+                                        className={`form-control p-2 ${errors.phone && touched.phone ? 'is-invalid' : ''}`}
                                     />
-                                    <span
-                                        onClick={() => setShowPassword(prev => !prev)}
-                                        className="flex items-center"
-                                    >
-                                        <i className={`icon ${showPassword ? 'eye' : 'eye-slash'}`}></i>
-                                    </span>
+                                    <ErrorMessage name="phone" component="div" className="error-messages" />
                                 </div>
-                                <ErrorMessage name="password" component="div" className="error-messages" />
-                            </div>
-                            <div className="w-100">
-                                <label htmlFor="password_confirmation">{t('Şifre Tekrar')}</label>
-                                <div className="pass-input">
-                                    <Field
-                                        name="password_confirmation"
-                                        type={showPasswordConfirmation ? "text" : "password"}
-                                        placeholder={t('Şifre Tekrar')}
-                                        className={`form-control p-2 ${errors.password_confirmation && touched.password_confirmation ? 'is-invalid' : ''}`}
-                                    />
-                                    <span
-                                        onClick={() => setShowPasswordConfirmation(prev => !prev)}
-                                        className="d-flex align-items-center"
-                                    >
-                                        <i className={`icon ${showPasswordConfirmation ? 'eye' : 'eye-slash'}`}></i>
-                                    </span>
-                                </div>
-                                <ErrorMessage name="password_confirmation" component="div" className="error-messages" />
 
+                                <div className="col-lg-6 mb-1">
+                                    <label htmlFor="email">{t('E-posta Adresi')}</label>
+                                    <Field
+                                        id="email"
+                                        name="email"
+                                        type="email"
+                                        placeholder={t('E-posta Adresi')}
+                                        className={`form-control p-2 ${errors.email && touched.email ? 'is-invalid' : ''}`}
+                                    />
+                                    <ErrorMessage name="email" component="div" className="error-messages" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <div className="row">
+                                <div className="col-lg-6 mb-1">
+                                    <label htmlFor="password">{t('Şifre')}</label>
+                                    <div className="pass-input">
+                                        <Field
+                                            name="password"
+                                            type={showPassword ? "text" : "password"}
+                                            placeholder={t('Şifre')}
+                                            className={`form-control p-2 ${errors.password && touched.password ? 'is-invalid' : ''}`}
+                                        />
+                                        <span
+                                            onClick={() => setShowPassword(prev => !prev)}
+                                            className="flex items-center"
+                                        >
+                                            <i className={`icon ${showPassword ? 'eye' : 'eye-slash'}`}></i>
+                                        </span>
+                                    </div>
+                                    <ErrorMessage name="password" component="div" className="error-messages" />
+                                </div>
+
+
+                                <div className="col-lg-6 mb-1">
+                                    <label htmlFor="password_confirmation">{t('Şifre Tekrar')}</label>
+                                    <div className="pass-input">
+                                        <Field
+                                            name="password_confirmation"
+                                            type={showPasswordConfirmation ? "text" : "password"}
+                                            placeholder={t('Şifre Tekrar')}
+                                            className={`form-control p-2 ${errors.password_confirmation && touched.password_confirmation ? 'is-invalid' : ''}`}
+                                        />
+                                        <span
+                                            onClick={() => setShowPasswordConfirmation(prev => !prev)}
+                                            className="d-flex align-items-center"
+                                        >
+                                            <i className={`icon ${showPasswordConfirmation ? 'eye' : 'eye-slash'}`}></i>
+                                        </span>
+                                    </div>
+                                    <ErrorMessage name="password_confirmation" component="div" className="error-messages" />
+
+                                </div>
                             </div>
                         </div>
                         <div className="my-2">
@@ -165,14 +175,9 @@ const Register = () => {
                         <button type="submit" className="submit-button">
                             Kayıt Ol
                         </button>
-                        <div className="auth-links">
-                            <span className="separator">{t('Zaten hesabınız var mı?')}</span>
-                            <Link to={ROUTES.AUTH.LOGIN}>
-                                &nbsp; {t('Giriş yap')}
-                            </Link>
-                        </div>
-                        <div className="home-links">
-                            <Link to={ROUTES.ROOT.DASHBOARD}>{t('Anasayfa Dön')}</Link>
+                        <div className="footer-links">
+                            <Link to={ROUTES.AUTH.LOGIN}>{t('Giriş Yap')}</Link>
+                            <Link to={ROUTES.UI.LANDING}>{t('Anasayfa Dön')}</Link>
                         </div>
                     </Form>
                 )}
