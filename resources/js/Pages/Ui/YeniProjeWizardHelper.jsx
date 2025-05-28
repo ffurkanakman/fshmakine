@@ -12,41 +12,25 @@ export const projectFormSchema = [
     // Customer fields
     customerType: Yup.string().required('Müşteri seçimi zorunludur'),
     // Conditional validation for new customer
-    companyName: Yup.string().when('customerType', {
-      is: 'new',
+    companyName: Yup.string().when(['isNewCustomer'], {
+      is: (isNewCustomer) => isNewCustomer === true,
       then: () => Yup.string().required('Firma Adı zorunludur'),
-      otherwise: () => Yup.string().when('isNewCustomer', {
-        is: true,
-        then: () => Yup.string().required('Firma Adı zorunludur'),
-        otherwise: () => Yup.string(),
-      }),
+      otherwise: () => Yup.string(),
     }),
-    authorizedPerson: Yup.string().when('customerType', {
-      is: 'new',
+    authorizedPerson: Yup.string().when(['isNewCustomer'], {
+      is: (isNewCustomer) => isNewCustomer === true,
       then: () => Yup.string().required('Yetkili Adı Soyadı zorunludur'),
-      otherwise: () => Yup.string().when('isNewCustomer', {
-        is: true,
-        then: () => Yup.string().required('Yetkili Adı Soyadı zorunludur'),
-        otherwise: () => Yup.string(),
-      }),
+      otherwise: () => Yup.string(),
     }),
-    phoneNumber: Yup.string().when('customerType', {
-      is: 'new',
+    phoneNumber: Yup.string().when(['isNewCustomer'], {
+      is: (isNewCustomer) => isNewCustomer === true,
       then: () => Yup.string().required('Telefon Numarası zorunludur'),
-      otherwise: () => Yup.string().when('isNewCustomer', {
-        is: true,
-        then: () => Yup.string().required('Telefon Numarası zorunludur'),
-        otherwise: () => Yup.string(),
-      }),
+      otherwise: () => Yup.string(),
     }),
-    email: Yup.string().when('customerType', {
-      is: 'new',
+    email: Yup.string().when(['isNewCustomer'], {
+      is: (isNewCustomer) => isNewCustomer === true,
       then: () => Yup.string().email('Geçerli bir e-posta adresi giriniz').required('E-Posta zorunludur'),
-      otherwise: () => Yup.string().when('isNewCustomer', {
-        is: true,
-        then: () => Yup.string().email('Geçerli bir e-posta adresi giriniz').required('E-Posta zorunludur'),
-        otherwise: () => Yup.string().email('Geçerli bir e-posta adresi giriniz'),
-      }),
+      otherwise: () => Yup.string().email('Geçerli bir e-posta adresi giriniz'),
     }),
 
     // Vehicle fields

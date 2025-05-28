@@ -10,6 +10,8 @@ import { projectFormSchema, initialValues } from './YeniProjeWizardHelper';
 import { Toolbar } from '../../Libs/Metronic/_metronic/layout/components/toolbar/Toolbar';
 import { Content } from '../../Libs/Metronic/_metronic/layout/components/Content';
 import { useServis } from '../../ServerSide/Hooks/useServis';
+import { useClient } from '../../ServerSide/Hooks/useClient';
+import { toast } from 'react-toastify';
 
 const newProjectBreadCrumbs = [
     {
@@ -41,7 +43,26 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
     const navigate = useNavigate();
 
     // Servis hook'unu kullan
-    const { saveProject, loading } = useServis();
+    const { saveProject, loading: serviceLoading } = useServis();
+
+    // Client hook'unu kullan
+    const { clients, fetchClients, createClient, loading: clientLoading } = useClient();
+
+    // Combined loading state
+    const loading = serviceLoading || clientLoading;
+
+    // Fetch clients when component mounts
+    useEffect(() => {
+        const loadClients = async () => {
+            try {
+                await fetchClients();
+            } catch (error) {
+                console.error('Müşteriler yüklenirken hata oluştu:', error);
+            }
+        };
+
+        loadClients();
+    }, []);
 
     // Calculate total price
     const calculateTotal = (values) => {
@@ -49,6 +70,8 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
         values.parts.forEach(part => {
             total += parseFloat(part.totalPrice || 0);
         });
+        // Add debt to the total
+        total += parseFloat(values.debt || 0);
         return total - parseFloat(values.discount || 0);
     };
 
@@ -78,6 +101,32 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
             stepper.goNext();
         } else {
             try {
+                let clientId = null;
+
+                // If this is a new customer, create a client record first
+                if (values.isNewCustomer) {
+                    const clientData = {
+                        company_name: values.companyName,
+                        authorized_person: values.authorizedPerson,
+                        phone: values.phoneNumber,
+                        email: values.email
+                    };
+
+                    try {
+                        const newClient = await createClient(clientData);
+                        if (newClient && newClient.id) {
+                            clientId = newClient.id;
+                            toast.success('Müşteri başarıyla oluşturuldu');
+                        }
+                    } catch (clientError) {
+                        console.error('Müşteri kaydedilirken hata oluştu:', clientError);
+                        // Continue with service creation even if client creation fails
+                    }
+                } else if (values.customerType && values.customerType !== 'new') {
+                    // If an existing client is selected, use its ID
+                    clientId = values.customerType;
+                }
+
                 // Map form fields to the required fields for the ProjectRequest
                 const projectData = {
                     // Required fields
@@ -93,11 +142,22 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
                     done_jobs: values.tasksDone
                 };
 
-                // Form is complete, submit the data using the hook
-                await saveProject(projectData);
+                // Add client_id if available
+                if (clientId) {
+                    projectData.client_id = clientId;
+                }
 
-                // Başarılı kayıt sonrası projeler sayfasına yönlendir
-                navigate(ROUTES.UI.PROJECTS);
+                // Form is complete, submit the data using the hook
+                const savedProject = await saveProject(projectData);
+
+                // Display success message
+                toast.success('Servis başarıyla oluşturuldu');
+
+                // Short delay to ensure toast is visible before navigation
+                setTimeout(() => {
+                    // Başarılı kayıt sonrası projeler sayfasına yönlendir
+                    navigate(ROUTES.UI.PROJECTS);
+                }, 1000);
                 return;
             } catch (error) {
                 console.error('Proje kaydedilirken hata oluştu:', error);
@@ -111,10 +171,23 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
     };
 
     // Handle customer type change
-    const handleCustomerTypeChange = (e, setFieldValue) => {
-        const isNewCustomer = e.target.value === 'new';
-        setFieldValue('customerType', e.target.value);
+    const handleCustomerTypeChange = (e, setFieldValue, values) => {
+        const selectedValue = e.target.value;
+        const isNewCustomer = selectedValue === 'new';
+        setFieldValue('customerType', selectedValue);
         setFieldValue('isNewCustomer', isNewCustomer);
+
+        // If an existing client is selected, populate the form with client data
+        if (!isNewCustomer && selectedValue !== '') {
+            const selectedClient = clients.find(client => client.id.toString() === selectedValue.toString());
+            if (selectedClient) {
+                // Populate form fields with client data
+                setFieldValue('companyName', selectedClient.company_name || '');
+                setFieldValue('authorizedPerson', selectedClient.authorized_person || selectedClient.name || '');
+                setFieldValue('phoneNumber', selectedClient.phone || '');
+                setFieldValue('email', selectedClient.email || '');
+            }
+        }
     };
 
     // Handle part field changes
@@ -244,13 +317,15 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
                                                         as="select"
                                                         className="form-select w-100"
                                                         name="customerType"
-                                                        onChange={(e) => handleCustomerTypeChange(e, setFieldValue)}
+                                                        onChange={(e) => handleCustomerTypeChange(e, setFieldValue, values)}
                                                     >
                                                         <option value="">Müşteri Seçiniz</option>
                                                         <option value="new">Yeni Müşteri</option>
-                                                        <option value="existing">Mevcut Müşteri 1</option>
-                                                        <option value="existing">Mevcut Müşteri 2</option>
-                                                        <option value="existing">Mevcut Müşteri 3</option>
+                                                        {clients && clients.map((client) => (
+                                                            <option key={client.id} value={client.id}>
+                                                                {client.company_name || client.name}
+                                                            </option>
+                                                        ))}
                                                     </Field>
                                                     <div className="text-danger mt-2">
                                                         <ErrorMessage name="customerType" />

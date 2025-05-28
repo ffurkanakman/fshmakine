@@ -1,5 +1,6 @@
 import servisSlice from "./Modules/ServisSlice";
 import authSlice from "./Modules/authSlice";
+import clientSlice from "./Modules/clientSlice";
 import {configureStore} from "@reduxjs/toolkit";
 import { Provider } from 'react-redux';
 import { persistStore, persistReducer } from 'redux-persist';
@@ -23,6 +24,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
     servis: servisSlice,
     auth: authSlice,
+    client: clientSlice,
     // diğer slice'lar
 });
 

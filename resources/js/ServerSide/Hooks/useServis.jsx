@@ -44,7 +44,7 @@ export const useServis = () => {
             // Redux store'a projeyi ekle
             dispatch(addProject(response.data.data || projectData));
 
-            toast.success('Proje başarıyla kaydedildi');
+            // Return the saved project data
             return response.data.data || projectData;
 
         } catch (error) {

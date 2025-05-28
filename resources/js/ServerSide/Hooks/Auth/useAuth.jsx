@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 import {
     setUser,
     setToken,
@@ -13,6 +14,7 @@ import { apiService } from '../../Load';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../../Libs/Routes/config';
+import { API_CONFIG } from '../../Endpoints';
 
 export const useAuth = () => {
     const dispatch = useDispatch();
@@ -26,7 +28,7 @@ export const useAuth = () => {
             dispatch(setLoading(true));
             setLoginError(null);
 
-            const response = await apiService.post('/api/v1/Giris', credentials);
+            const response = await apiService.post(API_CONFIG.ENDPOINTS.AUTH.LOGIN, credentials);
 
             if (response.data.token) {
                 dispatch(setToken(response.data.token));
@@ -47,6 +49,58 @@ export const useAuth = () => {
             setLoginError(errorMessage);
             toast.error(errorMessage);
             dispatch(setError(errorMessage));
+            return false;
+        } finally {
+            dispatch(setLoading(false));
+        }
+    };
+
+    // Register function
+    const register = async (userData) => {
+        try {
+            dispatch(setLoading(true));
+
+            const response = await apiService.post(API_CONFIG.ENDPOINTS.AUTH.REGISTER, userData);
+
+            if (response.data?.token && response.data?.user) {
+                toast.success('Kayıt başarılı! Yönlendiriliyorsunuz...');
+
+                dispatch(setToken(response.data.token));
+                dispatch(setUser(response.data.user));
+                dispatch(setAuthenticated(true));
+                localStorage.setItem('auth_token', response.data.token);
+
+                setTimeout(() => {
+                    navigate(ROUTES.UI.LANDING);
+                }, 1500); // 1.5 saniye sonra yönlendir
+                return true;
+            }
+
+
+
+            const message = response.data?.message || 'Kayıt işlemi tamamlanamadı';
+            toast.warning(message);
+            return false;
+        } catch (error) {
+            console.error('Register error:', error);
+
+            const responseErrors = error.response?.data?.errors;
+
+            if (responseErrors) {
+                // Laravel'den gelen tüm validation hatalarını döndür
+                Object.values(responseErrors).flat().forEach((msg) => {
+                    toast.error(msg);
+                });
+            } else {
+                const errorMessage =
+                    error.response?.data?.message ||
+                    error.response?.data?.errors?.error ||
+                    'Kayıt olurken bir hata oluştu';
+
+                toast.error(errorMessage);
+                dispatch(setError(errorMessage));
+            }
+
             return false;
         } finally {
             dispatch(setLoading(false));
@@ -173,6 +227,7 @@ export const useAuth = () => {
         error,
         loginError,
         login,
+        register,
         logout,
         forgotPassword,
         resetPassword,

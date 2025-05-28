@@ -4,13 +4,27 @@ import axios from 'axios';
 // Using Laravel Sanctum for API authentication instead
 
 const api = axios.create({
-    baseURL: 'http://localhost:8000',
+    baseURL: 'http://127.0.0.1:8000',
     headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
     },
     withCredentials: true, // Include cookies in requests for Sanctum session authentication
 });
+
+// Add request interceptor to include auth token in headers
+api.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('auth_token');
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
 
 export const apiService = {
     get: api.get,

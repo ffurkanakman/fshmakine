@@ -5,13 +5,16 @@ import * as Yup from "yup";
 import { useTranslation } from "react-i18next";
 import { ROUTES } from "../../Libs/Routes/config";
 import PasswordStrengthBar from 'react-password-strength-bar';
+import { toast } from 'react-toastify';
+import useAuth from "../../ServerSide/Hooks/Auth/useAuth";
 
 const Register = () => {
     const { t } = useTranslation();
+    const { register } = useAuth();
     const initialValues = {
         name: "",
         surname: "",
-        phone: "",
+        phone_number: "",
         email: "",
         password: "",
         password_confirmation: "",
@@ -21,12 +24,10 @@ const Register = () => {
     const validationSchema = Yup.object({
         name: Yup.string().required(t('Ad zorunludur')),
         surname: Yup.string().required(t('Soyad zorunludur')),
-        phone: Yup.string().required(t('Telefon numarası zorunludur')),
+        phone_number: Yup.string().required(t('Telefon numarası zorunludur')),
         email: Yup.string()
             .email(t('Geçerli bir email adresi giriniz'))
             .required(t('Email adresi zorunludur')),
-        city_id: Yup.string().required(t('Şehir seçimi zorunludur')),
-        address: Yup.string(),
         password: Yup.string()
             .min(8, t('Şifre en az 8 karakter olmalıdır'))
             .matches(/[A-Z]/, t('Şifre en az 1 büyük harf içermelidir'))
@@ -40,13 +41,32 @@ const Register = () => {
 
     const handleSubmit = async (values, { setSubmitting, resetForm }) => {
         try {
-            console.log(values);
+            console.log('Form values to be submitted:', values);
+
+            // Show loading toast
+            const loadingToastId = toast.loading('Kayıt işlemi yapılıyor...');
+
             const response = await register(values);
+
+            // Dismiss loading toast
+            toast.dismiss(loadingToastId);
+
             if (response) {
-                toast.success(t('Kayıt Başaralı. Yönlendiriliyorsunuz!'));
+                toast.success(t('Kayıt Başarılı. Yönlendiriliyorsunuz!'));
+                // Don't reset form if successful as we're navigating away
+            } else {
+                // If register returned false but didn't throw an error
+                toast.warning(t('Kayıt işlemi tamamlanamadı. Lütfen tekrar deneyin.'));
             }
         } catch (error) {
-            toast.error(error.message || t('Kayıt işlemi başarısız'));
+            console.error('Error in handleSubmit:', error);
+
+            // Provide more detailed error message if available
+            const errorMessage = error.message
+                ? `${t('Kayıt işlemi başarısız')}: ${error.message}`
+                : t('Kayıt işlemi başarısız. Lütfen tekrar deneyin.');
+
+            toast.error(errorMessage);
         } finally {
             setSubmitting(false);
         }
@@ -101,7 +121,7 @@ const Register = () => {
                                     <label htmlFor="phone">{t('Telefon Numarası')}</label>
                                     <Field
                                         id="phone"
-                                        name="phone"
+                                        name="phone_number"
                                         type="tel"
                                         placeholder={t('Telefon Numarası')}
                                         className={`form-control p-2 ${errors.phone && touched.phone ? 'is-invalid' : ''}`}
@@ -122,6 +142,7 @@ const Register = () => {
                                 </div>
                             </div>
                         </div>
+
 
                         <div className="form-group">
                             <div className="row">
