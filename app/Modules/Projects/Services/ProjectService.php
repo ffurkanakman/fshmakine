@@ -36,15 +36,15 @@ class ProjectService
             $data['name'] = $this->generateProjectName();
         }
 
-        // Use firstOrCreate to avoid duplicates
-        $searchCriteria = [];
-        if (isset($data['company_name']) && isset($data['machine_info'])) {
-            $searchCriteria = [
-                'company_name' => $data['company_name'],
-                'machine_info' => $data['machine_info']
-            ];
-            return $this->projectRepository->firstOrCreate($searchCriteria, $data);
-        }
+//        // Use firstOrCreate to avoid duplicates
+//        $searchCriteria = [];
+//        if (isset($data['company_name']) && isset($data['machine_info'])) {
+//            $searchCriteria = [
+//                'company_name' => $data['company_name'],
+//                'machine_info' => $data['machine_info']
+//            ];
+//            return $this->projectRepository->firstOrCreate($searchCriteria, $data);
+//        }
 
         // If no search criteria, just create a new record
         return $this->projectRepository->create($data);

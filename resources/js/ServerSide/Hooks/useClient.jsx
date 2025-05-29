@@ -16,7 +16,7 @@ export const useClient = () => {
         try {
             dispatch(setLoading(true));
 
-            const response = await apiService.get(API_CONFIG.ENDPOINTS.CLIENT.CLIENTS);
+            const response = await apiService.get(API_CONFIG.ENDPOINTS.CLIENT.CLIENT);
 
             // Dispatch only the data part
             dispatch(setClients(response.data));

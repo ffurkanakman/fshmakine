@@ -2,26 +2,26 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
     setError,
     setLoading,
-    setservisler,
+    setProjects,
     addProject
-}  from '../../Repo/Redux/Modules/servisSlice';
+}  from '../../Repo/Redux/Modules/projectSlice.jsx';
 import { API_CONFIG } from "../EndPoints";
 import { toast } from "react-toastify";
 import { apiService } from '../Load';
 
 
-export const useServis = () => {
+export const useProject = () => {
     const dispatch = useDispatch();
-    const { servisler, loading, error } = useSelector(state => state.servis);
+    const { projects, loading, error } = useSelector(state => state.project);
 
-    const setServis = async () => {
+    const setProject = async () => {
         try {
             dispatch(setLoading(true));
 
-            const response = await apiService.get(API_CONFIG.ENDPOINTS.SERVIS.SERVIS);
+            const response = await apiService.get(API_CONFIG.ENDPOINTS.PROJECTS.PROJECTS);
 
             // Sadece data kısmını dispatch et
-            dispatch(setservisler(response.data));
+            dispatch(setProjects(response.data));
 
             return response.data;
 
@@ -57,10 +57,10 @@ export const useServis = () => {
     };
 
     return {
-        servisler,
+        projects,
         loading,
         error,
-        setServisler: setServis,
+        setProjects: setProject,
         saveProject
     };
 };

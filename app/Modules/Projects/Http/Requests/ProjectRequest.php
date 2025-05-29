@@ -17,8 +17,8 @@ class ProjectRequest extends FormRequest
         $rules = [
             'name' => ['sometimes', 'string', 'max:255'],
             'description' => ['sometimes', 'string'],
-            'company_name' => ['required', 'string', 'max:255'],
-            'authorized_person' => ['required', 'string', 'max:255'],
+//            'company_name' => ['required', 'string', 'max:255'],
+//            'authorized_person' => ['required', 'string', 'max:255'],
             'machine_info' => ['required', 'string', 'max:255'],
             'project_type' => ['required', 'string', 'max:100'],
             'price' => ['sometimes', 'numeric', 'min:0'],

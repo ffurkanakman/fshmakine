@@ -1,18 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    servisler: [],
     projects: [],
     loading: false,
     error: null
 };
 
-const servisSlice = createSlice({
-    name: 'servis',
+const projectSlice = createSlice({
+    name: 'project',
     initialState,
     reducers: {
-        setservisler: (state, action) => {
-            state.servisler = action.payload.data;
+        setProjects: (state, action) => {
+            state.projects = action.payload.data;
         },
         setError: (state, action) => {
             state.error = action.payload;
@@ -28,8 +27,8 @@ const servisSlice = createSlice({
 });
 
 export const {
-    setservisler,
+    setProjects,
     setError,
     setLoading,
-    addProject } = servisSlice.actions;
-export default servisSlice.reducer;
+    addProject } = projectSlice.actions;
+export default projectSlice.reducer;

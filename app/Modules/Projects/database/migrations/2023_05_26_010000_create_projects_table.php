@@ -12,8 +12,6 @@ return new class extends Migration {
 
             $table->string('name')->unique(); // PRJ-1234
             $table->text('description')->nullable();
-            $table->string('company_name');
-            $table->string('authorized_person');
             $table->string('machine_info');
             $table->string('project_type'); // Construction, Repair, etc.
             $table->decimal('price', 15, 2)->nullable();

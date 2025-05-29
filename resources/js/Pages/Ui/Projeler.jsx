@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { PageLink, PageTitle } from '../../Libs/Metronic/_metronic/layout/core';
 import { ROUTES } from "@/Libs/Routes/config.jsx";
 import { KTCard, KTCardBody } from '../../Libs/Metronic/_metronic/helpers';
-import { useServis } from '../../ServerSide/Hooks/useServis';
+import { useProject } from '../../ServerSide/Hooks/useProject.jsx';
 
 const projectsBreadCrumbs = [
     {
@@ -25,12 +25,12 @@ const ProjectsPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(5);
 
-    // useServis hook'unu kullan - artık tüm state'ler buradan geliyor
-    const { servisler, loading, error, setServisler } = useServis();
+    // useProject hook'unu kullan - artık tüm state'ler buradan geliyor
+    const { projects, loading, error, setProjects } = useProject();
 
-    // Component mount olduğunda servisleri getir
+    // Component mount olduğunda projects getir
     useEffect(() => {
-        setServisler();
+        setProjects();
     }, []);
 
     // Function to get status badge class based on status
@@ -53,13 +53,13 @@ const ProjectsPage = () => {
     // Get current projects
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentProjects = servisler ? servisler.slice(indexOfFirstItem, indexOfLastItem) : [];
+    const currentProjects = projects ? projects.slice(indexOfFirstItem, indexOfLastItem) : [];
 
     // Change page
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     // Calculate total pages
-    const totalPages = servisler ? Math.ceil(servisler.length / itemsPerPage) : 0;
+    const totalPages = projects ? Math.ceil(projects.length / itemsPerPage) : 0;
 
     // Loading durumunu göster
     if (loading) {
@@ -88,7 +88,7 @@ const ProjectsPage = () => {
                     <h3 className='card-title align-items-start flex-column'>
                         <span className='card-label fw-bold fs-3 mb-1'>Servis Listesi</span>
                         <span className='text-muted mt-1 fw-semibold fs-7'>
-                            Toplam {servisler ? servisler.length : 0} servis
+                            Toplam {projects ? projects.length : 0} servis
                         </span>
                     </h3>
                     <div className='card-toolbar'>
@@ -114,48 +114,48 @@ const ProjectsPage = () => {
                             </tr>
                             </thead>
                             <tbody>
-                            {currentProjects.map((servis) => (
-                                <tr key={servis.id}>
+                            {currentProjects.map((project) => (
+                                <tr key={project.id}>
                                     <td>
                                         <span className='text-dark fw-bold text-hover-primary d-block fs-6'>
-                                            {servis.id}
+                                            {project.id}
                                         </span>
                                     </td>
                                     <td>
                                         <div className='d-flex align-items-center'>
                                             <div className='d-flex justify-content-start flex-column'>
                                                 <span className='text-dark fw-bold text-hover-primary fs-6'>
-                                                    {servis.company_name}
+                                                    {project.client?.company_name}
                                                 </span>
                                                 <span className='text-muted fw-semibold text-muted d-block fs-7'>
-                                                    {servis.authorized_person}
+                                                    {project.client?.authorized_person}
                                                 </span>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
                                         <span className='text-dark fw-bold text-hover-primary d-block fs-6'>
-                                            {servis.machine_info}
+                                            {project.machine_info}
                                         </span>
                                     </td>
                                     <td>
                                         <span className='text-dark fw-bold text-hover-primary d-block fs-6'>
-                                            {servis.notes}
+                                            {project.notes}
                                         </span>
                                     </td>
                                     <td>
                                         <span className='text-dark fw-bold text-hover-primary d-block fs-6'>
-                                            ₺{servis.price}
+                                            ₺{project.price}
                                         </span>
                                     </td>
                                     <td>
-                                        <span className={`badge ${getStatusBadgeClass(servis.status)}`}>
-                                            {servis.status}
+                                        <span className={`badge ${getStatusBadgeClass(project.status)}`}>
+                                            {project.status}
                                         </span>
                                     </td>
                                     <td>
                                         <span className='text-dark fw-bold text-hover-primary d-block fs-6'>
-                                            {servis.sales_person}
+                                            {project.salesPerson?.name}
                                         </span>
                                     </td>
                                     <td className='text-end'>
@@ -184,10 +184,10 @@ const ProjectsPage = () => {
                         </table>
                     </div>
 
-                    {servisler && servisler.length > 0 && (
+                    {projects && projects.length > 0 && (
                         <div className='d-flex flex-stack flex-wrap pt-10'>
                             <div className='fs-6 fw-bold text-gray-700'>
-                                Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, servisler.length)} of {servisler.length} entries
+                                Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, projects.length)} of {projects.length} entries
                             </div>
 
                             <ul className='pagination'>

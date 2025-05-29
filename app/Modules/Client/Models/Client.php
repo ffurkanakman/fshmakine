@@ -2,7 +2,7 @@
 
 namespace App\Modules\Client\Models;
 
-use App\Modules\Servis\Models\Servis;
+use App\Modules\Projects\Models\Project;
 use Illuminate\Database\Eloquent\Model;
 
 
@@ -23,8 +23,8 @@ class Client extends Model
         'updated_at' => 'datetime',
     ];
 
-    public function servis()
+    public function projects()
     {
-        return $this->hasMany(Servis::class);
+        return $this->hasMany(Project::class);
     }
 }

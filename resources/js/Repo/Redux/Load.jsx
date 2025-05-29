@@ -1,4 +1,4 @@
-import servisSlice from "./Modules/ServisSlice";
+import projectSlice from "./Modules/projectSlice";
 import authSlice from "./Modules/authSlice";
 import clientSlice from "./Modules/clientSlice";
 import {configureStore} from "@reduxjs/toolkit";
@@ -22,7 +22,7 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
-    servis: servisSlice,
+    project: projectSlice,
     auth: authSlice,
     client: clientSlice,
     // diğer slice'lar

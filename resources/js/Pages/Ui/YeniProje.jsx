@@ -9,7 +9,7 @@ import { Form, Formik, Field, ErrorMessage } from 'formik';
 import { projectFormSchema, initialValues } from './YeniProjeWizardHelper';
 import { Toolbar } from '../../Libs/Metronic/_metronic/layout/components/toolbar/Toolbar';
 import { Content } from '../../Libs/Metronic/_metronic/layout/components/Content';
-import { useServis } from '../../ServerSide/Hooks/useServis';
+import { useProject } from '../../ServerSide/Hooks/useProject.jsx';
 import { useClient } from '../../ServerSide/Hooks/useClient';
 import { toast } from 'react-toastify';
 
@@ -43,7 +43,7 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
     const navigate = useNavigate();
 
     // Servis hook'unu kullan
-    const { saveProject, loading: serviceLoading } = useServis();
+    const { saveProject, loading: serviceLoading } = useProject();
 
     // Client hook'unu kullan
     const { clients, fetchClients, createClient, loading: clientLoading } = useClient();
