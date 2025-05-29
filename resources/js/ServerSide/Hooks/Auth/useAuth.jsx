@@ -23,6 +23,7 @@ export const useAuth = () => {
     const [loginError, setLoginError] = useState(null);
 
     // Login function
+    // login fonksiyonu içinde sadece şu haliyle bırakıyoruz:
     const login = async (credentials) => {
         try {
             dispatch(setLoading(true));
@@ -34,18 +35,9 @@ export const useAuth = () => {
                 dispatch(setToken(response.data.token));
                 dispatch(setUser(response.data.user));
                 dispatch(setAuthenticated(true));
-
-                // Store token in localStorage for persistence
                 localStorage.setItem('token', response.data.token);
 
-                toast.success('Giriş başarılı! Yönlendiriliyorsunuz...');
-
-                // 1.5 saniye sonra yönlendir
-                setTimeout(() => {
-                    navigate(ROUTES.UI.LANDING);
-                }, 1500);
-
-                return true;
+                return true; // Sadece başarılı olduğunu döner
             }
 
             return false;
@@ -60,6 +52,7 @@ export const useAuth = () => {
             dispatch(setLoading(false));
         }
     };
+
 
     // Register function
     const register = async (userData) => {
@@ -114,33 +107,39 @@ export const useAuth = () => {
     };
 
     // Logout function
+
     const logout = async () => {
         try {
             dispatch(setLoading(true));
 
-            // Call logout API if user is authenticated
             if (isAuthenticated) {
                 await apiService.post('/api/v1/Cikis');
             }
 
-            // Clear auth state
             dispatch(logoutAction());
-
-            // Remove token from localStorage
             localStorage.removeItem('token');
 
-            toast.success('Çıkış yapıldı');
-            navigate(ROUTES.AUTH.LOGIN);
+            // ✅ Toast için flag bırak
+            sessionStorage.setItem('logoutToastPending', '1');
+
+            // ✅ Geçişi yumuşat: 100ms sonra replace: true ile yönlendir
+            setTimeout(() => {
+                navigate(ROUTES.AUTH.LOGIN, { replace: true });
+            }, 100);
 
             return true;
         } catch (error) {
-            console.error('Logout error:', error);
-            toast.error('Çıkış yapılırken bir hata oluştu');
+            console.error("Logout error:", error);
+            toast.error("Çıkış yapılırken bir hata oluştu");
             return false;
         } finally {
             dispatch(setLoading(false));
         }
     };
+
+
+
+
 
     // Forgot password function
     const forgotPassword = async (email) => {
