@@ -21,6 +21,10 @@ export const ROUTES = {
         USERS: '/Kullanicilar',
         NEW_USER: '/YeniKullanici',
         VIEW_USER: '/KullaniciGoruntule/:id',
-        EDIT_USER: '/KullaniciDuzenle/:id'
+        EDIT_USER: '/KullaniciDuzenle/:id',
+        CLIENTS: '/Musteriler',
+        NEW_CLIENT: '/YeniMusteri',
+        VIEW_CLIENT: '/MusteriGoruntule/:id',
+        EDIT_CLIENT: '/MusteriDuzenle/:id'
     }
 }

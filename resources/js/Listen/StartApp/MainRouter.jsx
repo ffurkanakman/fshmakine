@@ -16,6 +16,10 @@ import Kullanicilar from '../../Pages/Ui/Kullanicilar';
 import KullaniciGoruntule from '../../Pages/Ui/KullaniciGoruntule';
 import KullaniciDuzenle from '../../Pages/Ui/KullaniciDuzenle';
 import YeniKullanici from '../../Pages/Ui/YeniKullanici';
+import Musteriler from '../../Pages/Ui/Musteriler';
+import YeniMusteri from '../../Pages/Ui/YeniMusteri';
+import MusteriGoruntule from '../../Pages/Ui/MusteriGoruntule';
+import MusteriDuzenle from '../../Pages/Ui/MusteriDuzenle';
 import ProtectedRoute from '../../Components/Auth/ProtectedRoute';
 
 import {ErrorsPage} from '../../Libs/Metronic/app/modules/errors/ErrorsPage';
@@ -107,6 +111,38 @@ const MainRouter = () => {
                         element={
                             <ProtectedRoute>
                                 <YeniKullanici />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path={ROUTES.UI.CLIENTS}
+                        element={
+                            <ProtectedRoute>
+                                <Musteriler />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path={ROUTES.UI.NEW_CLIENT}
+                        element={
+                            <ProtectedRoute>
+                                <YeniMusteri />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path={ROUTES.UI.VIEW_CLIENT}
+                        element={
+                            <ProtectedRoute>
+                                <MusteriGoruntule />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path={ROUTES.UI.EDIT_CLIENT}
+                        element={
+                            <ProtectedRoute>
+                                <MusteriDuzenle />
                             </ProtectedRoute>
                         }
                     />

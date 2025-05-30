@@ -11,7 +11,7 @@ const clientSlice = createSlice({
     initialState,
     reducers: {
         setClients: (state, action) => {
-            state.clients = action.payload.data;
+            state.clients = action.payload;
         },
         setError: (state, action) => {
             state.error = action.payload;
