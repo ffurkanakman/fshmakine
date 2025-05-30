@@ -15,6 +15,7 @@ import ProjeGoruntule from '../../Pages/Ui/ProjeGoruntule';
 import Kullanicilar from '../../Pages/Ui/Kullanicilar';
 import KullaniciGoruntule from '../../Pages/Ui/KullaniciGoruntule';
 import KullaniciDuzenle from '../../Pages/Ui/KullaniciDuzenle';
+import YeniKullanici from '../../Pages/Ui/YeniKullanici';
 import ProtectedRoute from '../../Components/Auth/ProtectedRoute';
 
 import {ErrorsPage} from '../../Libs/Metronic/app/modules/errors/ErrorsPage';
@@ -98,6 +99,14 @@ const MainRouter = () => {
                         element={
                             <ProtectedRoute>
                                 <KullaniciDuzenle />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path={ROUTES.UI.NEW_USER}
+                        element={
+                            <ProtectedRoute>
+                                <YeniKullanici />
                             </ProtectedRoute>
                         }
                     />

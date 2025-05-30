@@ -19,6 +19,7 @@ export const ROUTES = {
         EDIT_PROJECT: '/ProjeGuncelle/:id',
         VIEW_PROJECT: '/ProjeGoruntule/:id',
         USERS: '/Kullanicilar',
+        NEW_USER: '/YeniKullanici',
         VIEW_USER: '/KullaniciGoruntule/:id',
         EDIT_USER: '/KullaniciDuzenle/:id'
     }

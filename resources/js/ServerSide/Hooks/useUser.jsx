@@ -81,6 +81,23 @@ export const useUser = () => {
         }
     };
 
+    const createUser = async (user) => {
+        try {
+            dispatch(setLoading(true));
+
+            const response = await apiService.post(API_CONFIG.ENDPOINTS.USER.USER, user);
+
+            return response.data;
+
+        } catch (error) {
+            dispatch(setError(error.message));
+            toast.error('Kullanıcı Eklenemedi.');
+            throw error;
+        } finally {
+            dispatch(setLoading(false));
+        }
+    };
+
     return {
         users,
         currentUser,
@@ -88,6 +105,7 @@ export const useUser = () => {
         error,
         setUser,
         getUserById,
-        updateUser
+        updateUser,
+        createUser
     };
 };

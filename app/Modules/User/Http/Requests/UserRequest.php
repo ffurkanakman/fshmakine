@@ -32,7 +32,7 @@ class UserRequest extends FormRequest
             'surname' => ['sometimes', 'string', 'max:255'],
             'phone_number' => ['sometimes', 'string', 'max:20', 'unique:users,phone_number,' . $userId],
             'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:users,email,' . $userId],
-            'password' => ['sometimes', 'string', 'min:8', 'confirmed'],
+            'password' => ['sometimes', 'nullable', 'string', 'min:8'],
             'role' => ['sometimes', 'string'],
             'status' => ['sometimes', 'string', 'in:active,inactive'],
         ];

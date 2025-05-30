@@ -107,12 +107,20 @@ const UserDetailsPage = () => {
                                 <div className="fs-5 text-dark">{user.id}</div>
                             </div>
                             <div className="col-lg-4 col-md-6 mb-4">
-                                <div className="fw-bold text-gray-600 mb-1">Ad Soyad</div>
+                                <div className="fw-bold text-gray-600 mb-1">Ad</div>
                                 <div className="fs-5 text-dark">{user.name}</div>
+                            </div>
+                            <div className="col-lg-4 col-md-6 mb-4">
+                                <div className="fw-bold text-gray-600 mb-1">Soyad</div>
+                                <div className="fs-5 text-dark">{user.surname}</div>
                             </div>
                             <div className="col-lg-4 col-md-6 mb-4">
                                 <div className="fw-bold text-gray-600 mb-1">E-posta</div>
                                 <div className="fs-5 text-dark">{user.email}</div>
+                            </div>
+                            <div className="col-lg-4 col-md-6 mb-4">
+                                <div className="fw-bold text-gray-600 mb-1">Telefon Numarası</div>
+                                <div className="fs-5 text-dark">{user.phone_number}</div>
                             </div>
                             <div className="col-lg-4 col-md-6 mb-4">
                                 <div className="fw-bold text-gray-600 mb-1">Rol</div>

@@ -80,10 +80,10 @@ const UsersPage = () => {
                         </span>
                     </h3>
                     <div className='card-toolbar'>
-                        <a href="/YeniKullanici" className='btn btn-sm btn-primary'>
+                        <Link to={ROUTES.UI.NEW_USER} className='btn btn-sm btn-primary'>
                             <i className='bi bi-plus-lg me-2'></i>
                             Yeni Kullanıcı Ekle
-                        </a>
+                        </Link>
                     </div>
                 </div>
                 <KTCardBody className='py-3'>
@@ -92,8 +92,10 @@ const UsersPage = () => {
                             <thead>
                             <tr className="fw-bold text-muted">
                                 <th className="min-w-50px">ID</th>
-                                <th className="min-w-150px">Ad Soyad</th>
+                                <th className="min-w-120px">Ad</th>
+                                <th className="min-w-120px">Soyad</th>
                                 <th className="min-w-140px">E-posta</th>
+                                <th className="min-w-120px">Telefon</th>
                                 <th className="min-w-120px">Rol</th>
                                 <th className="min-w-120px">Durum</th>
                                 <th className="min-w-100px text-end">İşlem</th>
@@ -118,7 +120,17 @@ const UsersPage = () => {
                                     </td>
                                     <td>
                                         <span className='text-dark fw-bold text-hover-primary d-block fs-6'>
+                                            {user.surname}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span className='text-dark fw-bold text-hover-primary d-block fs-6'>
                                             {user.email}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span className='text-dark fw-bold text-hover-primary d-block fs-6'>
+                                            {user.phone_number}
                                         </span>
                                     </td>
                                     <td>
