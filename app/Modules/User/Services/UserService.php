@@ -20,6 +20,9 @@ class UserService
 
     public function create(array $data)
     {
+        if (isset($data['password'])) {
+            $data['password'] = bcrypt($data['password']);
+        }
         return $this->userRepository->create($data);
     }
 
@@ -30,6 +33,9 @@ class UserService
 
     public function update($id, array $data)
     {
+        if (isset($data['password'])) {
+            $data['password'] = bcrypt($data['password']);
+        }
         return $this->userRepository->update($id, $data);
     }
 

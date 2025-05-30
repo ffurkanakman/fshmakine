@@ -15,6 +15,10 @@ export const API_CONFIG = {
         CLIENT: {
             CLIENTS: '/api/client',
             CLIENT: '/api/client'
+        },
+        USER: {
+            USER: '/api/user',
+            USER_UPDATE: '/api/user'
         }
     }
 };
