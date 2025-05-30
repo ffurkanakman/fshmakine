@@ -25,7 +25,7 @@ class UserRequest extends FormRequest
         }
 
         // PUT veya PATCH - alanlar opsiyonel ama gelen varsa doğrulanır
-        $userId = $this->route('user') ?? auth()->id();
+        $userId = $this->route('id') ?? auth()->id();
 
         return [
             'name' => ['sometimes', 'string', 'max:255'],
@@ -34,6 +34,7 @@ class UserRequest extends FormRequest
             'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:users,email,' . $userId],
             'password' => ['sometimes', 'string', 'min:8', 'confirmed'],
             'role' => ['sometimes', 'string'],
+            'status' => ['sometimes', 'string', 'in:active,inactive'],
         ];
     }
 }

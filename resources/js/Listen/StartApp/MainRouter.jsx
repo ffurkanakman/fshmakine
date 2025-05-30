@@ -12,6 +12,9 @@ import Projeler from '../../Pages/Ui/Projeler';
 import YeniProje from '../../Pages/Ui/YeniProje';
 import ProjeGuncelle from '../../Pages/Ui/ProjeGuncelle';
 import ProjeGoruntule from '../../Pages/Ui/ProjeGoruntule';
+import Kullanicilar from '../../Pages/Ui/Kullanicilar';
+import KullaniciGoruntule from '../../Pages/Ui/KullaniciGoruntule';
+import KullaniciDuzenle from '../../Pages/Ui/KullaniciDuzenle';
 import ProtectedRoute from '../../Components/Auth/ProtectedRoute';
 
 import {ErrorsPage} from '../../Libs/Metronic/app/modules/errors/ErrorsPage';
@@ -71,6 +74,30 @@ const MainRouter = () => {
                         element={
                             <ProtectedRoute>
                                 <ProjeGoruntule />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path={ROUTES.UI.USERS}
+                        element={
+                            <ProtectedRoute>
+                                <Kullanicilar />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path={ROUTES.UI.VIEW_USER}
+                        element={
+                            <ProtectedRoute>
+                                <KullaniciGoruntule />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path={ROUTES.UI.EDIT_USER}
+                        element={
+                            <ProtectedRoute>
+                                <KullaniciDuzenle />
                             </ProtectedRoute>
                         }
                     />

@@ -23,6 +23,12 @@ const AsideMenuMain = () => {
                     fontIcon='bi-clipboard-data'
                 />
                 <AsideMenuItem
+                    to='/Kullanicilar'
+                    icon='people'
+                    title='Kullanıcılar'
+                    fontIcon='bi-people'
+                />
+                <AsideMenuItem
                     to='/builder'
                     icon='switch'
                     title='Layout Builder'

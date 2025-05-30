@@ -31,4 +31,19 @@ class User extends Authenticatable
         'updated_at' => 'datetime',
         'status' => 'boolean',
     ];
+
+    /**
+     * Set the user's status.
+     *
+     * @param  string|bool  $value
+     * @return void
+     */
+    public function setStatusAttribute($value)
+    {
+        if (is_string($value)) {
+            $this->attributes['status'] = $value === 'active' ? 1 : 0;
+        } else {
+            $this->attributes['status'] = $value ? 1 : 0;
+        }
+    }
 }
