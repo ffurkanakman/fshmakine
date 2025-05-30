@@ -19,6 +19,7 @@ class ClientRequest extends FormRequest
             'authorized_person' => ['required', 'string', 'max:255'],
             'phone'             => ['nullable', 'string', 'max:20'],
             'address'           => ['nullable', 'string'],
+            'email'             => ['nullable', 'email', 'max:255'],
         ];
     }
 }
