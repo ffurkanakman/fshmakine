@@ -16,6 +16,7 @@ class Client extends Model
         'authorized_person',
         'phone',
         'address',
+        'email',
     ];
 
     protected $casts = [

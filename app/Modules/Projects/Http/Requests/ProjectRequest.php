@@ -27,12 +27,36 @@ class ProjectRequest extends FormRequest
             'done_jobs' => ['sometimes', 'string'],
             'client_id' => ['sometimes', 'exists:clients,id'],
             'sales_person_id' => ['sometimes', 'exists:users,id'],
+
+            // Vehicle information fields
+            'brand' => ['sometimes', 'string', 'max:255'],
+            'model' => ['sometimes', 'string', 'max:255'],
+            'serial_number' => ['sometimes', 'string', 'max:255'],
+            'chassis_number' => ['sometimes', 'string', 'max:255'],
+            'hours' => ['sometimes', 'integer', 'min:0'],
+            'model_year' => ['sometimes', 'integer', 'min:1900', 'max:2100'],
+            'photos' => ['sometimes', 'array'],
+            'photos.*' => ['sometimes', 'string'],
+            'vehiclePhotos' => ['sometimes', 'array'],
+            'vehiclePhotos.*' => ['sometimes'],
+
+            // Support for camelCase field names from frontend
+            'serialNumber' => ['sometimes', 'string', 'max:255'],
+            'chassisNumber' => ['sometimes', 'string', 'max:255'],
+            'modelYear' => ['sometimes', 'integer', 'min:1900', 'max:2100'],
+
+            // Parts data
+            'parts' => ['sometimes', 'array'],
+            'parts.*.name' => ['sometimes', 'string', 'max:255'],
+            'parts.*.quantity' => ['sometimes', 'numeric', 'min:0'],
+            'parts.*.unit_price' => ['sometimes', 'numeric', 'min:0'],
+            'parts.*.total_price' => ['sometimes', 'numeric', 'min:0'],
+            'parts.*.unitPrice' => ['sometimes', 'numeric', 'min:0'],
+            'parts.*.totalPrice' => ['sometimes', 'numeric', 'min:0'],
         ];
 
         // If this is an update request (PUT/PATCH), make some fields optional
         if ($this->isMethod('put') || $this->isMethod('patch')) {
-            $rules['company_name'] = ['sometimes', 'string', 'max:255'];
-            $rules['authorized_person'] = ['sometimes', 'string', 'max:255'];
             $rules['machine_info'] = ['sometimes', 'string', 'max:255'];
             $rules['project_type'] = ['sometimes', 'string', 'max:100'];
         }

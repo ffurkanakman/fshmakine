@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     projects: [],
+    currentProject: null,
     loading: false,
     error: null
 };
@@ -22,6 +23,15 @@ const projectSlice = createSlice({
         },
         addProject: (state, action) => {
             state.projects.push(action.payload);
+        },
+        updateProject: (state, action) => {
+            const index = state.projects.findIndex(project => project.id === action.payload.id);
+            if (index !== -1) {
+                state.projects[index] = action.payload;
+            }
+        },
+        setCurrentProject: (state, action) => {
+            state.currentProject = action.payload;
         }
     }
 });
@@ -30,5 +40,7 @@ export const {
     setProjects,
     setError,
     setLoading,
-    addProject } = projectSlice.actions;
+    addProject,
+    updateProject,
+    setCurrentProject } = projectSlice.actions;
 export default projectSlice.reducer;

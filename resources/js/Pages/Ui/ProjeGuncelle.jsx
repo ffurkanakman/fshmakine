@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useIntl } from 'react-intl';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { PageLink, PageTitle } from '../../Libs/Metronic/_metronic/layout/core';
 import { ROUTES } from "@/Libs/Routes/config.jsx";
 import { KTCard, KTCardBody, KTIcon } from '../../Libs/Metronic/_metronic/helpers';
@@ -13,7 +13,7 @@ import { useProject } from '../../ServerSide/Hooks/useProject.jsx';
 import { useClient } from '../../ServerSide/Hooks/useClient';
 import { toast } from 'react-toastify';
 
-const newProjectBreadCrumbs = [
+const editProjectBreadCrumbs = [
     {
         title: 'Ana Sayfa',
         path: ROUTES.UI.LANDING,
@@ -27,23 +27,26 @@ const newProjectBreadCrumbs = [
         isActive: false,
     },
     {
-        title: 'Yeni Proje',
-        path: ROUTES.UI.NEW_PROJECT,
+        title: 'Proje Güncelle',
+        path: '',
         isSeparator: false,
         isActive: true,
     }
 ];
 
-// Wizard component for new project creation
-const ProjectWizard = ({ breadcrumbs, title }) => {
+// Wizard component for project editing
+const ProjectEditWizard = ({ breadcrumbs, title }) => {
     const stepperRef = useRef(null);
     const [stepper, setStepper] = useState(null);
     const [currentSchema, setCurrentSchema] = useState(projectFormSchema[0]);
     const [isSubmitButton, setSubmitButton] = useState(false);
     const navigate = useNavigate();
+    const { id } = useParams();
+    const [formValues, setFormValues] = useState(initialValues);
+    const [existingPhotos, setExistingPhotos] = useState([]);
 
     // Servis hook'unu kullan
-    const { saveProject, loading: serviceLoading } = useProject();
+    const { getProjectById, updateProject, currentProject, loading: serviceLoading } = useProject();
 
     // Client hook'unu kullan
     const { clients, fetchClients, createClient, loading: clientLoading } = useClient();
@@ -51,11 +54,119 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
     // Combined loading state
     const loading = serviceLoading || clientLoading;
 
+    // Fetch project data when component mounts and clients are loaded
+    useEffect(() => {
+        // Only load project data if clients are available
+        if (!clients || clients.length === 0) {
+            console.log('Waiting for clients to load before loading project data');
+            return;
+        }
+
+        console.log('Clients are loaded, now loading project data');
+        const loadProject = async () => {
+            try {
+                console.log('Loading project data for ID:', id);
+                const projectData = await getProjectById(id);
+                console.log('Project data loaded:', projectData);
+                if (projectData) {
+                    // Map API data to form fields
+                    const mappedValues = {
+                        ...initialValues,
+                        tasksToBeDone: projectData.notes || '',
+                        tasksDone: projectData.done_jobs || '',
+                        extraNotes: projectData.description || '',
+                        laborCost: projectData.price || 0,
+                        discount: projectData.discount || 0,
+                        debt: projectData.debt || 0,
+                    };
+
+                    // Check if project has parts data
+                    if (projectData.parts && Array.isArray(projectData.parts) && projectData.parts.length > 0) {
+                        // Map parts data to form fields
+                        mappedValues.parts = projectData.parts.map(part => ({
+                            name: part.name || '',
+                            quantity: part.quantity || '',
+                            unitPrice: part.unit_price || part.unitPrice || '',
+                            totalPrice: part.total_price || part.totalPrice || ''
+                        }));
+                    } else if (projectData.project_parts && Array.isArray(projectData.project_parts) && projectData.project_parts.length > 0) {
+                        // Alternative field name for parts
+                        mappedValues.parts = projectData.project_parts.map(part => ({
+                            name: part.name || '',
+                            quantity: part.quantity || '',
+                            unitPrice: part.unit_price || part.unitPrice || '',
+                            totalPrice: part.total_price || part.totalPrice || ''
+                        }));
+                    }
+
+                    // Log the project data to see its structure
+                    console.log('Project data for editing:', projectData);
+
+                    // Log vehicle information specifically
+                    if (projectData.vehicle_information) {
+                        console.log('Vehicle information found:', projectData.vehicle_information);
+                    } else {
+                        console.log('No vehicle information found, falling back to machine_info');
+                    }
+
+                    // If there's a client, populate client fields
+                    if (projectData.client) {
+                        mappedValues.customerType = projectData.client.id.toString();
+                        mappedValues.isNewCustomer = false;
+                        mappedValues.companyName = projectData.client.company_name || '';
+                        mappedValues.authorizedPerson = projectData.client.authorized_person || '';
+                        mappedValues.phoneNumber = projectData.client.phone || '';
+                        mappedValues.email = projectData.client.email || '';
+
+                        console.log('Client found in project data:', projectData.client);
+                        console.log('Setting customerType to:', projectData.client.id.toString());
+                    }
+
+                    // If there's vehicle information, use it
+                    if (projectData.vehicle_information) {
+                        mappedValues.brand = projectData.vehicle_information.brand || '';
+                        mappedValues.model = projectData.vehicle_information.model || '';
+                        mappedValues.serialNumber = projectData.vehicle_information.serial_number || '';
+                        mappedValues.chassisNumber = projectData.vehicle_information.chassis_number || '';
+                        mappedValues.hours = projectData.vehicle_information.hours || '';
+                        mappedValues.modelYear = projectData.vehicle_information.model_year || '';
+
+                        // Handle photos if they exist
+                        if (projectData.vehicle_information.photos && Array.isArray(projectData.vehicle_information.photos)) {
+                            console.log('Vehicle photos:', projectData.vehicle_information.photos);
+                            // Store the existing photo paths in state
+                            setExistingPhotos(projectData.vehicle_information.photos);
+                        }
+                    }
+                    // Fallback to parsing machine_info if no vehicle_information
+                    else if (projectData.machine_info) {
+                        const parts = projectData.machine_info.split(' ');
+                        if (parts.length >= 2) {
+                            mappedValues.brand = parts[0] || '';
+                            mappedValues.model = parts.slice(1).join(' ') || '';
+                        } else {
+                            mappedValues.brand = projectData.machine_info;
+                        }
+                    }
+
+                    console.log('Setting form values:', mappedValues);
+                    setFormValues(mappedValues);
+                }
+            } catch (error) {
+                console.error('Proje yüklenirken hata oluştu:', error);
+                toast.error('Proje yüklenemedi');
+            }
+        };
+
+        loadProject();
+    }, [id, clients]); // Re-run when id or clients change
+
     // Fetch clients when component mounts
     useEffect(() => {
         const loadClients = async () => {
             try {
-                await fetchClients();
+                const clientsData = await fetchClients();
+                console.log('Clients loaded:', clientsData);
             } catch (error) {
                 console.error('Müşteriler yüklenirken hata oluştu:', error);
             }
@@ -120,7 +231,7 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
                         }
                     } catch (clientError) {
                         console.error('Müşteri kaydedilirken hata oluştu:', clientError);
-                        // Continue with service creation even if client creation fails
+                        // Continue with service update even if client creation fails
                     }
                 } else if (values.customerType && values.customerType !== 'new') {
                     // If an existing client is selected, use its ID
@@ -151,6 +262,7 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
                     hours: values.hours,
                     modelYear: values.modelYear,
                     vehiclePhotos: values.vehiclePhotos,
+                    existingPhotos: values.vehiclePhotos.length === 0 ? existingPhotos : [],
 
                     // Include parts data
                     parts: values.parts.filter(part => part.name && part.quantity && part.unitPrice).map(part => ({
@@ -167,19 +279,19 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
                 }
 
                 // Form is complete, submit the data using the hook
-                const savedProject = await saveProject(projectData);
+                const updatedProject = await updateProject(id, projectData);
 
                 // Display success message
-                toast.success('Servis başarıyla oluşturuldu');
+                toast.success('Servis başarıyla güncellendi');
 
                 // Short delay to ensure toast is visible before navigation
                 setTimeout(() => {
-                    // Başarılı kayıt sonrası projeler sayfasına yönlendir
+                    // Başarılı güncelleme sonrası projeler sayfasına yönlendir
                     navigate(ROUTES.UI.PROJECTS);
                 }, 1000);
                 return;
             } catch (error) {
-                console.error('Proje kaydedilirken hata oluştu:', error);
+                console.error('Proje güncellenirken hata oluştu:', error);
                 // Hata durumunda form işlemini devam ettir
                 actions.setSubmitting(false);
             }
@@ -265,6 +377,17 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
         loadStepper();
     }, [stepperRef]);
 
+    // If still loading project data, show loading indicator
+    if (loading && !currentProject) {
+        return (
+            <div className="d-flex justify-content-center align-items-center" style={{ height: '400px' }}>
+                <div className="spinner-border text-fsh-primary" role="status">
+                    <span className="visually-hidden">Yükleniyor...</span>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <>
             <PageTitle breadcrumbs={breadcrumbs}>
@@ -274,7 +397,7 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
                         <div
                             ref={stepperRef}
                             className='stepper stepper-links d-flex flex-column pt-15'
-                            id='kt_create_project_stepper'
+                            id='kt_edit_project_stepper'
                         >
                             <div className='stepper-nav mb-5'>
                                 <div className='stepper-item current' data-kt-stepper-element='nav'>
@@ -294,9 +417,15 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
                                 </div>
                             </div>
 
-                            <Formik validationSchema={currentSchema} initialValues={initialValues} onSubmit={submitStep}>
+                            {console.log('Initializing Formik with formValues:', formValues)}
+                            <Formik
+                                validationSchema={currentSchema}
+                                initialValues={formValues}
+                                onSubmit={submitStep}
+                                enableReinitialize={true} // This ensures form values update when formValues state changes
+                            >
                                 {({ values, setFieldValue, errors, touched }) => (
-                                    <Form className='pt-15 pb-10 form-wrapper' id='kt_create_project_form'>
+                                    <Form className='pt-15 pb-10 form-wrapper' id='kt_edit_project_form'>
                                         <div className='current' data-kt-stepper-element='content'>
                                             <div className="step-content">
                                                 <div className="mb-10">
@@ -340,11 +469,21 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
                                                     >
                                                         <option value="">Müşteri Seçiniz</option>
                                                         <option value="new">Yeni Müşteri</option>
-                                                        {clients && clients.map((client) => (
-                                                            <option key={client.id} value={client.id}>
-                                                                {client.company_name || client.name}
-                                                            </option>
-                                                        ))}
+                                                        {clients && (
+                                                            console.log('Rendering client options, current customerType:', values.customerType),
+                                                            clients.map((client) => {
+                                                                const isSelected = client.id.toString() === values.customerType;
+                                                                console.log(`Client option: ${client.id.toString()}, isSelected: ${isSelected}`);
+                                                                return (
+                                                                    <option
+                                                                        key={client.id}
+                                                                        value={client.id.toString()}
+                                                                    >
+                                                                        {client.company_name || client.name}
+                                                                    </option>
+                                                                );
+                                                            })
+                                                        )}
                                                     </Field>
                                                     <div className="text-danger mt-2">
                                                         <ErrorMessage name="customerType" />
@@ -478,6 +617,30 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
                                                 {/* Vehicle Photos */}
                                                 <div className="mb-10">
                                                     <label className="form-label">Araç Fotoğrafları</label>
+
+                                                    {/* Existing Photos */}
+                                                    {existingPhotos.length > 0 && (
+                                                        <div className="mb-5">
+                                                            <h6>Mevcut Fotoğraflar</h6>
+                                                            <div className="alert alert-info mb-3">
+                                                                <i className="bi bi-info-circle me-2"></i>
+                                                                Mevcut fotoğraflar korunacaktır. Değiştirmek istiyorsanız yeni fotoğraflar yükleyin.
+                                                            </div>
+                                                            <div className="d-flex flex-wrap gap-3 mt-3">
+                                                                {existingPhotos.map((photoPath, index) => (
+                                                                    <div key={`existing-${index}`} className="position-relative">
+                                                                        <img
+                                                                            src={`/storage/${photoPath}`}
+                                                                            alt={`Existing vehicle photo ${index + 1}`}
+                                                                            className="img-thumbnail"
+                                                                            style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                                                                        />
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    )}
+
                                                     <div className="dropzone-container border rounded p-4">
                                                         <div className="dz-message needsclick text-center mb-3">
                                                             <i className="bi bi-file-earmark-image fs-3x text-fsh-primary"></i>
@@ -495,10 +658,10 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
                                                         />
                                                     </div>
 
-                                                    {/* Display uploaded photos */}
+                                                    {/* Display newly uploaded photos */}
                                                     {values.vehiclePhotos.length > 0 && (
                                                         <div className="mt-5">
-                                                            <h6>Yüklenen Fotoğraflar</h6>
+                                                            <h6>Yeni Yüklenen Fotoğraflar</h6>
                                                             <div className="d-flex flex-wrap gap-3 mt-3">
                                                                 {values.vehiclePhotos.map((photo, index) => (
                                                                     <div key={index} className="position-relative">
@@ -779,20 +942,47 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
                                                             </div>
                                                         </div>
 
-                                                        {values.vehiclePhotos.length > 0 && (
+                                                        {(values.vehiclePhotos.length > 0 || existingPhotos.length > 0) && (
                                                             <div className="mt-3">
                                                                 <h5 className="text-gray-800">Araç Fotoğrafları</h5>
-                                                                <div className="d-flex flex-wrap gap-3 mt-3">
-                                                                    {values.vehiclePhotos.map((photo, index) => (
-                                                                        <img
-                                                                            key={index}
-                                                                            src={URL.createObjectURL(photo)}
-                                                                            alt={`Vehicle photo ${index + 1}`}
-                                                                            className="img-thumbnail"
-                                                                            style={{ width: '100px', height: '100px', objectFit: 'cover' }}
-                                                                        />
-                                                                    ))}
-                                                                </div>
+
+                                                                {/* Show existing photos if no new ones are uploaded */}
+                                                                {values.vehiclePhotos.length === 0 && existingPhotos.length > 0 && (
+                                                                    <div className="mb-3">
+                                                                        <h6 className="text-gray-600">Mevcut Fotoğraflar</h6>
+                                                                        <div className="d-flex flex-wrap gap-3 mt-3">
+                                                                            {existingPhotos.map((photoPath, index) => (
+                                                                                <img
+                                                                                    key={`existing-preview-${index}`}
+                                                                                    src={`/storage/${photoPath}`}
+                                                                                    alt={`Existing vehicle photo ${index + 1}`}
+                                                                                    className="img-thumbnail"
+                                                                                    style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                                                                                />
+                                                                            ))}
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+
+                                                                {/* Show new photos if uploaded */}
+                                                                {values.vehiclePhotos.length > 0 && (
+                                                                    <div>
+                                                                        {existingPhotos.length > 0 && (
+                                                                            <h6 className="text-gray-600">Yeni Fotoğraflar (Mevcut fotoğrafların yerini alacak)</h6>
+                                                                        )}
+                                                                        <div className="d-flex flex-wrap gap-3 mt-3">
+                                                                            {values.vehiclePhotos.map((photo, index) => (
+                                                                                <img
+                                                                                    key={`new-preview-${index}`}
+                                                                                    src={URL.createObjectURL(photo)}
+                                                                                    alt={`Vehicle photo ${index + 1}`}
+                                                                                    className="img-thumbnail"
+                                                                                    style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                                                                                />
+                                                                            ))}
+                                                                        </div>
+                                                                    </div>
+                                                                )}
                                                             </div>
                                                         )}
                                                     </div>
@@ -896,7 +1086,7 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
                                                 {!loading && (
                                                     <span className='indicator-label'>
                                                         {!isSubmitButton && 'İleri'}
-                                                        {isSubmitButton && 'Kaydet'}
+                                                        {isSubmitButton && 'Güncelle'}
                                                         <KTIcon iconName='arrow-right' className='fs-3 ms-2 me-0' />
                                                     </span>
                                                 )}
@@ -918,17 +1108,17 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
     );
 };
 
-const YeniProje = () => {
+const ProjeGuncelle = () => {
     const intl = useIntl();
     return (
         <>
-            <ProjectWizard
-                breadcrumbs={newProjectBreadCrumbs}
-                title="Yeni Proje Ekle"
+            <ProjectEditWizard
+                breadcrumbs={editProjectBreadCrumbs}
+                title="Proje Güncelle"
             />
         </>
     );
 };
 
-export { YeniProje };
-export default YeniProje;
+export { ProjeGuncelle };
+export default ProjeGuncelle;

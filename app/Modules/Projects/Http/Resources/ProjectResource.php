@@ -33,6 +33,29 @@ class ProjectResource extends JsonResource
                     'name' => $this->salesPerson->name,
                 ];
             }),
+            'vehicle_information' => $this->when($this->vehicleInformation, function () {
+                return [
+                    'id' => $this->vehicleInformation->id,
+                    'brand' => $this->vehicleInformation->brand,
+                    'model' => $this->vehicleInformation->model,
+                    'serial_number' => $this->vehicleInformation->serial_number,
+                    'chassis_number' => $this->vehicleInformation->chassis_number,
+                    'hours' => $this->vehicleInformation->hours,
+                    'model_year' => $this->vehicleInformation->model_year,
+                    'photos' => $this->vehicleInformation->photos,
+                ];
+            }),
+            'parts' => $this->when($this->parts, function () {
+                return $this->parts->map(function ($part) {
+                    return [
+                        'id' => $part->id,
+                        'name' => $part->name,
+                        'quantity' => $part->quantity,
+                        'unit_price' => $part->unit_price,
+                        'total_price' => $part->total_price,
+                    ];
+                });
+            }),
             'created_at' => $this->created_at?->toDateTimeString(),
             'updated_at' => $this->updated_at?->toDateTimeString(),
         ];

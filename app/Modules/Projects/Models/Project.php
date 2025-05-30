@@ -13,8 +13,6 @@ class Project extends Model
     protected $fillable = [
         'name',
         'description',
-        'company_name',
-        'authorized_person',
         'machine_info',
         'project_type',
         'price',
@@ -23,6 +21,7 @@ class Project extends Model
         'done_jobs',
         'client_id',
         'sales_person_id',
+        'vehicle_id',
     ];
 
     protected $dates = ['deleted_at'];
@@ -41,5 +40,15 @@ class Project extends Model
     public function salesPerson()
     {
         return $this->belongsTo(\App\Modules\User\Models\User::class, 'sales_person_id');
+    }
+
+    public function vehicleInformation()
+    {
+        return $this->hasOne(VehicleInformation::class);
+    }
+
+    public function parts()
+    {
+        return $this->hasMany(ProjectPart::class);
     }
 }

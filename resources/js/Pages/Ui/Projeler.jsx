@@ -3,7 +3,9 @@ import { useIntl } from 'react-intl';
 import { PageLink, PageTitle } from '../../Libs/Metronic/_metronic/layout/core';
 import { ROUTES } from "@/Libs/Routes/config.jsx";
 import { KTCard, KTCardBody } from '../../Libs/Metronic/_metronic/helpers';
+import { Link } from 'react-router-dom';
 import { useProject } from '../../ServerSide/Hooks/useProject.jsx';
+import { toast } from 'react-toastify';
 
 const projectsBreadCrumbs = [
     {
@@ -26,7 +28,7 @@ const ProjectsPage = () => {
     const [itemsPerPage] = useState(5);
 
     // useProject hook'unu kullan - artık tüm state'ler buradan geliyor
-    const { projects, loading, error, setProjects } = useProject();
+    const { projects, loading, error, setProjects, approveProject, rejectProject, deleteProject } = useProject();
 
     // Component mount olduğunda projects getir
     useEffect(() => {
@@ -63,6 +65,45 @@ const ProjectsPage = () => {
 
     // Calculate total pages
     const totalPages = projects ? Math.ceil(projects.length / itemsPerPage) : 0;
+
+    // Handle approve project
+    const handleApprove = async (id) => {
+        try {
+            await approveProject(id);
+            toast.success('Proje başarıyla onaylandı');
+            // Refresh projects list
+            setProjects();
+        } catch (error) {
+            console.error('Proje onaylanırken hata oluştu:', error);
+        }
+    };
+
+    // Handle reject project
+    const handleReject = async (id) => {
+        try {
+            await rejectProject(id);
+            toast.success('Proje başarıyla reddedildi');
+            // Refresh projects list
+            setProjects();
+        } catch (error) {
+            console.error('Proje reddedilirken hata oluştu:', error);
+        }
+    };
+
+    // Handle delete project
+    const handleDelete = async (id) => {
+        // Show confirmation dialog
+        if (window.confirm('Bu projeyi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.')) {
+            try {
+                await deleteProject(id);
+                toast.success('Proje başarıyla silindi');
+                // Refresh projects list
+                setProjects();
+            } catch (error) {
+                console.error('Proje silinirken hata oluştu:', error);
+            }
+        }
+    };
 
     // Loading durumunu göster
     if (loading) {
@@ -162,24 +203,41 @@ const ProjectsPage = () => {
                                         </span>
                                     </td>
                                     <td className='text-end'>
-                                        <a
-                                            href='#'
-                                            className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
-                                        >
-                                            <i className='bi bi-eye fs-4'></i>
-                                        </a>
-                                        <a
-                                            href='#'
-                                            className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
-                                        >
-                                            <i className='bi bi-pencil fs-4'></i>
-                                        </a>
-                                        <a
-                                            href='#'
-                                            className='btn btn-icon btn-bg-light btn-active-color-danger btn-sm'
-                                        >
-                                            <i className='bi bi-trash fs-4'></i>
-                                        </a>
+                                        <div className="d-flex justify-content-end">
+                                            <Link
+                                                to={`/ProjeGoruntule/${project.id}`}
+                                                className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+                                            >
+                                                <i className='bi bi-eye fs-4'></i>
+                                            </Link>
+                                            <Link
+                                                to={`/ProjeGuncelle/${project.id}`}
+                                                className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+                                            >
+                                                <i className='bi bi-pencil fs-4'></i>
+                                            </Link>
+                                            <button
+                                                onClick={() => handleApprove(project.id)}
+                                                className='btn btn-icon btn-bg-light btn-active-color-success btn-sm me-1'
+                                                title='Onayla'
+                                            >
+                                                <i className='bi bi-check-lg fs-4'></i>
+                                            </button>
+                                            <button
+                                                onClick={() => handleReject(project.id)}
+                                                className='btn btn-icon btn-bg-light btn-active-color-danger btn-sm me-1'
+                                                title='Reddet'
+                                            >
+                                                <i className='bi bi-x-lg fs-4'></i>
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(project.id)}
+                                                className='btn btn-icon btn-bg-light btn-active-color-danger btn-sm'
+                                                title='Sil'
+                                            >
+                                                <i className='bi bi-trash fs-4'></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}

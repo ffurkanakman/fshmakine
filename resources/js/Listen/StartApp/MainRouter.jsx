@@ -10,6 +10,8 @@ import ResetPassword from "../../Pages/Auth/ResetPassword";
 import Home from '../../Pages/Ui/Home/ServisList';
 import Projeler from '../../Pages/Ui/Projeler';
 import YeniProje from '../../Pages/Ui/YeniProje';
+import ProjeGuncelle from '../../Pages/Ui/ProjeGuncelle';
+import ProjeGoruntule from '../../Pages/Ui/ProjeGoruntule';
 import ProtectedRoute from '../../Components/Auth/ProtectedRoute';
 
 import {ErrorsPage} from '../../Libs/Metronic/app/modules/errors/ErrorsPage';
@@ -53,6 +55,22 @@ const MainRouter = () => {
                         element={
                             <ProtectedRoute>
                                 <YeniProje />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path={ROUTES.UI.EDIT_PROJECT}
+                        element={
+                            <ProtectedRoute>
+                                <ProjeGuncelle />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path={ROUTES.UI.VIEW_PROJECT}
+                        element={
+                            <ProtectedRoute>
+                                <ProjeGoruntule />
                             </ProtectedRoute>
                         }
                     />
