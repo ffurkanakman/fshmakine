@@ -31,24 +31,30 @@ class ProjectService
 
     public function create(array $data)
     {
+        // Eğer sales_person_id request'ten gelmediyse, giriş yapan kullanıcıyı ata
+        if (!isset($data['sales_person_id'])) {
+            $data['sales_person_id'] = auth()->id();
+        }
+
         // Generate a unique code for the project if not provided
         if (!isset($data['name'])) {
             $data['name'] = $this->generateProjectName();
         }
 
-//        // Use firstOrCreate to avoid duplicates
-//        $searchCriteria = [];
-//        if (isset($data['company_name']) && isset($data['machine_info'])) {
-//            $searchCriteria = [
-//                'company_name' => $data['company_name'],
-//                'machine_info' => $data['machine_info']
-//            ];
-//            return $this->projectRepository->firstOrCreate($searchCriteria, $data);
-//        }
+        // Use firstOrCreate to avoid duplicates
+        $searchCriteria = [];
+        if (isset($data['company_name']) && isset($data['machine_info'])) {
+            $searchCriteria = [
+                'company_name' => $data['company_name'],
+                'machine_info' => $data['machine_info']
+            ];
+            return $this->projectRepository->firstOrCreate($searchCriteria, $data);
+        }
 
         // If no search criteria, just create a new record
         return $this->projectRepository->create($data);
     }
+
 
     public function update($id, array $data)
     {

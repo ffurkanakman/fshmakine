@@ -55,6 +55,9 @@ const ProjectsPage = () => {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentProjects = projects ? projects.slice(indexOfFirstItem, indexOfLastItem) : [];
 
+    console.log("gelen projects: ", projects);
+    console.log("su anki sayfadaki veriler: ", currentProjects);
+
     // Change page
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -155,7 +158,7 @@ const ProjectsPage = () => {
                                     </td>
                                     <td>
                                         <span className='text-dark fw-bold text-hover-primary d-block fs-6'>
-                                            {project.salesPerson?.name}
+                                            {project.sales_person?.name}
                                         </span>
                                     </td>
                                     <td className='text-end'>
