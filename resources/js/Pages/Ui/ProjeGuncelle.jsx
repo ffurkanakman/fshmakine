@@ -75,7 +75,7 @@ const ProjectEditWizard = ({ breadcrumbs, title }) => {
                         tasksToBeDone: projectData.notes || '',
                         tasksDone: projectData.done_jobs || '',
                         extraNotes: projectData.description || '',
-                        laborCost: projectData.price || 0,
+                        laborCost: projectData.labor_cost || 0,
                         discount: projectData.discount || 0,
                         debt: projectData.debt || 0,
                     };

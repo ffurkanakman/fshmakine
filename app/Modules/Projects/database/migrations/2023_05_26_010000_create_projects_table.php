@@ -15,6 +15,10 @@ return new class extends Migration {
             $table->string('machine_info');
             $table->string('project_type'); // Construction, Repair, etc.
             $table->decimal('price', 15, 2)->nullable();
+            $table->decimal('labor_cost', 15, 2)->nullable();
+            $table->decimal('discount', 15, 2)->nullable();
+            $table->decimal('debt', 15, 2)->nullable();
+
             $table->enum('status', ['pending', 'approved', 'rejected', 'in_progress', 'completed'])->default('pending');
 
             $table->text('notes')->nullable(); // Tasks to be done

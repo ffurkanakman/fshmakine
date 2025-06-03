@@ -140,6 +140,7 @@ const ProjectWizard = ({ breadcrumbs, title }) => {
                     price: calculateTotal(values),
                     notes: values.tasksToBeDone,
                     done_jobs: values.tasksDone,
+                    labor_cost: values.laborCost || 0,
                     discount: values.discount || 0,
                     debt: values.debt || 0,
 

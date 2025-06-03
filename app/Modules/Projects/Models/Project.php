@@ -11,12 +11,16 @@ class Project extends Model
     use SoftDeletes, LogsActivity;
 
     protected $table = 'projects';
+
     protected $fillable = [
         'name',
         'description',
         'machine_info',
         'project_type',
         'price',
+        'labor_cost',     // ✅ eklendi
+        'discount',       // ✅ eklendi
+        'debt',           // ✅ eklendi
         'status',
         'notes',
         'done_jobs',
@@ -25,8 +29,13 @@ class Project extends Model
         'vehicle_id',
     ];
 
+
     protected $dates = ['deleted_at'];
     protected $casts = [
+        'price' => 'decimal:2',
+        'labor_cost' => 'decimal:2',
+        'discount' => 'decimal:2',
+        'debt' => 'decimal:2',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

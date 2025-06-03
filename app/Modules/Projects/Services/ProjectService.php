@@ -36,54 +36,56 @@ class ProjectService
             $data['sales_person_id'] = auth()->id();
         }
 
-        // Generate a unique code for the project if not provided
+        // Proje adı yoksa otomatik oluştur
         if (!isset($data['name'])) {
             $data['name'] = $this->generateProjectName();
         }
 
-        // Extract vehicle information from the data
+        // Araç bilgilerini ayıkla
         $vehicleData = $this->extractVehicleData($data);
 
-        // Use firstOrCreate to avoid duplicates
-        $searchCriteria = [];
+        // Bu alanlar sadece client kaydı için gönderiliyorsa temizlenmeli
+        $excludedKeys = [
+            'authorized_person',
+            'company_name',
+            'phone',
+            'address',
+            // frontend’in camelCase olarak göndermesi durumunda normalize edilmiş key’ler
+            'serialNumber',
+            'chassisNumber',
+            'modelYear',
+            'vehiclePhotos'
+        ];
+
+        // İşçilik, iskonto ve borç gibi yeni eklenen alanlar burada kalsın ✋
+        $projectData = collect($data)->except($excludedKeys)->toArray();
+
         if (isset($data['machine_info'])) {
             $searchCriteria = [
                 'machine_info' => $data['machine_info']
             ];
-
-            // Remove client-specific fields from project data
-            $projectData = collect($data)->except([
-                'authorized_person', 'company_name', 'phone', 'address'
-            ])->toArray();
-
             $project = $this->projectRepository->firstOrCreate($searchCriteria, $projectData);
         } else {
-            // Remove client-specific fields from project data
-            $projectData = collect($data)->except([
-                'authorized_person', 'company_name', 'phone', 'address'
-            ])->toArray();
-
-            // If no search criteria, just create a new record
             $project = $this->projectRepository->create($projectData);
         }
 
-        // Save vehicle information if available
+        // Araç bilgileri varsa kaydet
         if (!empty($vehicleData)) {
             $vehicleData['project_id'] = $project->id;
             $vehicleInfo = $this->saveVehicleInformation($vehicleData);
 
-            // Update the project with the vehicle_id
             $project->vehicle_id = $vehicleInfo->id;
             $project->save();
         }
 
-        // Save parts if available
+        // Parça bilgileri varsa kaydet
         if (isset($data['parts']) && is_array($data['parts'])) {
             $this->saveParts($project->id, $data['parts']);
         }
 
         return $project;
     }
+
 
 
     public function update($id, array $data)
