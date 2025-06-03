@@ -29,6 +29,12 @@ const AsideMenuMain = () => {
                     fontIcon='bi-people'
                 />
                 <AsideMenuItem
+                    to='/Musteriler'
+                    icon='people'
+                    title='Müşteriler'
+                    fontIcon='bi-people'
+                />
+                <AsideMenuItem
                     to='/builder'
                     icon='switch'
                     title='Layout Builder'

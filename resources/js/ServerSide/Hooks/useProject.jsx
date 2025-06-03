@@ -10,6 +10,19 @@ import {
 import { API_CONFIG } from "../EndPoints";
 import { toast } from "react-toastify";
 import { apiService } from '../Load';
+import { ROUTES } from "../../Libs/Routes/config";
+
+// Helper function to handle 401 errors
+const handle401Error = (error) => {
+    if (error.response && error.response.status === 401) {
+        // Clear token from localStorage
+        localStorage.removeItem('token');
+        // Redirect to login page
+        window.location.href = ROUTES.AUTH.LOGIN;
+        return true;
+    }
+    return false;
+};
 
 
 export const useProject = () => {
@@ -29,6 +42,12 @@ export const useProject = () => {
 
         } catch (error) {
             dispatch(setError(error.message));
+
+            // Handle 401 error
+            if (handle401Error(error)) {
+                return;
+            }
+
             toast.error('Yüklenemedi...')
             throw error;
         } finally {
@@ -51,6 +70,12 @@ export const useProject = () => {
 
         } catch (error) {
             dispatch(setError(error.message));
+
+            // Handle 401 error
+            if (handle401Error(error)) {
+                return;
+            }
+
             toast.error('Proje kaydedilemedi');
             throw error;
         } finally {
@@ -80,6 +105,12 @@ export const useProject = () => {
             return response.data.data;
         } catch (error) {
             dispatch(setError(error.message));
+
+            // Handle 401 error
+            if (handle401Error(error)) {
+                return;
+            }
+
             toast.error('Proje yüklenemedi');
             throw error;
         } finally {
@@ -101,6 +132,12 @@ export const useProject = () => {
             return response.data.data || projectData;
         } catch (error) {
             dispatch(setError(error.message));
+
+            // Handle 401 error
+            if (handle401Error(error)) {
+                return;
+            }
+
             toast.error('Proje güncellenemedi');
             throw error;
         } finally {
@@ -122,6 +159,12 @@ export const useProject = () => {
             return response.data.data;
         } catch (error) {
             dispatch(setError(error.message));
+
+            // Handle 401 error
+            if (handle401Error(error)) {
+                return;
+            }
+
             toast.error('Proje onaylanamadı');
             throw error;
         } finally {
@@ -143,6 +186,12 @@ export const useProject = () => {
             return response.data.data;
         } catch (error) {
             dispatch(setError(error.message));
+
+            // Handle 401 error
+            if (handle401Error(error)) {
+                return;
+            }
+
             toast.error('Proje reddedilemedi');
             throw error;
         } finally {
@@ -163,6 +212,12 @@ export const useProject = () => {
             return true;
         } catch (error) {
             dispatch(setError(error.message));
+
+            // Handle 401 error
+            if (handle401Error(error)) {
+                return;
+            }
+
             toast.error('Proje silinemedi');
             throw error;
         } finally {

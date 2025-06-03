@@ -106,6 +106,86 @@ class ProjectService
             'brand', 'model', 'serial_number', 'chassis_number', 'hours', 'model_year', 'photos'
         ])->toArray();
 
+        // Check if we need to preserve the original price
+        // If parts and labor cost haven't changed, preserve the original price
+        $shouldPreservePrice = true;
+
+        // Check if labor cost has changed
+        if (isset($data['laborCost']) && $project->price != $data['laborCost']) {
+            $shouldPreservePrice = false;
+            \Log::info('Labor cost changed, recalculating price', [
+                'old_labor_cost' => $project->price,
+                'new_labor_cost' => $data['laborCost']
+            ]);
+        }
+
+        // Check if discount has changed
+        if (isset($data['discount']) && $project->discount != $data['discount']) {
+            $shouldPreservePrice = false;
+            \Log::info('Discount changed, recalculating price', [
+                'old_discount' => $project->discount,
+                'new_discount' => $data['discount']
+            ]);
+        }
+
+        // Check if debt has changed
+        if (isset($data['debt']) && $project->debt != $data['debt']) {
+            $shouldPreservePrice = false;
+            \Log::info('Debt changed, recalculating price', [
+                'old_debt' => $project->debt,
+                'new_debt' => $data['debt']
+            ]);
+        }
+
+        // Check if parts have changed
+        if (isset($data['parts']) && is_array($data['parts'])) {
+            // Get existing parts
+            $existingParts = $project->parts()->get();
+
+            // If the number of parts is different, we need to recalculate
+            if (count($data['parts']) != $existingParts->count()) {
+                $shouldPreservePrice = false;
+                \Log::info('Number of parts changed, recalculating price', [
+                    'old_parts_count' => $existingParts->count(),
+                    'new_parts_count' => count($data['parts'])
+                ]);
+            } else {
+                // Check if any part has changed
+                foreach ($data['parts'] as $partData) {
+                    // Skip empty parts
+                    if (empty($partData['name']) || empty($partData['quantity']) || empty($partData['unit_price'])) {
+                        continue;
+                    }
+
+                    // Find the corresponding existing part
+                    $existingPart = $existingParts->first(function ($item) use ($partData) {
+                        return $item->name === $partData['name'];
+                    });
+
+                    // If the part doesn't exist or its quantity or unit_price has changed, recalculate
+                    if (!$existingPart ||
+                        $existingPart->quantity != $partData['quantity'] ||
+                        $existingPart->unit_price != $partData['unit_price']) {
+                        $shouldPreservePrice = false;
+                        \Log::info('Part changed, recalculating price', [
+                            'part_name' => $partData['name'],
+                            'old_quantity' => $existingPart ? $existingPart->quantity : 'N/A',
+                            'new_quantity' => $partData['quantity'],
+                            'old_unit_price' => $existingPart ? $existingPart->unit_price : 'N/A',
+                            'new_unit_price' => $partData['unit_price']
+                        ]);
+                        break;
+                    }
+                }
+            }
+        }
+
+        // If we should preserve the original price, remove price from projectData
+        if ($shouldPreservePrice) {
+            \Log::info('Preserving original price', ['price' => $project->price]);
+            unset($projectData['price']);
+        }
+
         // 5️⃣ Update project data
         $updatedProject = $this->projectRepository->update($id, $projectData);
 
@@ -346,13 +426,16 @@ class ProjectService
             return;
         }
 
-        // Delete existing parts for this project
-        $existingParts = $project->parts()->count();
-        \Log::info('Deleting ' . $existingParts . ' existing parts for project ' . $projectId);
-        $project->parts()->delete();
+        // Get existing parts for this project
+        $existingParts = $project->parts()->get();
+        \Log::info('Found ' . $existingParts->count() . ' existing parts for project ' . $projectId);
 
-        // Create new parts
+        // Track which parts have been processed
+        $processedPartIds = [];
         $createdParts = 0;
+        $updatedParts = 0;
+
+        // Process each part in the input data
         foreach ($partsData as $partData) {
             // Skip empty parts
             if (empty($partData['name']) || empty($partData['quantity']) || empty($partData['unit_price'])) {
@@ -361,7 +444,7 @@ class ProjectService
             }
 
             // Ensure part data has the correct keys
-            $part = [
+            $partAttributes = [
                 'project_id' => $projectId,
                 'name' => $partData['name'],
                 'quantity' => $partData['quantity'],
@@ -369,18 +452,52 @@ class ProjectService
                 'total_price' => $partData['total_price'] ?? $partData['totalPrice'] ?? 0,
             ];
 
-            // Log the part data
-            \Log::info('Creating part', $part);
+            // Check if this part already exists (by name)
+            $existingPart = $existingParts->first(function ($item) use ($partData) {
+                return $item->name === $partData['name'];
+            });
 
-            // Create the part
-            $createdPart = $partModel::create($part);
-            if ($createdPart) {
-                $createdParts++;
+            if ($existingPart) {
+                // Update existing part but preserve total_price if quantity and unit_price haven't changed
+                if ($existingPart->quantity == $partData['quantity'] && $existingPart->unit_price == $partData['unit_price']) {
+                    // If quantity and unit_price haven't changed, preserve the original total_price
+                    $partAttributes['total_price'] = $existingPart->total_price;
+                    \Log::info('Preserving original total_price for unchanged part', [
+                        'id' => $existingPart->id,
+                        'name' => $existingPart->name,
+                        'total_price' => $existingPart->total_price
+                    ]);
+                }
+
+                \Log::info('Updating existing part', ['id' => $existingPart->id, 'data' => $partAttributes]);
+                $existingPart->update($partAttributes);
+                $processedPartIds[] = $existingPart->id;
+                $updatedParts++;
             } else {
-                \Log::warning('Failed to create part', $part);
+                // Create new part
+                \Log::info('Creating new part', $partAttributes);
+                $createdPart = $partModel::create($partAttributes);
+                if ($createdPart) {
+                    $processedPartIds[] = $createdPart->id;
+                    $createdParts++;
+                } else {
+                    \Log::warning('Failed to create part', $partAttributes);
+                }
             }
         }
 
-        \Log::info('Created ' . $createdParts . ' parts for project ' . $projectId);
+        // Delete parts that weren't in the input data
+        $partsToDelete = $existingParts->filter(function ($part) use ($processedPartIds) {
+            return !in_array($part->id, $processedPartIds);
+        });
+
+        if ($partsToDelete->count() > 0) {
+            \Log::info('Deleting ' . $partsToDelete->count() . ' parts that are no longer needed');
+            foreach ($partsToDelete as $part) {
+                $part->delete();
+            }
+        }
+
+        \Log::info('Parts processing completed: ' . $createdParts . ' created, ' . $updatedParts . ' updated, ' . $partsToDelete->count() . ' deleted');
     }
 }
