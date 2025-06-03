@@ -24,6 +24,7 @@ import ProtectedRoute from '../../Components/Auth/ProtectedRoute';
 
 import {ErrorsPage} from '../../Libs/Metronic/app/modules/errors/ErrorsPage';
 import {PagesLoad} from "../../Pages/Load.jsx";
+import TeklifSayfasi from '@/Pages/Ui/TeklifSayfasi';
 
 const MainRouter = () => {
 
@@ -149,6 +150,8 @@ const MainRouter = () => {
                 </Route>
 
                 <Route path={`${ROUTES.UI.ERROR}/*`} element={<ErrorsPage />} />
+                <Route path={ROUTES.UI.TEKLIFSAYFASI} element={<TeklifSayfasi/>} />
+
             </Route>
 
             {/* Hatalı rota durumunda yönlendirme */}

@@ -25,6 +25,7 @@ export const ROUTES = {
         CLIENTS: '/Musteriler',
         NEW_CLIENT: '/YeniMusteri',
         VIEW_CLIENT: '/MusteriGoruntule/:id',
-        EDIT_CLIENT: '/MusteriDuzenle/:id'
+        EDIT_CLIENT: '/MusteriDuzenle/:id',
+        TEKLIFSAYFASI:'/Teklif',
     }
 }
