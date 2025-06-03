@@ -4,10 +4,11 @@ namespace App\Modules\Projects\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Modules\Logs\Traits\LogsActivity;
 
 class Project extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, LogsActivity;
 
     protected $table = 'projects';
     protected $fillable = [

@@ -5,10 +5,12 @@ namespace App\Modules\User\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Modules\Logs\Traits\LogsActivity;
+
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens, Notifiable, LogsActivity;
 
     protected $table = 'users';
 

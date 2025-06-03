@@ -3,9 +3,13 @@
 namespace App\Modules\Projects\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Modules\Logs\Traits\LogsActivity;
+
 
 class ProjectPart extends Model
 {
+    use LogsActivity;
+
     protected $table = 'project_parts';
 
     protected $fillable = [
