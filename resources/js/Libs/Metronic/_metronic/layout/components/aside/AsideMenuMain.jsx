@@ -40,6 +40,12 @@ const AsideMenuMain = () => {
                     title='Layout Builder'
                     fontIcon='bi-layers'
                 />
+                <AsideMenuItem
+                    to='/Teklif'
+                    icon='bi bi-filetype-pdf'
+                    title='Teklif'
+                    fontIcon='bi-layers'
+                />
 
                 <div className='menu-item'>
                     <div className='menu-content pt-8 pb-2'>

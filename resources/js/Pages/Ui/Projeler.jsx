@@ -22,6 +22,7 @@ const projectsBreadCrumbs = [
     }
 ];
 
+
 const ProjectsPage = () => {
     // Pagination state
     const [currentPage, setCurrentPage] = useState(1);
@@ -77,6 +78,10 @@ const ProjectsPage = () => {
             console.error('Proje onaylanırken hata oluştu:', error);
         }
     };
+
+      const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDropdown = () => setIsOpen(!isOpen);
 
     // Handle reject project
     const handleReject = async (id) => {
@@ -217,26 +222,56 @@ const ProjectsPage = () => {
                                                 <i className='bi bi-pencil fs-4'></i>
                                             </Link>
                                             <button
-                                                onClick={() => handleApprove(project.id)}
-                                                className='btn btn-icon btn-bg-light btn-active-color-success btn-sm me-1'
-                                                title='Onayla'
-                                            >
-                                                <i className='bi bi-check-lg fs-4'></i>
-                                            </button>
-                                            <button
-                                                onClick={() => handleReject(project.id)}
-                                                className='btn btn-icon btn-bg-light btn-active-color-danger btn-sm me-1'
-                                                title='Reddet'
-                                            >
-                                                <i className='bi bi-x-lg fs-4'></i>
-                                            </button>
-                                            <button
                                                 onClick={() => handleDelete(project.id)}
                                                 className='btn btn-icon btn-bg-light btn-active-color-danger btn-sm'
                                                 title='Sil'
                                             >
                                                 <i className='bi bi-trash fs-4'></i>
                                             </button>
+                                            <div style={{ position: "relative", display: "inline-block" }}>
+                                                {/* Dropdown Menü */}
+                                                {isOpen && (
+                                                    <ul
+                                                    style={{
+                                                        position: "absolute",
+                                                        bottom: "-20%",
+                                                        right: 0,
+                                                        marginBottom: "4px",
+                                                        backgroundColor: "#f9f9f9",
+                                                        border: "1px solid #ccc",
+                                                        borderRadius: "4px",
+                                                        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                                                        minWidth: "90px",
+                                                        fontSize: "13px",
+                                                        padding: "4px 0",
+                                                        zIndex: 1000,
+                                                        listStyle:"none",
+                                                        justifyContent:"center",
+                                                        textAlign:"center,",
+                                                        display:"flex",
+                                                    }}
+                                                    >
+                                                    <li style={menuItemStyle}><button style={{ border: "none", padding: "3px",}}><i className='bi bi-x-lg fs-4'></i></button></li>
+                                                    <li style={menuItemStyle}><button style={{ border: "none", padding: "3px",}}><i className='bi bi-check-lg fs-4'></i></button></li>
+                                                    </ul>
+                                                )}
+
+                                                {/* Menü Butonu */}
+                                                <button
+                                                    onClick={toggleDropdown}
+                                                    style={{
+                                                    padding: "8px 10px",
+                                                    fontSize: "13px",
+                                                    backgroundColor: "#f9f9f9",
+                                                    color: "#fff",
+                                                    border: "none",
+                                                    cursor: "pointer",
+                                                    marginLeft: "3px",
+                                                    }}
+                                                >
+                                                    <i class="bi bi-three-dots"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -311,6 +346,18 @@ const Projeler = () => {
             <ProjectsPage />
         </>
     );
+};
+
+const menuItemStyle = {
+  padding: "6px 10px",
+  cursor: "pointer",
+  whiteSpace: "nowrap",
+  transition: "background 0.2s",
+  color: "#333",
+  fontSize: "13px",
+  hover: {
+    backgroundColor: "#f2f2f2",
+  },
 };
 
 export { Projeler };
