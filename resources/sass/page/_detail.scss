@@ -316,3 +316,19 @@
     }
 
 }
+
+.for-one {
+  transition: 0.3s ease;
+
+  &:hover {
+    color: #f8285a;
+  }
+}
+
+.for-two {
+  transition: 0.3s ease;
+
+  &:hover {
+    color: #17c653;
+  }
+}

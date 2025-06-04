@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { PageLink, PageTitle } from '../../Libs/Metronic/_metronic/layout/core';
 import { ROUTES } from "@/Libs/Routes/config.jsx";
@@ -6,6 +6,7 @@ import { KTCard, KTCardBody } from '../../Libs/Metronic/_metronic/helpers';
 import { Link } from 'react-router-dom';
 import { useProject } from '../../ServerSide/Hooks/useProject.jsx';
 import { toast } from 'react-toastify';
+import '../../../sass/page/_detail.scss';
 
 const projectsBreadCrumbs = [
     {
@@ -79,9 +80,26 @@ const ProjectsPage = () => {
         }
     };
 
-      const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef(null);
 
-  const toggleDropdown = () => setIsOpen(!isOpen);
+    const toggleDropdown = () => {
+        setIsOpen(prev => !prev);
+    };
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            setIsOpen(false);
+        }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
 
     // Handle reject project
     const handleReject = async (id) => {
@@ -228,7 +246,23 @@ const ProjectsPage = () => {
                                             >
                                                 <i className='bi bi-trash fs-4'></i>
                                             </button>
-                                            <div style={{ position: "relative", display: "inline-block" }}>
+                                            <div ref={dropdownRef} style={{ position: "relative", display: "inline-block" }}>
+                                                {/* Menü Butonu */}
+                                                <button
+                                                    onClick={toggleDropdown}
+                                                    style={{
+                                                    padding: "8px 10px",
+                                                    fontSize: "13px",
+                                                    backgroundColor: "#f9f9f9",
+                                                    color: "#000",
+                                                    border: "none",
+                                                    cursor: "pointer",
+                                                    marginLeft: "3px",
+                                                    }}
+                                                >
+                                                    <i className="bi bi-three-dots"></i>
+                                                </button>
+
                                                 {/* Dropdown Menü */}
                                                 {isOpen && (
                                                     <ul
@@ -245,33 +279,32 @@ const ProjectsPage = () => {
                                                         fontSize: "13px",
                                                         padding: "4px 0",
                                                         zIndex: 1000,
-                                                        listStyle:"none",
-                                                        justifyContent:"center",
-                                                        textAlign:"center,",
-                                                        display:"flex",
+                                                        listStyle: "none",
+                                                        display: "flex",
+                                                        justifyContent: "center",
+                                                        textAlign: "center",
                                                     }}
                                                     >
-                                                    <li style={menuItemStyle}><button style={{ border: "none", padding: "3px",}}><i className='bi bi-x-lg fs-4'></i></button></li>
-                                                    <li style={menuItemStyle}><button style={{ border: "none", padding: "3px",}}><i className='bi bi-check-lg fs-4'></i></button></li>
+                                                    <li style={menuItemStyle}>
+                                                        <button
+                                                        onClick={() => setIsOpen(false)} // Butona tıklayınca kapanır
+                                                        style={{ border: "none", padding: "3px", background: "transparent" }}
+                                                        >
+                                                        <i className="bi bi-x-lg fs-4 for-one"></i>
+                                                        </button>
+                                                    </li>
+                                                    <li style={menuItemStyle}>
+                                                        <button
+                                                        onClick={() => setIsOpen(false)} // Butona tıklayınca kapanır
+                                                        style={{ border: "none", padding: "3px", background: "transparent" }}
+                                                        >
+                                                        <i className="bi bi-check-lg fs-4 for-two"></i>
+                                                        </button>
+                                                    </li>
                                                     </ul>
                                                 )}
-
-                                                {/* Menü Butonu */}
-                                                <button
-                                                    onClick={toggleDropdown}
-                                                    style={{
-                                                    padding: "8px 10px",
-                                                    fontSize: "13px",
-                                                    backgroundColor: "#f9f9f9",
-                                                    color: "#fff",
-                                                    border: "none",
-                                                    cursor: "pointer",
-                                                    marginLeft: "3px",
-                                                    }}
-                                                >
-                                                    <i class="bi bi-three-dots"></i>
-                                                </button>
                                             </div>
+
                                         </div>
                                     </td>
                                 </tr>
@@ -355,10 +388,8 @@ const menuItemStyle = {
   transition: "background 0.2s",
   color: "#333",
   fontSize: "13px",
-  hover: {
-    backgroundColor: "#f2f2f2",
-  },
 };
+
 
 export { Projeler };
 export default Projeler;
