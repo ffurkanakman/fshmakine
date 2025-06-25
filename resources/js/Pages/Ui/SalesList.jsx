@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { useProject } from "../../ServerSide/Hooks/useProject.jsx";
 import { toast } from "react-toastify";
 import "../../../sass/page/_detail.scss";
+import { AsideDefault } from "@/Libs/Metronic/_metronic/layout/components/aside/AsideDefault";
 
 const projectsBreadCrumbs = [
     {
@@ -168,7 +169,7 @@ const ProjectsPage = () => {
                 <div className="card-header border-0 pt-5">
                     <h3 className="card-title align-items-start flex-column">
                         <span className="card-label fw-bold fs-3 mb-1">
-                            Servis Listesi
+                            Satış Teklifi
                         </span>
                         <span className="text-muted mt-1 fw-semibold fs-7">
                             Toplam {projects ? projects.length : 0} servis
@@ -176,11 +177,11 @@ const ProjectsPage = () => {
                     </h3>
                     <div className="card-toolbar">
                         <a
-                            href={ROUTES.UI.NEW_PROJECT}
+                            href={ROUTES.UI.NEW_SALE}
                             className="btn btn-sm btn-primary"
                         >
                             <i className="bi bi-plus-lg me-2"></i>
-                            Yeni Servis Ekle
+                            Yeni Satış Ekle
                         </a>
                     </div>
                 </div>
@@ -484,7 +485,7 @@ const Projeler = () => {
     const intl = useIntl();
     return (
         <>
-            <PageTitle breadcrumbs={projectsBreadCrumbs}>Projeler</PageTitle>
+            <PageTitle breadcrumbs={projectsBreadCrumbs}>Satışlar</PageTitle>
             <ProjectsPage />
         </>
     );

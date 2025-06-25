@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { useProject } from "../../ServerSide/Hooks/useProject.jsx";
 import { toast } from "react-toastify";
 import "../../../sass/page/_detail.scss";
+import { AsideDefault } from "@/Libs/Metronic/_metronic/layout/components/aside/AsideDefault";
 
 const projectsBreadCrumbs = [
     {
@@ -23,7 +24,7 @@ const projectsBreadCrumbs = [
     },
 ];
 
-const ProjectsPage = () => {
+const VehiclePage = () => {
     // Pagination state
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(5);
@@ -168,7 +169,7 @@ const ProjectsPage = () => {
                 <div className="card-header border-0 pt-5">
                     <h3 className="card-title align-items-start flex-column">
                         <span className="card-label fw-bold fs-3 mb-1">
-                            Servis Listesi
+                            Satış Teklifi
                         </span>
                         <span className="text-muted mt-1 fw-semibold fs-7">
                             Toplam {projects ? projects.length : 0} servis
@@ -176,11 +177,11 @@ const ProjectsPage = () => {
                     </h3>
                     <div className="card-toolbar">
                         <a
-                            href={ROUTES.UI.NEW_PROJECT}
+                            href={ROUTES.UI.NEW_VEHICLE}
                             className="btn btn-sm btn-primary"
                         >
                             <i className="bi bi-plus-lg me-2"></i>
-                            Yeni Servis Ekle
+                            Yeni Araç Ekle
                         </a>
                     </div>
                 </div>
@@ -480,12 +481,12 @@ const ProjectsPage = () => {
     );
 };
 
-const Projeler = () => {
+const VehicleList = () => {
     const intl = useIntl();
     return (
         <>
-            <PageTitle breadcrumbs={projectsBreadCrumbs}>Projeler</PageTitle>
-            <ProjectsPage />
+            <PageTitle breadcrumbs={projectsBreadCrumbs}>Araçlar</PageTitle>
+            <VehiclePage />
         </>
     );
 };
@@ -499,5 +500,5 @@ const menuItemStyle = {
     fontSize: "13px",
 };
 
-export { Projeler };
-export default Projeler;
+export { VehicleList };
+export default VehicleList;
