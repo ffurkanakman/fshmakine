@@ -1,5 +1,6 @@
 import {KTIcon, toAbsoluteUrl} from '../../../helpers'
 import {HeaderNotificationsMenu, HeaderUserMenu, QuickLinks} from '../../../partials'
+import { Link } from 'react-router-dom';
 
 const AsideFooter = () => {
   return (
@@ -8,8 +9,8 @@ const AsideFooter = () => {
       id='kt_aside_footer'
     >
       {/* begin::Quick links */}
-      <div className='d-flex align-items-center mb-2'>
-        {/* begin::Menu wrapper */}
+      <Link to='/AraclarListesi' className='d-flex align-items-center mb-2'>
+      {/* begin::Menu wrapper */}
         <div
           className='btn btn-icon btn-active-color-fsh-primary btn-color-gray-500 btn-active-light'
           data-kt-menu-trigger='click'
@@ -24,7 +25,7 @@ const AsideFooter = () => {
         </div>
         {/* end::Menu wrapper */}
         <QuickLinks backgroundUrl='media/misc/pattern-1.jpg' />
-      </div>
+    </Link>
       {/* end::Quick links */}
 
       {/* begin::Activities */}
