@@ -48,8 +48,20 @@ const AsideMenuMain = () => {
                 />
                 <AsideMenuItem
                     to="/AraclarListesi"
-                    icon="bi bi-filetype-pdf"
-                    title="Araç Ekle"
+                    icon="bi bi-card-list"
+                    title="Araç Listesi"
+                    fontIcon="bi-layers"
+                />
+                <AsideMenuItem
+                    to="/YeniMarkaEkle"
+                    icon="bi bi-plus-circle"
+                    title="Yeni Marka Ekle"
+                    fontIcon="bi-layers"
+                />
+                <AsideMenuItem
+                    to="/SatisListesi"
+                    icon="bi bi-receipt"
+                    title="Satış Listesi"
                     fontIcon="bi-layers"
                 />
 
