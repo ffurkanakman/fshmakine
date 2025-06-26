@@ -143,10 +143,16 @@ const NewVehicle = () => {
                                 <div className="col-md-6">
                                     <label className="form-label">Marka</label>
                                     <Field
+                                        as="select"
                                         name="brand"
-                                        type="text"
-                                        className="form-control"
-                                    />
+                                        className="form-select"
+                                    >
+                                        <option value="">Marka Seçiniz</option>
+                                        <option value="Mima">Mima</option>
+                                        <option value="Luigong">Luigong</option>
+                                        <option value="Snoboom">Snoboom</option>
+                                        <option value="Lifet">Lifet</option>
+                                    </Field>
                                     <div className="text-danger mt-1">
                                         <ErrorMessage name="brand" />
                                     </div>

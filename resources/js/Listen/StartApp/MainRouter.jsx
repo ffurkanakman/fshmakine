@@ -31,6 +31,7 @@ import YeniSatis from "@/Pages/Ui/NewSale";
 import NewVehicle from "@/Pages/Ui/NewVehicle";
 import VehicleList from "@/Pages/Ui/VehicleList";
 import VehicleRoute from "@/Components/Auth/VehicleRoutes";
+import NewBrand from "@/Pages/Ui/NewBrand";
 
 const MainRouter = () => {
     return (
@@ -187,6 +188,14 @@ const MainRouter = () => {
                         element={
                             <VehicleRoute>
                                 <NewVehicle />
+                            </VehicleRoute>
+                        }
+                    />
+                    <Route
+                        path={ROUTES.UI.NEW_BRAND}
+                        element={
+                            <VehicleRoute>
+                                <NewBrand />
                             </VehicleRoute>
                         }
                     />

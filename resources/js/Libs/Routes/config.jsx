@@ -30,5 +30,6 @@ export const ROUTES = {
         NEW_SALE: "/YeniSatis",
         VEHICLELIST: "/AraclarListesi",
         NEW_VEHICLE: "/YeniAracEkle",
+        NEW_BRAND: "/YeniMarkaEkle",
     },
 };
