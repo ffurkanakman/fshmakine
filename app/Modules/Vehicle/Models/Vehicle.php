@@ -10,7 +10,7 @@ class Vehicle extends Model
     protected $table = 'vehicles';
 
     protected $fillable = [
-        'brand',
+        'brand_id',
         'model',
         'type',
         'slug',
@@ -58,5 +58,10 @@ class Vehicle extends Model
     public function specifications(): HasMany
     {
         return $this->hasMany(VehicleSpecification::class);
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(VehicleBrand::class, 'brand_id');
     }
 }

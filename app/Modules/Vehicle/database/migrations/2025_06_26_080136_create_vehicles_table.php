@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
-            $table->string('brand');
+            $table->foreignId('brand_id')->constrained('vehicle_brands')->onDelete('cascade');
             $table->string('model');
             $table->string('type'); // elektrikli, dizel, vb.
             $table->string('slug')->unique();

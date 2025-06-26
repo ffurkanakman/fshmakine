@@ -10,11 +10,19 @@ class VehicleResource extends JsonResource
     {
         return [
             'id'          => $this->id,
-            'brand'       => $this->brand,
             'model'       => $this->model,
             'type'        => $this->type,
             'slug'        => $this->slug,
             'description' => $this->description,
+
+            // Marka
+            'brand' => $this->whenLoaded('brand', function () {
+                return [
+                    'id' => $this->brand->id,
+                    'name' => $this->brand->name,
+                    'logo' => asset('storage/' .$this->brand-logo_path),
+                ];
+            }),
 
             // Galeri
             'images' => $this->whenLoaded('gallery', function () {
