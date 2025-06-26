@@ -1,5 +1,6 @@
 <?php
 namespace App\Providers;
+use App\Modules\SalesOffer\Providers\SalesOfferServiceProvider;
 use App\Modules\Vehicle\Providers\VehicleServiceProvider;
 use App\Modules\Logs\Providers\LogsServiceProvider;
 use App\Modules\Client\Providers\ClientServiceProvider;
@@ -15,6 +16,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+    // Register services
+        $this->app->register(SalesOfferServiceProvider::class);
     // Register services
         $this->app->register(VehicleServiceProvider::class);
     // Register services

@@ -15,12 +15,12 @@ class VehicleResource extends JsonResource
             'slug'        => $this->slug,
             'description' => $this->description,
 
-            // Marka
+            // Marka bilgisi
             'brand' => $this->whenLoaded('brand', function () {
                 return [
-                    'id' => $this->brand->id,
+                    'id'   => $this->brand->id,
                     'name' => $this->brand->name,
-                    'logo' => asset('storage/' .$this->brand-logo_path),
+                    'logo' => asset('storage/' . $this->brand->logo_path),
                 ];
             }),
 
@@ -31,7 +31,7 @@ class VehicleResource extends JsonResource
                 });
             }),
 
-            // Dinamik teknik özellikler (repeater uyumlu)
+            // Teknik özellikler
             'specifications' => $this->whenLoaded('specifications', function () {
                 return $this->specifications->map(function ($spec) {
                     return [
