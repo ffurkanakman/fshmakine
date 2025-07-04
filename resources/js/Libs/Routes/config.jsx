@@ -31,5 +31,8 @@ export const ROUTES = {
         VEHICLELIST: "/AraclarListesi",
         NEW_VEHICLE: "/YeniAracEkle",
         NEW_BRAND: "/YeniMarkaEkle",
+        SALES_OFFER_FORM: "/SatisTeklifiForm",
+        BRAND_LIST: "/MarkalarListesi",
+        PROFPORMA_INVOICE: "/ProformaFatura",
     },
 };

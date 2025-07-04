@@ -32,6 +32,9 @@ import NewVehicle from "@/Pages/Ui/NewVehicle";
 import VehicleList from "@/Pages/Ui/VehicleList";
 import VehicleRoute from "@/Components/Auth/VehicleRoutes";
 import NewBrand from "@/Pages/Ui/NewBrand";
+import SalesOfferForm from "@/Pages/Ui/SalesOfferForm";
+import BrandList from "@/Pages/Ui/BrandsList";
+import ProformaInvoice from "@/Pages/Ui/ProformaInvoice";
 
 const MainRouter = () => {
     return (
@@ -192,6 +195,14 @@ const MainRouter = () => {
                         }
                     />
                     <Route
+                        path={ROUTES.UI.BRAND_LIST}
+                        element={
+                            <VehicleRoute>
+                                <BrandList />
+                            </VehicleRoute>
+                        }
+                    />
+                    <Route
                         path={ROUTES.UI.NEW_BRAND}
                         element={
                             <VehicleRoute>
@@ -207,6 +218,14 @@ const MainRouter = () => {
                     element={<TeklifSayfasi />}
                 />
                 <Route path={ROUTES.UI.SALESLIST} element={<SalesList />} />
+                <Route
+                    path={ROUTES.UI.PROFPORMA_INVOICE}
+                    element={<ProformaInvoice />}
+                />
+                <Route
+                    path={ROUTES.UI.SALES_OFFER_FORM}
+                    element={<SalesOfferForm />}
+                />
             </Route>
 
             {/* Hatalı rota durumunda yönlendirme */}

@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 import { useProject } from "../../ServerSide/Hooks/useProject.jsx";
 import { toast } from "react-toastify";
 import "../../../sass/page/_detail.scss";
-import { AsideDefault } from "@/Libs/Metronic/_metronic/layout/components/aside/AsideDefault";
 
 const projectsBreadCrumbs = [
     {
@@ -18,7 +17,7 @@ const projectsBreadCrumbs = [
     },
 ];
 
-const VehiclePage = () => {
+const BrandListPage = () => {
     // Pagination state
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(5);
@@ -163,19 +162,19 @@ const VehiclePage = () => {
                 <div className="card-header border-0 pt-5">
                     <h3 className="card-title align-items-start flex-column">
                         <span className="card-label fw-bold fs-3 mb-1">
-                            Araçlar Listesi
+                            Markalar
                         </span>
                         <span className="text-muted mt-1 fw-semibold fs-7">
-                            Toplam {projects ? projects.length : 0} Araç
+                            Toplam {projects ? projects.length : 0} Marka
                         </span>
                     </h3>
                     <div className="card-toolbar">
                         <a
-                            href={ROUTES.UI.NEW_VEHICLE}
+                            href={ROUTES.UI.NEW_BRAND}
                             className="btn btn-sm btn-primary"
                         >
                             <i className="bi bi-plus-lg me-2"></i>
-                            Yeni Araç Ekle
+                            Yeni Marka Ekle
                         </a>
                     </div>
                 </div>
@@ -185,8 +184,6 @@ const VehiclePage = () => {
                             <thead>
                                 <tr className="fw-bold text-muted">
                                     <th className="min-w-120px">Marka Adı</th>
-                                    <th className="min-w-120px">Ürün</th>
-                                    <th className="min-w-120px">Model</th>
                                     <th className="min-w-100px text-end">
                                         İşlem
                                     </th>
@@ -196,39 +193,6 @@ const VehiclePage = () => {
                                 <tr>
                                     <td className="text-dark fw-bold text-hover-primary fs-6">
                                         Mima
-                                    </td>
-                                    <td className="text-dark fw-bold text-hover-primary fs-6">
-                                        Akülü Forklift
-                                    </td>
-                                    <td className="text-dark fw-bold text-hover-primary fs-6">
-                                        MK1548
-                                    </td>
-                                    <td className="text-end">
-                                        <div className="d-flex justify-content-end">
-                                            <Link className="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
-                                                <i className="bi bi-pencil fs-4"></i>
-                                            </Link>
-                                            <button
-                                                onClick={() =>
-                                                    handleDelete(project.id)
-                                                }
-                                                className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm"
-                                                title="Sil"
-                                            >
-                                                <i className="bi bi-trash fs-4"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="text-dark fw-bold text-hover-primary fs-6">
-                                        LUİGONG
-                                    </td>
-                                    <td className="text-dark fw-bold text-hover-primary fs-6">
-                                        Dizel Forklift
-                                    </td>
-                                    <td className="text-dark fw-bold text-hover-primary fs-6">
-                                        FDZN25
                                     </td>
                                     <td className="text-end">
                                         <div className="d-flex justify-content-end">
@@ -330,12 +294,12 @@ const VehiclePage = () => {
     );
 };
 
-const VehicleList = () => {
+const Markalar = () => {
     const intl = useIntl();
     return (
         <>
-            <PageTitle breadcrumbs={projectsBreadCrumbs}>Araçlar</PageTitle>
-            <VehiclePage />
+            <PageTitle breadcrumbs={projectsBreadCrumbs}>Markalar</PageTitle>
+            <BrandListPage />
         </>
     );
 };
@@ -349,5 +313,5 @@ const menuItemStyle = {
     fontSize: "13px",
 };
 
-export { VehicleList };
-export default VehicleList;
+export { Markalar };
+export default Markalar;

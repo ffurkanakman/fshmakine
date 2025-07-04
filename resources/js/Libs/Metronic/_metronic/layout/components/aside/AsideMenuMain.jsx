@@ -64,6 +64,12 @@ const AsideMenuMain = () => {
                     title="Satış Listesi"
                     fontIcon="bi-layers"
                 />
+                <AsideMenuItem
+                    to="/MarkalarListesi"
+                    icon="bi bi-receipt"
+                    title="Markalar Listesi"
+                    fontIcon="bi-layers"
+                />
 
                 <div className="menu-item">
                     <div className="menu-content pt-8 pb-2">
