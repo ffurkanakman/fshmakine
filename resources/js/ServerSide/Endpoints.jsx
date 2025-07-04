@@ -19,6 +19,12 @@ export const API_CONFIG = {
         USER: {
             USER: '/api/user',
             USER_UPDATE: '/api/user'
-        }
+        },
+        BRAND: {
+            BRAND: 'api/vehicle-brands',
+        },
+        VEHICLE: {
+            VEHICLE: 'api/vehicle',
+        },
     }
 };
