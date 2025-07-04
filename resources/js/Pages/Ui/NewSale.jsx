@@ -170,11 +170,8 @@ const NewSale = () => {
                                         className="form-select"
                                     >
                                         <option value="">Seçiniz</option>
-                                        <option value="2020">
-                                            Peşin Fiyat
-                                        </option>
-                                        <option value="2021">Havale</option>
-                                        <option value="2022">Kart</option>
+                                        <option value="Havale">Havale</option>
+                                        <option value="Kart">Kart</option>
                                     </Field>
                                     <div className="text-danger mt-1">
                                         <ErrorMessage name="odemetipi" />
@@ -232,128 +229,9 @@ const NewSale = () => {
                             </>
                         )}
 
-                        {currentStep === 2 && (
-                            <div className="col-12">
-                                <label className="form-label fs-3">
-                                    Galeri Fotoğrafları
-                                </label>
-                                <Field name="gallery">
-                                    {({ form }) => (
-                                        <>
-                                            <input
-                                                type="file"
-                                                accept="image/*"
-                                                multiple
-                                                className="form-control mb-3"
-                                                onChange={(event) => {
-                                                    const files = Array.from(
-                                                        event.currentTarget
-                                                            .files
-                                                    );
-                                                    const prev =
-                                                        form.values.gallery ||
-                                                        [];
-                                                    form.setFieldValue(
-                                                        "gallery",
-                                                        [...prev, ...files]
-                                                    );
-                                                }}
-                                            />
-                                            <div className="d-flex flex-wrap">
-                                                {form.values.gallery?.map(
-                                                    (photo, idx) => (
-                                                        <div
-                                                            key={idx}
-                                                            className="position-relative d-inline-block m-2"
-                                                        >
-                                                            <img
-                                                                src={URL.createObjectURL(
-                                                                    photo
-                                                                )}
-                                                                alt="Önizleme"
-                                                                className="rounded"
-                                                                style={{
-                                                                    maxHeight:
-                                                                        "150px",
-                                                                    maxWidth:
-                                                                        "150px",
-                                                                    objectFit:
-                                                                        "cover",
-                                                                }}
-                                                            />
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => {
-                                                                    const updated =
-                                                                        [
-                                                                            ...form
-                                                                                .values
-                                                                                .gallery,
-                                                                        ];
-                                                                    updated.splice(
-                                                                        idx,
-                                                                        1
-                                                                    );
-                                                                    form.setFieldValue(
-                                                                        "gallery",
-                                                                        updated
-                                                                    );
-                                                                }}
-                                                                className="position-absolute top-0 end-0 translate-middle-x p-1 rounded-circle border-0"
-                                                                style={{
-                                                                    backgroundColor:
-                                                                        "#ffffffdd",
-                                                                    color: "#dc3545",
-                                                                    width: "24px",
-                                                                    height: "24px",
-                                                                    display:
-                                                                        "flex",
-                                                                    alignItems:
-                                                                        "center",
-                                                                    justifyContent:
-                                                                        "center",
-                                                                    fontSize:
-                                                                        "16px",
-                                                                    boxShadow:
-                                                                        "0 0 4px rgba(0,0,0,0.1)",
-                                                                    cursor: "pointer",
-                                                                }}
-                                                                onMouseEnter={(
-                                                                    e
-                                                                ) => {
-                                                                    e.currentTarget.style.backgroundColor =
-                                                                        "#dc3545";
-                                                                    e.currentTarget.style.color =
-                                                                        "#fff";
-                                                                }}
-                                                                onMouseLeave={(
-                                                                    e
-                                                                ) => {
-                                                                    e.currentTarget.style.backgroundColor =
-                                                                        "#ffffffdd";
-                                                                    e.currentTarget.style.color =
-                                                                        "#dc3545";
-                                                                }}
-                                                            >
-                                                                &times;
-                                                            </button>
-                                                        </div>
-                                                    )
-                                                )}
-                                            </div>
-                                        </>
-                                    )}
-                                </Field>
-
-                                <div className="text-danger mt-1">
-                                    <ErrorMessage name="gallery" />
-                                </div>
-                            </div>
-                        )}
-
                         <div className="col-12 text-end">
                             <button type="submit" className="btn btn-primary">
-                                {currentStep === 2 ? "Kaydet" : "İleri"}
+                                {"Kaydet"}
                             </button>
                         </div>
                     </Form>

@@ -58,6 +58,7 @@ const NewVehicle = () => {
             brand: Yup.string().required("Marka zorunludur"),
             model: Yup.string().required("Model zorunludur"),
             urun: Yup.string().required("Ürün zorunludur"),
+            type: Yup.string().required("Tip zorunludur"),
         }),
         Yup.object({}), // ← validation kaldırıldı, ileri butonu artık çalışacak
         Yup.object({}), // Galeri
@@ -179,6 +180,17 @@ const NewVehicle = () => {
                                     />
                                     <div className="text-danger mt-1">
                                         <ErrorMessage name="model" />
+                                    </div>
+                                </div>
+                                <div className="col-md-6">
+                                    <label className="form-label">Tip</label>
+                                    <Field
+                                        name="type"
+                                        type="text"
+                                        className="form-control"
+                                    />
+                                    <div className="text-danger mt-1">
+                                        <ErrorMessage name="type" />
                                     </div>
                                 </div>
                                 <div className="col-md-6">
