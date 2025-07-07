@@ -195,6 +195,14 @@ const MainRouter = () => {
                         }
                     />
                     <Route
+                        path={ROUTES.UI.VEHICLE_EDIT}
+                        element={
+                            <VehicleRoute>
+                                <VehicleList/>
+                            </VehicleRoute>
+                        }
+                    />
+                    <Route
                         path={ROUTES.UI.BRAND_LIST}
                         element={
                             <VehicleRoute>

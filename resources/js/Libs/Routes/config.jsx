@@ -30,6 +30,7 @@ export const ROUTES = {
         NEW_SALE: "/YeniSatis",
         VEHICLELIST: "/AraclarListesi",
         NEW_VEHICLE: "/YeniAracEkle",
+        VEHICLE_EDIT: "/AracDuzenle/:id",
         NEW_BRAND: "/YeniMarkaEkle",
         SALES_OFFER_FORM: "/SatisTeklifiForm",
         BRAND_LIST: "/MarkalarListesi",

@@ -8,12 +8,12 @@ class VehicleRepository
 {
     public function all()
     {
-        return Vehicle::all();
+        return Vehicle::with('brand')->get();
     }
 
     public function paginate($perPage = 15)
     {
-        return Vehicle::paginate($perPage);
+        return Vehicle::with('brand')->paginate($perPage);
     }
 
     public function find($id)

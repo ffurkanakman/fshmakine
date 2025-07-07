@@ -4,10 +4,14 @@ import * as Yup from "yup";
 import { useBrand } from "../../ServerSide/Hooks/useBrand";
 import { useVehicle } from "../../ServerSide/Hooks/useVehicle";
 import {initialValues as values} from "@/Pages/Ui/YeniProjeWizardHelper.jsx";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/Libs/Routes/config.jsx";
 
 const NewVehicle = () => {
     const { brands, fetchBrands } = useBrand();
     const { createVehicle } = useVehicle();
+    const navigate = useNavigate();
+
 
     const [currentStep, setCurrentStep] = useState(0);
 
@@ -106,6 +110,8 @@ const NewVehicle = () => {
             });
 
             await createVehicle(formData);
+
+            navigate("/AraclarListesi");
         }
     };
 
