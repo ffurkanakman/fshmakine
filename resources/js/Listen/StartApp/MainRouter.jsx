@@ -30,6 +30,7 @@ import SalesRoute from "@/Components/Auth/SalesRoutes";
 import YeniSatis from "@/Pages/Ui/NewSale";
 import NewVehicle from "@/Pages/Ui/NewVehicle";
 import VehicleList from "@/Pages/Ui/VehicleList";
+import VehicleEdit from "@/Pages/Ui/VehicleEdit.jsx";
 import VehicleRoute from "@/Components/Auth/VehicleRoutes";
 import NewBrand from "@/Pages/Ui/NewBrand";
 import SalesOfferForm from "@/Pages/Ui/SalesOfferForm";
@@ -198,7 +199,7 @@ const MainRouter = () => {
                         path={ROUTES.UI.VEHICLE_EDIT}
                         element={
                             <VehicleRoute>
-                                <VehicleList/>
+                                <VehicleEdit/>
                             </VehicleRoute>
                         }
                     />
