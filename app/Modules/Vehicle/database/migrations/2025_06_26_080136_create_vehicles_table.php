@@ -11,7 +11,9 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('brand_id')->constrained('vehicle_brands')->onDelete('cascade');
             $table->string('model');
+            $table->string('product');
             $table->string('type'); // elektrikli, dizel, vb.
+            $table->string('cover_image')->nullable(); // Araç kapak fotoğrafı
             $table->string('slug')->unique();
             $table->text('description')->nullable(); // Opsiyonel açıklama
 

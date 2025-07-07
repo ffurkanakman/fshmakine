@@ -18,13 +18,22 @@ class VehicleRepository
 
     public function find($id)
     {
-        return Vehicle::findOrFail($id);
+        return Vehicle::with(['brand', 'gallery', 'specifications'])->findOrFail($id);
     }
 
     public function create(array $data)
     {
+        // slug generate et
+        $data['slug'] = \Str::slug($data['model'] . '-' . uniqid());
+
+        // cover_image var mı?
+        if (isset($data['cover_image'])) {
+            $data['cover_image'] = $data['cover_image']->store('vehicles/covers', 'public');
+        }
+
         return Vehicle::create($data);
     }
+
 
     public function update($id, array $data)
     {
@@ -56,4 +65,26 @@ class VehicleRepository
             ]);
         }
     }
+
+    public function updateCoverImage($vehicle, $coverImage)
+    {
+        $path = $coverImage->store('vehicles/covers', 'public');
+        $vehicle->update(['cover_image' => $path]);
+    }
+
+    public function updateImages($vehicle, $images)
+    {
+        // eski resimleri sil
+        $vehicle->gallery()->delete();
+
+        // yeni resimleri ekle
+        foreach ($images as $image) {
+            $path = $image->store('vehicles', 'public');
+            $vehicle->gallery()->create(['image_path' => $path]);
+        }
+    }
+
+
+
+
 }

@@ -18,8 +18,12 @@ class VehicleService
         return $this->vehicleRepository->all();
     }
 
-    public function create(array $data, $images = null)
+    public function create(array $data, $coverImage = null, $images = null)
     {
+        if ($coverImage) {
+            $data['cover_image'] = $coverImage;
+        }
+
         $vehicle = $this->vehicleRepository->create($data);
 
         if ($images) {
@@ -33,15 +37,27 @@ class VehicleService
         return $vehicle;
     }
 
+
     public function find($id)
     {
         return $this->vehicleRepository->find($id);
     }
 
-    public function update($id, array $data)
+    public function update($id, array $data, $coverImage = null, $images = null)
     {
-        return $this->vehicleRepository->update($id, $data);
+        $vehicle = $this->vehicleRepository->update($id, $data);
+
+        if ($coverImage) {
+            $this->vehicleRepository->updateCoverImage($vehicle, $coverImage);
+        }
+
+        if ($images) {
+            $this->vehicleRepository->updateImages($vehicle, $images);
+        }
+
+        return $vehicle;
     }
+
 
     public function delete($id)
     {

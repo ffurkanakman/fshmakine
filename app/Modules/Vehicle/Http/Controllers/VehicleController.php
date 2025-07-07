@@ -30,13 +30,15 @@ class VehicleController extends Controller
     {
         return $this->handleApiExceptions(function () use ($request) {
             $validatedData = $request->validated();
+            $coverImage = $request->file('cover_image');
             $images = $request->file('images') ?? null;
 
-            $vehicle = $this->vehicleService->create($validatedData, $images)->load('gallery', 'specifications');
+            $vehicle = $this->vehicleService->create($validatedData, $coverImage, $images)->load('gallery', 'specifications');
 
             return $this->createdResponse(new VehicleResource($vehicle));
         });
     }
+
 
     public function show($id): JsonResponse
     {
@@ -48,10 +50,15 @@ class VehicleController extends Controller
     {
         return $this->handleApiExceptions(function () use ($id, $request) {
             $validatedData = $request->validated();
-            $vehicle = $this->vehicleService->update($id, $validatedData);
+            $coverImage = $request->file('cover_image');
+            $images = $request->file('images') ?? null;
+
+            $vehicle = $this->vehicleService->update($id, $validatedData, $coverImage, $images)->load('gallery', 'specifications');
+
             return $this->updatedResponse(new VehicleResource($vehicle));
         });
     }
+
 
     public function destroy($id): JsonResponse
     {

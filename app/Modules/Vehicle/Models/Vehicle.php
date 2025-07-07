@@ -13,6 +13,8 @@ class Vehicle extends Model
         'brand_id',
         'model',
         'type',
+        'product',
+        'cover_image',
         'slug',
         'description',
 
