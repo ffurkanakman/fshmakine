@@ -16,12 +16,13 @@ class SalesOfferResource extends JsonResource
             }),
             'client_name' => $this->client_name,
             'client_authorized' => $this->client_authorized,
+            'subject' => $this->subject,
+            'mail' => $this->mail,
             'quantity' => $this->quantity,
             'price' => $this->price,
-            'currency' => $this->currency,
-            'note' => $this->note,
-            'offer_date' => $this->offer_date,
+            'payment_type' => $this->payment_type,
             'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

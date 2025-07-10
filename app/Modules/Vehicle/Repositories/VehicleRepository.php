@@ -74,15 +74,27 @@ class VehicleRepository
 
     public function updateImages($vehicle, $images)
     {
-        // eski resimleri sil
-        $vehicle->gallery()->delete();
-
         // yeni resimleri ekle
         foreach ($images as $image) {
             $path = $image->store('vehicles', 'public');
             $vehicle->gallery()->create(['image_path' => $path]);
         }
     }
+
+    public function updateSpecifications($vehicle, array $specs)
+    {
+        $vehicle->specifications()->delete();
+
+        foreach ($specs as $spec) {
+            $vehicle->specifications()->create([
+                'key' => $spec['key'],
+                'value' => $spec['value'],
+            ]);
+        }
+    }
+
+
+
 
 
 

@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import useSalesOffer from "../../ServerSide/Hooks/useSalesOffer";
+import useBrand from "../../ServerSide/Hooks/useBrand";
+import useVehicle from "../../ServerSide/Hooks/useVehicle";
 
 const NewSale = () => {
     const [currentStep, setCurrentStep] = useState(0);
@@ -28,6 +31,7 @@ const NewSale = () => {
         plate: "",
         photo: null,
         gallery: [],
+        fiyat: "",
     };
 
     const validationSchemas = [
@@ -175,6 +179,19 @@ const NewSale = () => {
                                     </Field>
                                     <div className="text-danger mt-1">
                                         <ErrorMessage name="odemetipi" />
+                                    </div>
+                                </div>
+                                <div className="col-md-6">
+                                    <label className="form-label">
+                                       Fiyat
+                                    </label>
+                                    <Field
+                                        type="text"
+                                        name="fiyat"
+                                        className="form-control"
+                                    ></Field>
+                                    <div className="text-danger mt-1">
+                                        <ErrorMessage name="fiyat" />
                                     </div>
                                 </div>
                                 <div className="col-md-6">

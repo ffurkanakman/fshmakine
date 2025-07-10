@@ -15,6 +15,7 @@ Route::group([
     Route::get('/{id}', [VehicleController::class, 'show'])->name('show'); // Tekil veri getir
     Route::put('/{id}', [VehicleController::class, 'update'])->name('update'); // Güncelleme
     Route::delete('/{id}', [VehicleController::class, 'destroy'])->name('destroy'); // Silme
+    Route::delete('/{vehicle}/gallery/{image}', [VehicleController::class, 'deleteImage']);
 });
 
 // 🏷️ Marka işlemleri
@@ -25,3 +26,5 @@ Route::prefix('api/vehicle-brands')->name('vehicle-brands.')->group(function () 
     Route::put('/{id}', [VehicleBrandController::class, 'update'])->name('update'); // Güncelle
     Route::delete('/{id}', [VehicleBrandController::class, 'destroy'])->name('destroy'); // Sil
 });
+
+

@@ -14,9 +14,11 @@ return new class extends Migration {
             $table->string('client_authorized'); // Yetkili kişi
             $table->unsignedInteger('quantity')->default(1); // Adet
             $table->decimal('price', 15, 2); // Fiyat
-            $table->string('currency')->default('TRY'); // USD, EUR, TRY...
-            $table->date('offer_date')->nullable(); // Teklif tarihi
-            $table->text('note')->nullable(); // Alt bilgi notu
+            $table->string('payment_type')->default('Havale'); // USD, EUR, TRY...
+            $table->string('subject');
+            $table->string('mail');
+//            $table->date('offer_date')->nullable(); // Teklif tarihi
+//            $table->text('note')->nullable(); // Alt bilgi notu
             $table->timestamps();
         });
     }

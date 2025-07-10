@@ -18,11 +18,11 @@ class SalesOfferRequest extends FormRequest
             'vehicle_id' => 'required|exists:vehicles,id',
             'client_name' => 'required|string|max:255',
             'client_authorized' => 'required|string|max:255',
+            'subject' => 'required|string|max:255',
+            'mail' => 'required|email|max:255',
             'quantity' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
-            'currency' => 'required|string|in:USD,EUR,TRY',
-            'note' => 'nullable|string',
-            'offer_date' => 'nullable|date',
+            'payment_type' => 'required|string|in:Nakit,Havale,Kredi Kartı',
         ];
     }
 }

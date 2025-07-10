@@ -1,0 +1,90 @@
+import { apiService } from "../Load";
+import { toast } from "react-toastify";
+import { API_CONFIG } from "../Endpoints";
+import { ROUTES } from "../../Libs/Routes/config";
+
+// 401 error handler
+const handle401Error = (error) => {
+    if (error.response && error.response.status === 401) {
+        localStorage.removeItem("token");
+        window.location.href = ROUTES.AUTH.LOGIN;
+        return true;
+    }
+    return false;
+};
+
+export const useSalesOffer = () => {
+    // Listeleme
+    const fetchSalesOffers = async () => {
+        try {
+            const res = await apiService.get(API_CONFIG.ENDPOINTS.SALES_OFFER.SALES_OFFER);
+            return res.data.data;
+        } catch (error) {
+            if (handle401Error(error)) return;
+            toast.error("Satış teklifleri yüklenemedi");
+            throw error;
+        }
+    };
+
+    // Tekil veri
+    const getSalesOfferById = async (id) => {
+        try {
+            const res = await apiService.get(`${API_CONFIG.ENDPOINTS.SALES_OFFER.SALES_OFFER}/${id}`);
+            return res.data.data;
+        } catch (error) {
+            if (handle401Error(error)) return;
+            toast.error("Satış teklifi yüklenemedi");
+            throw error;
+        }
+    };
+
+    // Ekleme
+    const createSalesOffer = async (data) => {
+        try {
+            const res = await apiService.post(API_CONFIG.ENDPOINTS.SALES_OFFER.SALES_OFFER, data);
+            toast.success("Satış teklifi oluşturuldu");
+            return res.data.data;
+        } catch (error) {
+            if (handle401Error(error)) return;
+            toast.error("Satış teklifi oluşturulamadı");
+            throw error;
+        }
+    };
+
+    // Güncelleme
+    const updateSalesOffer = async (id, data) => {
+        try {
+            const res = await apiService.put(
+                `${API_CONFIG.ENDPOINTS.SALES_OFFER.SALES_OFFER}/${id}`,
+                data
+            );
+            toast.success("Satış teklifi güncellendi");
+            return res.data.data;
+        } catch (error) {
+            if (handle401Error(error)) return;
+            toast.error("Satış teklifi güncellenemedi");
+            throw error;
+        }
+    };
+
+    // Silme
+    const deleteSalesOffer = async (id) => {
+        try {
+            await apiService.delete(`${API_CONFIG.ENDPOINTS.SALES_OFFER.SALES_OFFER}/${id}`);
+            toast.success("Satış teklifi silindi");
+            return true;
+        } catch (error) {
+            if (handle401Error(error)) return;
+            toast.error("Satış teklifi silinemedi");
+            throw error;
+        }
+    };
+
+    return {
+        fetchSalesOffers,
+        getSalesOfferById,
+        createSalesOffer,
+        updateSalesOffer,
+        deleteSalesOffer
+    };
+};

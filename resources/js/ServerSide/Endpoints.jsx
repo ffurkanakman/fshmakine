@@ -26,5 +26,8 @@ export const API_CONFIG = {
         VEHICLE: {
             VEHICLE: 'api/vehicle',
         },
+        SALES_OFFER: {
+            SALES_OFFER: 'api/salesoffer',
+        }
     }
 };

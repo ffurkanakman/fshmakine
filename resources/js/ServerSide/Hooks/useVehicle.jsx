@@ -64,10 +64,10 @@ export const useVehicle = () => {
     };
 
     // Tekil veri
-    const getVehicleById = async (id) => {
+    const getVehicleById = async (id, force = false) => {
         try {
             dispatch(setLoading(true));
-            if (vehicles && vehicles.length > 0) {
+            if (!force && vehicles && vehicles.length > 0) {
                 const vehicle = vehicles.find(v => v.id === parseInt(id));
                 if (vehicle) {
                     dispatch(setCurrentVehicle(vehicle));
@@ -86,6 +86,7 @@ export const useVehicle = () => {
             dispatch(setLoading(false));
         }
     };
+
 
     // Güncelleme
     const updateVehicle = async (id, formData) => {

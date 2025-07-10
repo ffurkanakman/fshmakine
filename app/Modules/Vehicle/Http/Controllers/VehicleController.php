@@ -67,4 +67,21 @@ class VehicleController extends Controller
             return $this->deletedResponse();
         });
     }
+
+    public function deleteImage($vehicleId, $imageId): \Illuminate\Http\JsonResponse
+    {
+        $image = \App\Modules\Vehicle\Models\VehicleImage::where('vehicle_id', $vehicleId)
+            ->where('id', $imageId)
+            ->firstOrFail();
+
+        $image->delete();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Resim başarıyla silindi.'
+        ]);
+    }
+
+
+
 }

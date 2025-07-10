@@ -54,6 +54,10 @@ class VehicleService
         if ($images) {
             $this->vehicleRepository->updateImages($vehicle, $images);
         }
+        if (isset($data['specifications']) && is_array($data['specifications'])) {
+            $this->vehicleRepository->updateSpecifications($vehicle, $data['specifications']);
+        }
+
 
         return $vehicle;
     }

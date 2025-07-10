@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { useBrand } from "../../ServerSide/Hooks/useBrand";
 import { useVehicle } from "../../ServerSide/Hooks/useVehicle";
 import { useNavigate, useParams } from "react-router-dom";
-import { ROUTES } from "@/Libs/Routes/config.jsx";
+import { apiService } from "@/ServerSide/Load.jsx";
 
 const VehicleEdit = () => {
     const { id } = useParams();
@@ -22,25 +22,15 @@ const VehicleEdit = () => {
         }, {})
     );
 
-    // Verileri yükle
     useEffect(() => {
         fetchBrands();
         loadVehicleData();
     }, [id]);
 
     const loadVehicleData = async () => {
-        const vehicle = await getVehicleById(id);
+        const vehicle = await getVehicleById(id, true);
         if (vehicle) {
-            setInitialData({
-                brand: vehicle.brand_id,
-                model: vehicle.model,
-                product: vehicle.product,
-                type: vehicle.type,
-                photo: vehicle.cover_image_url,
-                gallery: vehicle.images || []
-            });
-
-            // Özellikleri kategorilere ayır
+            // specs
             const specsData = categories.reduce((acc, cat) => {
                 acc[cat] = [];
                 return acc;
@@ -49,18 +39,29 @@ const VehicleEdit = () => {
             vehicle.specifications?.forEach(spec => {
                 const [category, ...titleParts] = spec.key.split(" - ");
                 const title = titleParts.join(" - ");
-                const [value1, value2] = spec.value.split(" ");
 
-                if (categories.includes(category)) {
-                    specsData[category].push({
-                        title,
-                        value1: value1 || "",
-                        value2: value2 || ""
+                let value1 = "";
+                let value2 = "";
+
+                if (spec.value) {
+                    const splitValues = spec.value.split(" ");
+                    value1 = splitValues[0] || "";
+                    value2 = splitValues.slice(1).join(" ");
+                }
+
+                const rawCategory = (category || "").trim();
+                if (categories.includes(rawCategory)) {
+                    specsData[rawCategory].push({
+                        title: title.trim(),
+                        value1: value1.trim(),
+                        value2: value2.trim()
                     });
                 }
+
+
             });
 
-            // Eğer bir kategoride özellik yoksa boş bir dizi ekle
+
             Object.keys(specsData).forEach(cat => {
                 if (specsData[cat].length === 0) {
                     specsData[cat] = [{ title: "", value1: "", value2: "" }];
@@ -68,20 +69,31 @@ const VehicleEdit = () => {
             });
 
             setGeneralInfoData(specsData);
+
+            setInitialData({
+                brand: vehicle.brand?.id || "", // brand_id değil çünkü JSON'da brand nested
+                model: vehicle.model || "",
+                product: vehicle.product || "",
+                type: vehicle.type || "",
+                photo: vehicle.cover_image || null, // cover_image_url değil
+                gallery: vehicle.images || []
+            });
+
         }
+        console.log("Final specsData", specsData);
     };
 
     const addRow = (category) => {
         setGeneralInfoData(prev => ({
             ...prev,
-            [category]: [...prev[category], { title: "", value1: "", value2: "" }],
+            [category]: [...prev[category], { title: "", value1: "", value2: "" }]
         }));
     };
 
     const removeRow = (category, index) => {
         setGeneralInfoData(prev => ({
             ...prev,
-            [category]: prev[category].filter((_, i) => i !== index),
+            [category]: prev[category].filter((_, i) => i !== index)
         }));
     };
 
@@ -93,24 +105,15 @@ const VehicleEdit = () => {
         });
     };
 
-    const initialValues = {
-        brand: "",
-        model: "",
-        product: "",
-        type: "",
-        photo: null,
-        gallery: [],
-    };
-
     const validationSchemas = [
         Yup.object({
             brand: Yup.string().required("Marka zorunludur"),
             model: Yup.string().required("Model zorunludur"),
             product: Yup.string().required("Ürün zorunludur"),
-            type: Yup.string().required("Tip zorunludur"),
+            type: Yup.string().required("Tip zorunludur")
         }),
         Yup.object({}),
-        Yup.object({}),
+        Yup.object({})
     ];
 
     const handleSubmit = async (values) => {
@@ -133,7 +136,6 @@ const VehicleEdit = () => {
                 }
             });
 
-            // Specifications flatten
             const flattenedSpecs = [];
             Object.entries(generalInfoData).forEach(([category, items]) => {
                 items.forEach(item => {
@@ -218,7 +220,7 @@ const VehicleEdit = () => {
                                     <Field as="select" name="brand" className="form-select">
                                         <option value="">Marka Seçiniz</option>
                                         {brands?.map(b => (
-                                            <option key={b.id} value={b.id} selected={b.id === values.brand}>
+                                            <option key={b.id} value={b.id}>
                                                 {b.name}
                                             </option>
                                         ))}
@@ -259,9 +261,11 @@ const VehicleEdit = () => {
                                     {values.photo && (
                                         <div className="mt-2">
                                             <img
-                                                src={typeof values.photo === "string"
-                                                    ? values.photo
-                                                    : URL.createObjectURL(values.photo)}
+                                                src={
+                                                    typeof values.photo === "string"
+                                                        ? values.photo
+                                                        : URL.createObjectURL(values.photo)
+                                                }
                                                 alt="Önizleme"
                                                 style={{ maxHeight: "150px", borderRadius: "6px" }}
                                             />
@@ -348,23 +352,40 @@ const VehicleEdit = () => {
                                             className="position-relative d-inline-block m-2"
                                         >
                                             <img
-                                                src={file instanceof File
-                                                    ? URL.createObjectURL(file)
-                                                    : file.url || file}
+                                                src={
+                                                    file instanceof File
+                                                        ? URL.createObjectURL(file)
+                                                        : file.url || file
+                                                }
                                                 alt="Önizleme"
                                                 className="rounded"
                                                 style={{
                                                     maxHeight: "150px",
                                                     maxWidth: "150px",
-                                                    objectFit: "cover",
+                                                    objectFit: "cover"
                                                 }}
                                             />
                                             <button
                                                 type="button"
                                                 onClick={() => {
-                                                    const updated = [...values.gallery];
-                                                    updated.splice(idx, 1);
-                                                    setFieldValue("gallery", updated);
+                                                    if (!(file instanceof File)) {
+                                                        // Backend'den sil
+                                                        apiService.delete(`api/vehicle/${id}/gallery/${file.id}`)
+                                                            .then(() => {
+                                                                // toast.success("Resim silindi");
+                                                                const updated = [...values.gallery];
+                                                                updated.splice(idx, 1);
+                                                                setFieldValue("gallery", updated);
+                                                            })
+                                                            .catch(() => {
+                                                                // toast.error("Resim silinemedi");
+                                                            });
+                                                    } else {
+                                                        // Sadece frontend'den kaldır
+                                                        const updated = [...values.gallery];
+                                                        updated.splice(idx, 1);
+                                                        setFieldValue("gallery", updated);
+                                                    }
                                                 }}
                                                 className="position-absolute top-0 end-0 translate-middle-x p-1 rounded-circle border-0"
                                                 style={{
@@ -377,7 +398,7 @@ const VehicleEdit = () => {
                                                     justifyContent: "center",
                                                     fontSize: "16px",
                                                     boxShadow: "0 0 4px rgba(0,0,0,0.1)",
-                                                    cursor: "pointer",
+                                                    cursor: "pointer"
                                                 }}
                                             >
                                                 &times;

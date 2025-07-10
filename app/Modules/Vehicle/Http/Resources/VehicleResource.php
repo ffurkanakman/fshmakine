@@ -29,9 +29,13 @@ class VehicleResource extends JsonResource
             // Galeri
             'images' => $this->whenLoaded('gallery', function () {
                 return $this->gallery->map(function ($image) {
-                    return asset('storage/' . $image->image_path);
+                    return [
+                        'id' => $image->id,
+                        'url' => asset('storage/' . $image->image_path),
+                    ];
                 });
             }),
+
 
             // Teknik özellikler
             'specifications' => $this->whenLoaded('specifications', function () {
