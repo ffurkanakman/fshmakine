@@ -13,6 +13,7 @@ const NewSale = () => {
     const [selectedBrandId, setSelectedBrandId] = useState(null);
 
     useEffect(() => {
+        console.log("useEffect çalıştı, brand ve vehicle fetch ediliyor...");
         fetchBrands();
         fetchVehicles();
     }, []);
@@ -41,7 +42,7 @@ const NewSale = () => {
     ];
 
     const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-        console.log("==> handleSubmit başladı", values);
+        console.log("==> handleSubmit BAŞLADI", values);
         try {
             const payload = {
                 vehicle_id: values.urun,
@@ -60,18 +61,15 @@ const NewSale = () => {
 
             console.log("==> API cevabı:", response);
 
-            toast.success("Satış teklifi başarıyla oluşturuldu!");
             resetForm();
         } catch (err) {
-            console.error("==> API Hatası:", err);
-            toast.error("Satış teklifi oluşturulamadı.");
+            console.error("==> handleSubmit API Hatası:", err);
         } finally {
             setSubmitting(false);
+            console.log("==> handleSubmit BİTTİ");
         }
     };
 
-
-    // Debug log
     console.log("TÜM VEHICLES:", vehicles);
     console.log("Seçili Marka ID:", selectedBrandId);
 
@@ -88,7 +86,10 @@ const NewSale = () => {
                     <h3
                         key={idx}
                         className={`step-tab ${currentStep === idx ? "active" : ""}`}
-                        onClick={() => setCurrentStep(idx)}
+                        onClick={() => {
+                            console.log(`Step değişti: ${idx}`);
+                            setCurrentStep(idx);
+                        }}
                     >
                         {label}
                     </h3>
@@ -99,13 +100,11 @@ const NewSale = () => {
                 initialValues={initialValues}
                 validationSchema={validationSchemas[currentStep]}
                 onSubmit={(values, helpers) => {
-                    console.log("formik submit çalıştı", values);
-                    if (currentStep < 2) {
-                        setCurrentStep(currentStep + 1);
-                    } else {
-                        handleSubmit(values, helpers);
-                    }
+                    console.log("formik onSubmit ÇALIŞTI", values);
+                    handleSubmit(values, helpers);
                 }}
+
+
             >
                 {({ isSubmitting, setFieldValue }) => (
                     <Form className="row g-3">
@@ -120,6 +119,7 @@ const NewSale = () => {
                                         onChange={(e) => {
                                             const val = e.target.value;
                                             const selected = val ? parseInt(val) : null;
+                                            console.log("Marka seçildi:", selected);
                                             setSelectedBrandId(selected);
                                             setFieldValue("brand", selected);
                                             setFieldValue("urun", "");

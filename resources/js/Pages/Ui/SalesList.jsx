@@ -1,504 +1,218 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useIntl } from "react-intl";
-import { PageLink, PageTitle } from "../../Libs/Metronic/_metronic/layout/core";
-import { ROUTES } from "@/Libs/Routes/config.jsx";
-import { KTCard, KTCardBody } from "../../Libs/Metronic/_metronic/helpers";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useProject } from "../../ServerSide/Hooks/useProject.jsx";
+import { KTCard, KTCardBody } from "../../Libs/Metronic/_metronic/helpers";
+import { useSalesOffer } from "../../ServerSide/Hooks/useSalesOffer";
+import { ROUTES } from "@/Libs/Routes/config.jsx";
 import { toast } from "react-toastify";
-import "../../../sass/page/_detail.scss";
-import { AsideDefault } from "@/Libs/Metronic/_metronic/layout/components/aside/AsideDefault";
+import Swal from "sweetalert2";
 
-const projectsBreadCrumbs = [
-    {
-        title: "Ana Sayfa",
-        path: ROUTES.UI.LANDING,
-        isSeparator: false,
-        isActive: false,
-    },
-    {
-        title: "Projeler",
-        path: ROUTES.UI.PROJECTS,
-        isSeparator: false,
-        isActive: true,
-    },
-];
-
-const ProjectsPage = () => {
-    // Pagination state
+const SalesList = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(5);
+    const [salesOffers, setSalesOffers] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    // useProject hook'unu kullan - artık tüm state'ler buradan geliyor
-    const {
-        projects,
-        loading,
-        error,
-        setProjects,
-        approveProject,
-        rejectProject,
-        deleteProject,
-    } = useProject();
+    const { fetchSalesOffers, deleteSalesOffer } = useSalesOffer();
 
-    // Component mount olduğunda projects getir
     useEffect(() => {
-        setProjects();
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                const data = await fetchSalesOffers();
+                setSalesOffers(data);
+            } catch (err) {
+                setError("Satış teklifleri yüklenemedi");
+                console.error("fetchSalesOffers error:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
     }, []);
 
-    // Function to get status badge class based on status
-    const getStatusBadgeClass = (status) => {
-        switch (status) {
-            case "Completed":
-            case "Tamamlandı":
-                return "badge-light-success";
-            case "In Progress":
-            case "Devam Ediyor":
-                return "badge-light-primary";
-            case "Pending":
-            case "Beklemede":
-                return "badge-light-warning";
-            default:
-                return "badge-light-info";
-        }
-    };
-
-    // Get current projects
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentProjects = projects
-        ? projects.slice(indexOfFirstItem, indexOfLastItem)
-        : [];
+    const currentItems = salesOffers.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(salesOffers.length / itemsPerPage);
 
-    console.log("gelen projects: ", projects);
-    console.log("su anki sayfadaki veriler: ", currentProjects);
-
-    // Change page
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-    // Calculate total pages
-    const totalPages = projects ? Math.ceil(projects.length / itemsPerPage) : 0;
-
-    // Handle approve project
-    const handleApprove = async (id) => {
-        try {
-            await approveProject(id);
-            toast.success("Proje başarıyla onaylandı");
-            // Refresh projects list
-            setProjects();
-        } catch (error) {
-            console.error("Proje onaylanırken hata oluştu:", error);
-        }
-    };
-
-    const [isOpen, setIsOpen] = useState(false);
-    const dropdownRef = useRef(null);
-
-    const toggleDropdown = () => {
-        setIsOpen((prev) => !prev);
-    };
-
-    useEffect(() => {
-        function handleClickOutside(event) {
-            if (
-                dropdownRef.current &&
-                !dropdownRef.current.contains(event.target)
-            ) {
-                setIsOpen(false);
-            }
-        }
-
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, []);
-
-    // Handle reject project
-    const handleReject = async (id) => {
-        try {
-            await rejectProject(id);
-            toast.success("Proje başarıyla reddedildi");
-            // Refresh projects list
-            setProjects();
-        } catch (error) {
-            console.error("Proje reddedilirken hata oluştu:", error);
-        }
-    };
-
-    // Handle delete project
     const handleDelete = async (id) => {
-        // Show confirmation dialog
-        if (
-            window.confirm(
-                "Bu projeyi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
-            )
-        ) {
+        const result = await Swal.fire({
+            title: "Emin misiniz?",
+            text: "Bu satışı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Evet, sil",
+            cancelButtonText: "Vazgeç",
+        });
+
+        if (result.isConfirmed) {
             try {
-                await deleteProject(id);
-                toast.success("Proje başarıyla silindi");
-                // Refresh projects list
-                setProjects();
-            } catch (error) {
-                console.error("Proje silinirken hata oluştu:", error);
+                await deleteSalesOffer(id);
+                const updated = await fetchSalesOffers();
+                setSalesOffers(updated);
+                Swal.fire("Silindi!", "Satış teklifi silindi.", "success");
+            } catch (err) {
+                console.error("Silme hatası:", err);
+                Swal.fire("Hata!", "Silinemedi.", "error");
             }
         }
     };
 
-    // Loading durumunu göster
     if (loading) {
         return (
-            <div
-                className="d-flex justify-content-center align-items-center"
-                style={{ height: "400px" }}
-            >
-                <div className="spinner-border text-fsh-primary" role="status">
+            <div className="d-flex justify-content-center align-items-center" style={{ height: "400px" }}>
+                <div className="spinner-border text-primary" role="status">
                     <span className="visually-hidden">Yükleniyor...</span>
                 </div>
             </div>
         );
     }
 
-    // Hata durumunu göster
     if (error) {
-        return <div className="alert alert-danger">Hata: {error}</div>;
+        return <div className="alert alert-danger">{error}</div>;
     }
 
     return (
-        <>
-            <KTCard className="mb-5 mb-xl-8">
-                <div className="card-header border-0 pt-5">
-                    <h3 className="card-title align-items-start flex-column">
-                        <span className="card-label fw-bold fs-3 mb-1">
-                            Satış Teklifi
-                        </span>
-                        <span className="text-muted mt-1 fw-semibold fs-7">
-                            Toplam {projects ? projects.length : 0} servis
-                        </span>
-                    </h3>
-                    <div className="card-toolbar">
-                        <a
-                            href={ROUTES.UI.NEW_SALE}
-                            className="btn btn-sm btn-primary"
-                        >
-                            <i className="bi bi-plus-lg me-2"></i>
-                            Yeni Satış Ekle
-                        </a>
-                    </div>
+        <KTCard className="mb-5 mb-xl-8">
+            <div className="card-header border-0 pt-5">
+                <h3 className="card-title align-items-start flex-column">
+                    <span className="card-label fw-bold fs-3 mb-1">Satış Teklifleri</span>
+                    <span className="text-muted mt-1 fw-semibold fs-7">
+            Toplam {salesOffers.length} Teklif
+          </span>
+                </h3>
+                <div className="card-toolbar">
+                    <Link to={ROUTES.UI.NEW_SALE} className="btn btn-sm btn-primary">
+                        <i className="bi bi-plus-lg me-2"></i>
+                        Yeni Satış Ekle
+                    </Link>
                 </div>
-                <KTCardBody className="py-3">
-                    <div className="table-responsive">
-                        <table className="table table-row-bordered table-row-gray-100 align-middle gs-0 gy-3">
-                            <thead>
-                                <tr className="fw-bold text-muted">
-                                    <th className="min-w-50px">No</th>
-                                    <th className="min-w-150px">
-                                        Firma Adı / Yetkili Adı
-                                    </th>
-                                    <th className="min-w-140px">
-                                        Makina Bilgileri
-                                    </th>
-                                    <th className="min-w-120px">
-                                        Servis Açıklaması
-                                    </th>
-                                    <th className="min-w-120px">
-                                        Toplam Ücret
-                                    </th>
-                                    <th className="min-w-120px">Durum</th>
-                                    <th className="min-w-120px">
-                                        Satış Yetkilisi
-                                    </th>
-                                    <th className="min-w-100px text-end">
-                                        İşlem
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {currentProjects.map((project) => (
-                                    <tr key={project.id}>
-                                        <td>
-                                            <span className="text-dark fw-bold text-hover-primary d-block fs-6">
-                                                {project.id}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div className="d-flex align-items-center">
-                                                <div className="d-flex justify-content-start flex-column">
-                                                    <span className="text-dark fw-bold text-hover-primary fs-6">
-                                                        {
-                                                            project.client
-                                                                ?.company_name
-                                                        }
-                                                    </span>
-                                                    <span className="text-muted fw-semibold text-muted d-block fs-7">
-                                                        {
-                                                            project.client
-                                                                ?.authorized_person
-                                                        }
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span className="text-dark fw-bold text-hover-primary d-block fs-6">
-                                                {project.machine_info}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span className="text-dark fw-bold text-hover-primary d-block fs-6">
-                                                {project.notes}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span className="text-dark fw-bold text-hover-primary d-block fs-6">
-                                                ₺{project.price}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span
-                                                className={`badge ${getStatusBadgeClass(
-                                                    project.status
-                                                )}`}
-                                            >
-                                                {project.status}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span className="text-dark fw-bold text-hover-primary d-block fs-6">
-                                                {project.sales_person?.name}
-                                            </span>
-                                        </td>
-                                        <td className="text-end">
-                                            <div className="d-flex justify-content-end">
-                                                <Link
-                                                    to={`/ProjeGoruntule/${project.id}`}
-                                                    className="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
-                                                >
-                                                    <i className="bi bi-eye fs-4"></i>
-                                                </Link>
-                                                <Link
-                                                    to={`/ProjeGuncelle/${project.id}`}
-                                                    className="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
-                                                >
-                                                    <i className="bi bi-pencil fs-4"></i>
-                                                </Link>
-                                                <button
-                                                    onClick={() =>
-                                                        handleDelete(project.id)
-                                                    }
-                                                    className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm"
-                                                    title="Sil"
-                                                >
-                                                    <i className="bi bi-trash fs-4"></i>
-                                                </button>
-                                                <div
-                                                    ref={dropdownRef}
-                                                    style={{
-                                                        position: "relative",
-                                                        display: "inline-block",
-                                                    }}
-                                                >
-                                                    {/* Menü Butonu */}
-                                                    <button
-                                                        onClick={toggleDropdown}
-                                                        style={{
-                                                            padding: "8px 10px",
-                                                            fontSize: "13px",
-                                                            backgroundColor:
-                                                                "#f9f9f9",
-                                                            color: "#000",
-                                                            border: "none",
-                                                            cursor: "pointer",
-                                                            marginLeft: "3px",
-                                                        }}
-                                                    >
-                                                        <i className="bi bi-three-dots"></i>
-                                                    </button>
-
-                                                    {/* Dropdown Menü */}
-                                                    {isOpen && (
-                                                        <ul
-                                                            style={{
-                                                                position:
-                                                                    "absolute",
-                                                                bottom: "-20%",
-                                                                right: 0,
-                                                                marginBottom:
-                                                                    "4px",
-                                                                backgroundColor:
-                                                                    "#f9f9f9",
-                                                                border: "1px solid #ccc",
-                                                                borderRadius:
-                                                                    "4px",
-                                                                boxShadow:
-                                                                    "0 2px 4px rgba(0, 0, 0, 0.1)",
-                                                                minWidth:
-                                                                    "90px",
-                                                                fontSize:
-                                                                    "13px",
-                                                                padding:
-                                                                    "4px 0",
-                                                                zIndex: 1000,
-                                                                listStyle:
-                                                                    "none",
-                                                                display: "flex",
-                                                                justifyContent:
-                                                                    "center",
-                                                                textAlign:
-                                                                    "center",
-                                                            }}
-                                                        >
-                                                            <li
-                                                                style={
-                                                                    menuItemStyle
-                                                                }
-                                                            >
-                                                                <button
-                                                                    onClick={() =>
-                                                                        setIsOpen(
-                                                                            false
-                                                                        )
-                                                                    } // Butona tıklayınca kapanır
-                                                                    style={{
-                                                                        border: "none",
-                                                                        padding:
-                                                                            "3px",
-                                                                        background:
-                                                                            "transparent",
-                                                                    }}
-                                                                >
-                                                                    <i className="bi bi-x-lg fs-4 for-one"></i>
-                                                                </button>
-                                                            </li>
-                                                            <li
-                                                                style={
-                                                                    menuItemStyle
-                                                                }
-                                                            >
-                                                                <button
-                                                                    onClick={() =>
-                                                                        setIsOpen(
-                                                                            false
-                                                                        )
-                                                                    } // Butona tıklayınca kapanır
-                                                                    style={{
-                                                                        border: "none",
-                                                                        padding:
-                                                                            "3px",
-                                                                        background:
-                                                                            "transparent",
-                                                                    }}
-                                                                >
-                                                                    <i className="bi bi-check-lg fs-4 for-two"></i>
-                                                                </button>
-                                                            </li>
-                                                        </ul>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    {projects && projects.length > 0 && (
-                        <div className="d-flex flex-stack flex-wrap pt-10">
-                            <div className="fs-6 fw-bold text-gray-700">
-                                Showing {indexOfFirstItem + 1} to{" "}
-                                {Math.min(indexOfLastItem, projects.length)} of{" "}
-                                {projects.length} entries
-                            </div>
-
-                            <ul className="pagination">
-                                <li
-                                    className={`page-item ${
-                                        currentPage === 1
-                                            ? "disabled"
-                                            : "previous"
-                                    }`}
-                                >
-                                    <a
-                                        href="#"
-                                        className="page-link"
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            if (currentPage > 1)
-                                                paginate(currentPage - 1);
-                                        }}
-                                    >
-                                        <i className="previous"></i>
-                                    </a>
-                                </li>
-
-                                {[...Array(totalPages)].map((_, index) => (
-                                    <li
-                                        key={index}
-                                        className={`page-item ${
-                                            currentPage === index + 1
-                                                ? "active"
-                                                : ""
-                                        }`}
-                                    >
-                                        <a
-                                            href="#"
-                                            className="page-link"
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                paginate(index + 1);
-                                            }}
+            </div>
+            <KTCardBody className="py-3">
+                <div className="table-responsive">
+                    <table className="table table-row-bordered table-row-gray-100 align-middle gs-0 gy-3">
+                        <thead>
+                        <tr className="fw-bold text-muted">
+                            <th className="min-w-50px">ID</th>
+                            <th className="min-w-150px">Firma</th>
+                            <th className="min-w-150px">Yetkili</th>
+                            <th className="min-w-120px">Ürün</th>
+                            <th className="min-w-120px">Model</th>
+                            <th className="min-w-80px">Adet</th>
+                            <th className="min-w-100px">Fiyat</th>
+                            <th className="min-w-120px">Ödeme Tipi</th>
+                            <th className="min-w-100px text-end">İşlem</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {currentItems.length === 0 && (
+                            <tr>
+                                <td colSpan="9" className="text-center py-5">
+                                    Hiç teklif bulunamadı.
+                                </td>
+                            </tr>
+                        )}
+                        {currentItems.map((offer) => (
+                            <tr key={offer.id}>
+                                <td className="text-dark fw-bold text-hover-primary fs-6">
+                                    {offer.id}
+                                </td>
+                                <td className="text-dark fw-bold text-hover-primary fs-6">
+                                    {offer.client_name}
+                                </td>
+                                <td className="text-dark fw-bold text-hover-primary fs-6">
+                                    {offer.client_authorized}
+                                </td>
+                                <td className="text-dark fw-bold text-hover-primary fs-6">
+                                    {offer.vehicle?.product}
+                                </td>
+                                <td className="text-dark fw-bold text-hover-primary fs-6">
+                                    {offer.vehicle?.model}
+                                </td>
+                                <td className="text-dark fw-bold text-hover-primary fs-6">
+                                    {offer.quantity}
+                                </td>
+                                <td className="text-dark fw-bold text-hover-primary fs-6">
+                                    ₺{offer.price}
+                                </td>
+                                <td className="text-dark fw-bold text-hover-primary fs-6">
+                                    {offer.payment_type}
+                                </td>
+                                <td className="text-end">
+                                    <div className="d-flex justify-content-end">
+                                        <button
+                                            onClick={() => handleDelete(offer.id)}
+                                            className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm"
+                                            title="Sil"
                                         >
-                                            {index + 1}
-                                        </a>
-                                    </li>
-                                ))}
+                                            <i className="bi bi-trash fs-4"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                </div>
 
+                {salesOffers.length > 0 && (
+                    <div className="d-flex flex-stack flex-wrap pt-10">
+                        <div className="fs-6 fw-bold text-gray-700">
+                            Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, salesOffers.length)} of {salesOffers.length} entries
+                        </div>
+                        <ul className="pagination">
+                            <li className={`page-item ${currentPage === 1 ? "disabled" : "previous"}`}>
+                                <a
+                                    href="#"
+                                    className="page-link"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        if (currentPage > 1) paginate(currentPage - 1);
+                                    }}
+                                >
+                                    <i className="previous"></i>
+                                </a>
+                            </li>
+                            {[...Array(totalPages)].map((_, index) => (
                                 <li
-                                    className={`page-item ${
-                                        currentPage === totalPages
-                                            ? "disabled"
-                                            : "next"
-                                    }`}
+                                    key={index}
+                                    className={`page-item ${currentPage === index + 1 ? "active" : ""}`}
                                 >
                                     <a
                                         href="#"
                                         className="page-link"
                                         onClick={(e) => {
                                             e.preventDefault();
-                                            if (currentPage < totalPages)
-                                                paginate(currentPage + 1);
+                                            paginate(index + 1);
                                         }}
                                     >
-                                        <i className="next"></i>
+                                        {index + 1}
                                     </a>
                                 </li>
-                            </ul>
-                        </div>
-                    )}
-                </KTCardBody>
-            </KTCard>
-        </>
+                            ))}
+                            <li className={`page-item ${currentPage === totalPages ? "disabled" : "next"}`}>
+                                <a
+                                    href="#"
+                                    className="page-link"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        if (currentPage < totalPages) paginate(currentPage + 1);
+                                    }}
+                                >
+                                    <i className="next"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                )}
+            </KTCardBody>
+        </KTCard>
     );
 };
 
-const Projeler = () => {
-    const intl = useIntl();
-    return (
-        <>
-            <PageTitle breadcrumbs={projectsBreadCrumbs}>Satışlar</PageTitle>
-            <ProjectsPage />
-        </>
-    );
-};
-
-const menuItemStyle = {
-    padding: "6px 10px",
-    cursor: "pointer",
-    whiteSpace: "nowrap",
-    transition: "background 0.2s",
-    color: "#333",
-    fontSize: "13px",
-};
-
-export { Projeler };
-export default Projeler;
+export default SalesList;
