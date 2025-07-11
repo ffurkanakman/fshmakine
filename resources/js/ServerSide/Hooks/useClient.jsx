@@ -123,3 +123,5 @@ export const useClient = () => {
         deleteClient
     };
 };
+
+export default useClient;

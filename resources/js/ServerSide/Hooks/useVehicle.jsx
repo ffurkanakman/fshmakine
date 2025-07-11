@@ -140,3 +140,5 @@ export const useVehicle = () => {
         deleteVehicle
     };
 };
+
+export default useVehicle;

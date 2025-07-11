@@ -109,3 +109,5 @@ export const useUser = () => {
         createUser
     };
 };
+
+export default useUser;

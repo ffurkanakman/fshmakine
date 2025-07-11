@@ -239,3 +239,5 @@ export const useProject = () => {
         deleteProject
     };
 };
+
+export default useProject;

@@ -49,3 +49,5 @@ export const useBrand = () => {
         createBrand,
     };
 };
+
+export default useBrand;

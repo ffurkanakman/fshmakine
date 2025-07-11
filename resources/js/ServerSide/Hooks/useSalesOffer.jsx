@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { API_CONFIG } from "../Endpoints";
 import { ROUTES } from "../../Libs/Routes/config";
 
+
 // 401 error handler
 const handle401Error = (error) => {
     if (error.response && error.response.status === 401) {
@@ -40,8 +41,11 @@ export const useSalesOffer = () => {
 
     // Ekleme
     const createSalesOffer = async (data) => {
+        console.log("createSalesOffer ÇALIŞTI. Data:", data);
+        console.log("Kullanılan endpoint:", API_CONFIG.ENDPOINTS.SALES_OFFER.SALES_OFFER);
         try {
             const res = await apiService.post(API_CONFIG.ENDPOINTS.SALES_OFFER.SALES_OFFER, data);
+            console.log("API response:", res);
             toast.success("Satış teklifi oluşturuldu");
             return res.data.data;
         } catch (error) {
@@ -88,3 +92,5 @@ export const useSalesOffer = () => {
         deleteSalesOffer
     };
 };
+
+export default useSalesOffer;
