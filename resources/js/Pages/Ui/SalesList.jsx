@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { KTCard, KTCardBody } from "../../Libs/Metronic/_metronic/helpers";
 import { useSalesOffer } from "../../ServerSide/Hooks/useSalesOffer";
 import { ROUTES } from "@/Libs/Routes/config.jsx";
-import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
 const SalesList = () => {
@@ -106,7 +105,7 @@ const SalesList = () => {
                             <th className="min-w-80px">Adet</th>
                             <th className="min-w-100px">Fiyat</th>
                             <th className="min-w-120px">Ödeme Tipi</th>
-                            <th className="min-w-100px text-end">İşlem</th>
+                            <th className="min-w-150px text-end">İşlem</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -145,6 +144,13 @@ const SalesList = () => {
                                 </td>
                                 <td className="text-end">
                                     <div className="d-flex justify-content-end">
+                                        <Link
+                                            to={`${ROUTES.UI.SALES_OFFER_FORM}/${offer.id}`}
+                                            className="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
+                                            title="Satış Formu"
+                                        >
+                                            <i className="bi bi-file-earmark-text fs-4"></i>
+                                        </Link>
                                         <button
                                             onClick={() => handleDelete(offer.id)}
                                             className="btn btn-icon btn-bg-light btn-active-color-danger btn-sm"

@@ -232,7 +232,7 @@ const MainRouter = () => {
                     element={<ProformaInvoice />}
                 />
                 <Route
-                    path={ROUTES.UI.SALES_OFFER_FORM}
+                    path={`${ROUTES.UI.SALES_OFFER_FORM}/:id`}
                     element={<SalesOfferForm />}
                 />
             </Route>
