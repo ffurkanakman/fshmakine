@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->string('name');
             $table->string('logo_path')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

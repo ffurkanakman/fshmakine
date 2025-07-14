@@ -41,12 +41,51 @@ export const useBrand = () => {
         }
     };
 
+    const deleteBrand = async (id) => {
+        try {
+            setLoading(true);
+            await apiService.delete(`${API_CONFIG.ENDPOINTS.BRAND.BRAND}/${id}`);
+            toast.success("Marka başarıyla silindi");
+            await fetchBrands();
+        } catch (err) {
+            setError(err.message);
+            toast.error("Marka silinemedi");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const updateBrand = async (id, formData) => {
+        try {
+            setLoading(true);
+            const res = await apiService.post(
+                `${API_CONFIG.ENDPOINTS.BRAND.BRAND}/${id}?_method=PUT`,
+                formData,
+                { headers: { "Content-Type": "multipart/form-data" } }
+            );
+            toast.success("Marka başarıyla güncellendi");
+            await fetchBrands();
+            return res.data.data;
+        } catch (err) {
+            setError(err.message);
+            toast.error("Marka güncellenemedi");
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+
+
     return {
         brands,
         loading,
         error,
         fetchBrands,
         createBrand,
+        deleteBrand,
+        updateBrand,
     };
 };
 

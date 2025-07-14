@@ -37,4 +37,19 @@ class VehicleBrandController extends Controller
         $brands = VehicleBrand::all();
         return $this->successResponse($brands);
     }
+
+    public function destroy($id): JsonResponse
+    {
+        return $this->handleApiExceptions(function () use ($id) {
+            $brand = VehicleBrand::findOrFail($id);
+
+            // Eğer markaya bağlı araçlar varsa burayı düzenleyebilirsin
+            // Örneğin:
+            // $brand->vehicles()->update(['vehicle_brand_id' => null]);
+
+            $brand->delete(); // soft delete
+            return response()->json(['message' => 'Marka başarıyla silindi.']);
+        });
+    }
+
 }
