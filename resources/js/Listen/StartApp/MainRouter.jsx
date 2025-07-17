@@ -223,7 +223,7 @@ const MainRouter = () => {
 
                 <Route path={`${ROUTES.UI.ERROR}/*`} element={<ErrorsPage />} />
                 <Route
-                    path={ROUTES.UI.TEKLIFSAYFASI}
+                    path={ROUTES.UI.OFFER_PAGE}
                     element={<TeklifSayfasi />}
                 />
                 <Route path={ROUTES.UI.SALESLIST} element={<SalesList />} />

@@ -275,6 +275,12 @@ const ProjectsPage = () => {
                                                     <i className="bi bi-eye fs-4"></i>
                                                 </Link>
                                                 <Link
+                                                    to={`/TeklifSayfası/${project.id}`}
+                                                    className="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
+                                                >
+                                                    <i className="bi bi-file-earmark fs-4"></i>
+                                                </Link>
+                                                <Link
                                                     to={`/ProjeGuncelle/${project.id}`}
                                                     className="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
                                                 >
