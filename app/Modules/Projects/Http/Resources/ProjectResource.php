@@ -26,6 +26,8 @@ class ProjectResource extends JsonResource
                 return [
                     'id' => $this->client->id,
                     'company_name' => $this->client->company_name,
+                    'phone' => $this->client->phone,
+                    'email' => $this->client->email,
                     'authorized_person' => $this->client->authorized_person,
                 ];
             }),
@@ -34,6 +36,8 @@ class ProjectResource extends JsonResource
                 return [
                     'id' => $this->salesPerson->id,
                     'name' => $this->salesPerson->name,
+                    'phone_number' => $this->salesPerson->phone_number,
+                    'email' => $this->salesPerson->email,
                 ];
             }),
 

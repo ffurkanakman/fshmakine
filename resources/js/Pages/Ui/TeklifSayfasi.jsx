@@ -35,22 +35,44 @@ const TeklifSayfasi = () => {
 
     useEffect(() => {
         const fetchAll = async () => {
-            const proj = await getProjectById(id);
-            setProject(proj);
-            setParts(proj.parts || []);
-            setVehicleInfo(proj.vehicle_information);
+            try {
+                const proj = await getProjectById(id);
+                console.log('✅ Project:', proj);
+                setProject(proj);
+                setParts(proj.parts || []);
+                setVehicleInfo(proj.vehicle_information);
 
-            if (proj.client_id) {
-                const cli = await getClient(proj.client_id);
-                setClient(cli);
-            }
-            if (proj.sales_person_id) {
-                const user = await getUserById(proj.sales_person_id);
-                setSalesPerson(user);
+                // CLIENT
+                if (proj.client_id && !proj.client) {
+                    const cli = await getClient(proj.client_id);
+                    console.log('✅ getClient ile çekilen:', cli);
+                    setClient(cli);
+                } else if (proj.client) {
+                    console.log('✅ Projeden gelen client:', proj.client);
+                    setClient(proj.client);
+                } else {
+                    console.warn('⚠️ Client bilgisi yok');
+                }
+
+                // SALES PERSON
+                if (proj.sales_person_id && !proj.sales_person) {
+                    const user = await getUserById(proj.sales_person_id);
+                    console.log('✅ getUserById ile çekilen:', user);
+                    setSalesPerson(user);
+                } else if (proj.sales_person) {
+                    console.log('✅ Projeden gelen sales_person:', proj.sales_person);
+                    setSalesPerson(proj.sales_person);
+                } else {
+                    console.warn('⚠️ Sales person bilgisi yok');
+                }
+            } catch (err) {
+                console.error('⛔ fetchAll hatası:', err);
             }
         };
+
         fetchAll();
     }, [id]);
+
 
     const total = parts.reduce((sum, p) => sum + Number(p.total_price), 0);
     const labor = Number(project?.labor_cost || 0);
