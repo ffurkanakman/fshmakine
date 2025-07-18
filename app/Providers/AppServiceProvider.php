@@ -1,5 +1,6 @@
 <?php
 namespace App\Providers;
+use App\Modules\ProformaInvoices\Providers\ProformaInvoicesServiceProvider;
 use App\Modules\SalesOffer\Providers\SalesOfferServiceProvider;
 use App\Modules\Vehicle\Providers\VehicleServiceProvider;
 use App\Modules\Logs\Providers\LogsServiceProvider;
@@ -16,6 +17,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+    // Register services
+        $this->app->register(ProformaInvoicesServiceProvider::class);
     // Register services
         $this->app->register(SalesOfferServiceProvider::class);
     // Register services

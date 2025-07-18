@@ -1,0 +1,30 @@
+### POST request to ProformaInvoices API
+POST http://localhost:8000/api/ProformaInvoices
+Content-Type: application/json
+
+{
+    "name": "John Doe"
+}
+
+###
+
+GET http://localhost:8000/api/proformainvoices
+
+###
+
+GET http://localhost:8000/api/proformainvoices/1
+
+###
+
+PUT http://localhost:8000/api/proformainvoices/1
+Content-Type: application/json
+
+{
+    "name": "Updated John Doe"
+}
+
+###
+
+DELETE http://localhost:8000/api/proformainvoices/1
+
+###
