@@ -13,6 +13,18 @@ class ProformaInvoicesResource extends JsonResource
             'proforma_no' => $this->proforma_no,
             'company_name' => $this->company_name,
             'authorized_person' => $this->authorized_person,
+            'address' => $this->address,
+            'tax_office' => $this->tax_office,
+            'email' => $this->email,
+            'delivery_time' => $this->delivery_time,
+            'delivery_place' => $this->delivery_place,
+            'payment' => $this->payment,
+            'warranty' => $this->warranty,
+            'origin' => $this->origin,
+            'gtip_no' => $this->gtip_no,
+            'bank_info' => $this->bank_info,
+            'account_name' => $this->account_name,
+            'iban' => $this->iban,
             'total_price' => $this->total_price,
             'parts' => $this->whenLoaded('parts', function () {
                 return $this->parts->map(function ($p) {
@@ -28,5 +40,6 @@ class ProformaInvoicesResource extends JsonResource
             'created_at' => $this->created_at?->toDateTimeString(),
         ];
     }
+
 
 }

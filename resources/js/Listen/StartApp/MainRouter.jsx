@@ -245,9 +245,8 @@ const MainRouter = () => {
                     path={ROUTES.UI.OFFER_PAGE}
                     element={<TeklifSayfasi />}
                 />
-                <Route path={ROUTES.UI.SALESLIST} element={<SalesList />} />
                 <Route
-                    path={ROUTES.UI.PROFPORMA_INVOICE}
+                    path={`${ROUTES.UI.PROFPORMA_INVOICE}/:id`} // Dinamik id buraya
                     element={<ProformaInvoice />}
                 />
                 <Route

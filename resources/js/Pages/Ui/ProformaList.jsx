@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { KTCard, KTCardBody } from "../../Libs/Metronic/_metronic/helpers";
 import { useProformaInvoice } from "../../ServerSide/Hooks/useProformaInvoice";
 import { ROUTES } from "@/Libs/Routes/config.jsx";
@@ -11,6 +11,7 @@ const ProformaList = () => {
     const [error, setError] = useState(null);
 
     const { fetchProformas, deleteProforma } = useProformaInvoice();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -49,6 +50,10 @@ const ProformaList = () => {
                 Swal.fire("Hata!", "Silinemedi.", "error");
             }
         }
+    };
+
+    const handleGoToForm = (id) => {
+        navigate(`${ROUTES.UI.PROFPORMA_INVOICE}/${id}`);
     };
 
     return (
@@ -97,9 +102,19 @@ const ProformaList = () => {
                                         <td>{item.proforma_no}</td>
                                         <td>₺{Number(item.total_price).toLocaleString("tr-TR")}</td>
                                         <td className="text-end">
+                                            {/* Form butonu */}
+                                            <button
+                                                onClick={() => handleGoToForm(item.id)}
+                                                className="btn btn-icon btn-bg-light btn-sm me-2"
+                                                title="Fatura Formu"
+                                            >
+                                                <i className="bi bi-file-earmark-text"></i>
+                                            </button>
+                                            {/* Sil butonu */}
                                             <button
                                                 onClick={() => handleDelete(item.id)}
                                                 className="btn btn-icon btn-bg-light btn-sm"
+                                                title="Sil"
                                             >
                                                 <i className="bi bi-trash"></i>
                                             </button>

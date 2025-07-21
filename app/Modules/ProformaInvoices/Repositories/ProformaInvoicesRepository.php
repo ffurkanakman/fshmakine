@@ -19,8 +19,9 @@ class ProformaInvoicesRepository
 
     public function find($id)
     {
-        return ProformaInvoices::findOrFail($id);
+        return ProformaInvoices::with(['parts.part'])->findOrFail($id);
     }
+
 
     public function create(array $data)
     {
