@@ -35,5 +35,7 @@ export const ROUTES = {
         SALES_OFFER_FORM: "/SatisTeklifiForm",
         BRAND_LIST: "/MarkalarListesi",
         PROFPORMA_INVOICE: "/ProformaFatura",
+        PROFORMA_INVOICE_LIST: "/ProformaFaturaListesi",
+        NEW_PROFORMA_INVOICE: "/YeniProformaFatura",
     },
 };

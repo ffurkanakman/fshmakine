@@ -28,6 +28,12 @@ export const API_CONFIG = {
         },
         SALES_OFFER: {
             SALES_OFFER: 'api/salesoffer',
+        },
+        PROFORMA_INVOICE: {
+            PROFORMA_INVOICE: 'api/proformainvoices',
+        },
+        PROJECT_PARTS: {
+            PROJECT_PARTS: 'api/projects/parts',
         }
     }
 };

@@ -35,6 +35,9 @@ import VehicleRoute from "@/Components/Auth/VehicleRoutes";
 import NewBrand from "@/Pages/Ui/NewBrand";
 import SalesOfferForm from "@/Pages/Ui/SalesOfferForm";
 import BrandList from "@/Pages/Ui/BrandsList";
+import ProformaRoute from "@/Components/Auth/ProformaRoute";
+import ProformaList from "@/Pages/Ui/ProformaList";
+import NewProforma from "@/Pages/Ui/NewProforma";
 import ProformaInvoice from "@/Pages/Ui/ProformaInvoice";
 
 const MainRouter = () => {
@@ -217,6 +220,22 @@ const MainRouter = () => {
                             <VehicleRoute>
                                 <NewBrand />
                             </VehicleRoute>
+                        }
+                    />
+                    <Route
+                        path={ROUTES.UI.PROFORMA_INVOICE_LIST}
+                        element={
+                            <ProformaRoute>
+                                <ProformaList />
+                            </ProformaRoute>
+                        }
+                    />
+                    <Route
+                        path={ROUTES.UI.NEW_PROFORMA_INVOICE}
+                        element={
+                            <ProformaRoute>
+                                <NewProforma />
+                            </ProformaRoute>
                         }
                     />
                 </Route>

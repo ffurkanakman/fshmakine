@@ -18,6 +18,8 @@ class ProjectsServiceProvider extends ServiceProvider
             app_path("Modules/Projects/config.php"), "ProjectsModule"
         );
 
+        $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
+
         // Only load routes and migrations if the module is active
         if (config("ProjectsModule.active") === true) {
             // Load migrations

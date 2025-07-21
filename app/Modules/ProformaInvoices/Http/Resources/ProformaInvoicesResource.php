@@ -12,6 +12,7 @@ class ProformaInvoicesResource extends JsonResource
             'id' => $this->id,
             'proforma_no' => $this->proforma_no,
             'company_name' => $this->company_name,
+            'authorized_person' => $this->authorized_person,
             'total_price' => $this->total_price,
             'parts' => $this->whenLoaded('parts', function () {
                 return $this->parts->map(function ($p) {

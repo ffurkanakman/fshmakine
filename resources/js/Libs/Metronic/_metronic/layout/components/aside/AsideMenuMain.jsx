@@ -70,6 +70,13 @@ const AsideMenuMain = () => {
                     title="Markalar Listesi"
                     fontIcon="bi-layers"
                 />
+                <AsideMenuItem
+                    to="/ProformaFaturaListesi"
+                    icon="bi bi-file-earmark-text"
+                    title="Proforma Faturalar"
+                    fontIcon="bi-layers"
+                />
+
 
                 <div className="menu-item">
                     <div className="menu-content pt-8 pb-2">
